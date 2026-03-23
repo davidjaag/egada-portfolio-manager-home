@@ -108,7 +108,6 @@
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px; 
-            
             border: 1.5px solid rgba(255, 255, 255, 0.1); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
             animation: borderPulseSubtle 3s infinite alternate;
@@ -169,8 +168,61 @@
             display: flex; flex-direction: column; align-items: center; 
         }
         
-        .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 90px; height: 24px; background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; z-index: 10; }
+        .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 90px; height: 24px; background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; z-index: 100; }
         
+        /* Contenedor principal de la pantalla */
+        .iphone-screen {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            position: relative;
+            border-radius: 54px;
+            z-index: 1;
+        }
+
+        /* 👇 LA MAGIA: ANIMACIÓN FLUIDA DE SIRI 👇 */
+        .siri-container {
+            position: absolute;
+            inset: 0px; 
+            border-radius: 54px;
+            padding: 8px; /* Ancho del resplandor de Siri */
+            
+            /* Máscara que "recorta" el centro y deja solo el borde */
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            
+            pointer-events: none;
+            z-index: 20; 
+            filter: blur(5px); /* Suaviza el borde interior de la máscara para un look de luz real */
+            animation: pulseSiri 2s ease-in-out infinite alternate;
+        }
+
+        /* El arcoíris gigante desenfocado que gira por debajo de la máscara */
+        .siri-container::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            /* Degradado cónico con los colores oficiales de Siri iOS 18 */
+            background: conic-gradient(
+                #00d4ff, #2d9cdb, #9b51e0, #ff0f7b, #f89b29, #ff0f7b, #9b51e0, #2d9cdb, #00d4ff
+            );
+            animation: spinSiri 5s linear infinite;
+            filter: blur(25px); /* Esto es lo que mezcla los colores en ondas fluidas (waves) */
+        }
+
+        @keyframes spinSiri {
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulseSiri {
+            0% { opacity: 0.7; transform: scale(0.995); }
+            100% { opacity: 1; transform: scale(1.005); }
+        }
+
+        /* Status Bar y Contenidos del Teléfono */
         .phone-status-bar { 
             width: 100%; display: flex; justify-content: space-between; align-items: center; 
             font-size: 11px; color: rgba(255, 255, 255, 0.9); padding: 15px 25px 0 25px; 
@@ -179,7 +231,7 @@
         .status-left { width: 60px; text-align: left; }
         .status-right { width: 70px; text-align: right; }
 
-        .asset-carousel-container { width: 100%; flex: 1; overflow: hidden; display: flex; justify-content: center; }
+        .asset-carousel-container { width: 100%; flex: 1; overflow: hidden; display: flex; justify-content: center; position: relative; z-index: 5;}
         .asset-carousel { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: scrollVertical 35s linear infinite; }
         @keyframes scrollVertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
@@ -363,10 +415,9 @@
         #banner-container { width: 100%; max-width: 1000px; height: 400px; margin: 20px auto; position: relative; background: transparent; }
         #banner-container canvas { display: block; width: 100%; height: 100%; }
 
-        /* Estilos para el nuevo botón flotante sobre el Canvas */
         .banner-btn {
             position: absolute;
-            top: 65%; /* Lo sitúa debajo del texto central */
+            top: 65%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 16px;
@@ -452,8 +503,7 @@
         <p style="color: var(--gold); letter-spacing: 10px; font-weight: 600; margin-bottom: 15px;">EGADA INSTITUTIONAL TERMINAL</p>
         <h1 class="mega-slogan">+ INFORMACIÓN.<br>- RIESGO.</h1>
         <p class="hero-p">Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.</p>
-        
-        <a href="https://portfolio-manager-98q2.onrender.com/" class="btn-pulse">LANZAR TERMINAL</a>
+        <a href="AQUI_TU_ENLACE_TERMINAL" class="btn-pulse">LANZAR TERMINAL</a>
     </section>
 
     <div class="brokers-strip">
@@ -483,7 +533,10 @@
 
         <div class="transparent-phone-mockup">
             <div class="dynamic-island"></div>
+            
             <div class="iphone-screen">
+                <div class="siri-container"></div>
+                
                 <div class="phone-status-bar">
                     <span class="status-left">9:41</span>
                     <span class="status-right">5G   80%</span>
@@ -524,8 +577,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div> </div>
     </section>
 
     <section class="bubble-section">
@@ -588,7 +640,7 @@
 
     <div id="banner-container">
         <canvas id="canvas"></canvas>
-        <a href="https://portfolio-manager-98q2.onrender.com/" class="btn-pulse banner-btn">Haz tu test de perfil de riesgo</a>
+        <a href="AQUI_TU_ENLACE_TEST" class="btn-pulse banner-btn">Haz tu test de perfil de riesgo</a>
     </div>
 
     <section class="faq-section">
@@ -612,8 +664,7 @@
     <section class="newsletter-section">
         <h2 style="color: var(--gold); margin-bottom: 10px;">Únete a la élite de inversores objetivos.</h2>
         <input type="email" class="email-input" placeholder="[email protected]"><br>
-        
-        <a href="https://portfolio-manager-98q2.onrender.com/" class="btn-pulse" style="font-size: 16px; padding: 15px 40px;">Suscribirme ahora</a>
+        <a href="AQUI_TU_ENLACE_NEWSLETTER" class="btn-pulse" style="font-size: 16px; padding: 15px 40px;">Suscribirme ahora</a>
     </section>
 
     <div class="news-footer">
@@ -678,7 +729,6 @@
                 ctx.shadowBlur = 8; ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 const isMobile = container.offsetWidth < 500;
                 
-                // Ajuste leve de la posición en Y del texto para darle espacio al botón
                 if (isMobile) {
                     ctx.font = "300 29px Arial"; 
                     ctx.fillText("[Asistencia Inteligente", centerX, centerY - 35);
