@@ -58,11 +58,11 @@
            ========================================= */
         .hero { text-align: center; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; }
         .hero-logo { 
-    height: 120px; /* ACÁ CAMBIAS EL TAMAÑO (puedes subirlo a 150px o bajarlo a 100px) */
-    margin: 0 auto 30px auto; /* ESTO LO CENTRA PERFECTAMENTE (margen automático a los lados) */
-    filter: brightness(1.1); 
-    display: block; 
-}
+            height: 120px; 
+            margin: 0 auto 30px auto; 
+            filter: brightness(1.1); 
+            display: block; 
+        }
         .mega-slogan { font-size: clamp(35px, 8vw, 90px); font-weight: 900; line-height: 0.9; background: linear-gradient(135deg, #FFF 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -3px; margin-bottom: 30px; }
         .hero-p { color: #929497; font-size: clamp(16px, 2vw, 22px); max-width: 800px; margin-bottom: 50px; font-weight: 300; }
 
@@ -109,20 +109,17 @@
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px; 
             
-            /* Bordes sutiles y sombra blanca para efecto glass */
             border: 1.5px solid rgba(255, 255, 255, 0.1); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
             animation: borderPulseSubtle 3s infinite alternate;
             overflow: hidden;
         }
 
-        /* Definición de la animación de pulso sutil (compartida con ECG) */
         @keyframes borderPulseSubtle {
             0% { border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 10px rgba(255, 255, 255, 0.05); }
             100% { border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 255, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05); }
         }
 
-        /* Franja de luz animada */
         .chart-container::after {
             content: '';
             position: absolute;
@@ -187,7 +184,6 @@
         @keyframes scrollVertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
         .asset-card { 
-            /* Efecto Glassmorphism */
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); 
             backdrop-filter: blur(24px); 
             -webkit-backdrop-filter: blur(24px);
@@ -195,8 +191,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.4);
             border-left: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            
-            /* Estructura original */
             border-radius: 28px; 
             padding: 25px; 
             display: flex; 
@@ -207,7 +201,6 @@
         .asset-logo-container { width: 60px; height: 60px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; }
         .asset-logo-img { width: 100%; height: 100%; object-fit: contain; }
         
-        /* 👇 Cambio solicitado: Color de % a verde alcista 👇 */
         .asset-card b { color: var(--up); font-size: 22px; }
 
         /* =========================================
@@ -217,7 +210,6 @@
         .bubble-section-title { font-size: 18px; font-weight: 600; color: var(--gold); margin-bottom: 50px; letter-spacing: 1px; text-transform: uppercase; position: relative; z-index: 5; }
         .bubble-container { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
         
-        /* Base Glass para Burbujas Principales */
         .bubble-item { 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             border-radius: 50%; color: white; 
@@ -228,7 +220,6 @@
         .bubble-percent { font-size: 28px; font-weight: 900; }
         .bubble-ticker { font-size: 12px; opacity: 0.9; margin-top: 5px; font-weight: bold;}
         
-        /* Burbuja Cyan Glass */
         .b-cyan { 
             width: 140px; height: 140px; 
             background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(0, 191, 255, 0.05)); 
@@ -239,7 +230,6 @@
             animation: dynamicFloat1 6s infinite ease-in-out; 
         }
         
-        /* Burbuja Lime Glass */
         .b-lime { 
             width: 160px; height: 160px; 
             background: linear-gradient(135deg, rgba(173, 255, 47, 0.25), rgba(173, 255, 47, 0.05)); 
@@ -250,7 +240,6 @@
             animation: dynamicFloat2 7s infinite ease-in-out; 
         }
         
-        /* Burbuja Magenta Glass */
         .b-magenta { 
             width: 130px; height: 130px; 
             background: linear-gradient(135deg, rgba(255, 0, 255, 0.25), rgba(255, 0, 255, 0.05)); 
@@ -261,7 +250,6 @@
             animation: dynamicFloat3 6.5s infinite ease-in-out; 
         }
         
-        /* Burbuja Orange Glass */
         .b-orange { 
             width: 110px; height: 110px; 
             background: linear-gradient(135deg, rgba(255, 165, 0, 0.25), rgba(255, 165, 0, 0.05)); 
@@ -272,7 +260,6 @@
             animation: dynamicFloat4 8s infinite ease-in-out; 
         }
 
-        /* Mini Burbujas Glass */
         .mini-bubble { position: absolute; border-radius: 50%; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1; opacity: 0.8; }
         
         .mb-1 { width: 60px; height: 60px; top: 15%; left: 10%; background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(0, 191, 255, 0.05)); border: 1px solid rgba(0, 191, 255, 0.2); border-top: 1px solid rgba(0, 191, 255, 0.5); border-left: 1px solid rgba(0, 191, 255, 0.5); animation: dynamicFloat2 9s infinite ease-in-out reverse; }
@@ -299,35 +286,12 @@
             margin: 0 auto;
         }
 
-        .glass-card-wrapper {
-            position: relative;
-            z-index: 1;
-        }
-
-        .card-bg-shape {
-            position: absolute;
-            border-radius: 24px; 
-            z-index: -1;
-            transition: all 0.5s ease;
-        }
+        .glass-card-wrapper { position: relative; z-index: 1; }
+        .card-bg-shape { position: absolute; border-radius: 24px; z-index: -1; transition: all 0.5s ease; }
         
-        .shape-1 {
-            top: -25px; left: -25px; width: 130px; height: 130px;
-            background: linear-gradient(135deg, #ff512f, #dd2476);
-            box-shadow: 0 10px 30px rgba(255, 81, 47, 0.4);
-        }
-        
-        .shape-2 {
-            bottom: -25px; right: -25px; width: 140px; height: 140px;
-            background: linear-gradient(135deg, #0ecb81, #087a4d);
-            box-shadow: 0 10px 30px rgba(14, 203, 129, 0.4);
-        }
-
-        .shape-3 {
-            top: -25px; right: -25px; width: 120px; height: 120px;
-            background: linear-gradient(135deg, #f1c40f, #e67e22);
-            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
-        }
+        .shape-1 { top: -25px; left: -25px; width: 130px; height: 130px; background: linear-gradient(135deg, #ff512f, #dd2476); box-shadow: 0 10px 30px rgba(255, 81, 47, 0.4); }
+        .shape-2 { bottom: -25px; right: -25px; width: 140px; height: 140px; background: linear-gradient(135deg, #0ecb81, #087a4d); box-shadow: 0 10px 30px rgba(14, 203, 129, 0.4); }
+        .shape-3 { top: -25px; right: -25px; width: 120px; height: 120px; background: linear-gradient(135deg, #f1c40f, #e67e22); box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4); }
 
         .glass-card { 
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)); 
@@ -341,21 +305,11 @@
             transition: 0.4s ease; 
             height: 100%;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            display: flex; flex-direction: column; align-items: flex-start;
         }
 
-        .glass-card-wrapper:hover .glass-card {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(201, 162, 39, 0.3);
-        }
-
-        .glass-card-wrapper:hover .card-bg-shape {
-            transform: scale(1.1) rotate(5deg); 
-            filter: blur(5px);
-        }
+        .glass-card-wrapper:hover .glass-card { transform: translateY(-5px); box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.5); border: 1px solid rgba(201, 162, 39, 0.3); }
+        .glass-card-wrapper:hover .card-bg-shape { transform: scale(1.1) rotate(5deg); filter: blur(5px); }
 
         .card-pretitle { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: 700; }
         .card-badge { display: inline-block; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-size: 11px; letter-spacing: 2px; color: #fff; margin-bottom: 25px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
@@ -368,24 +322,18 @@
         .glass-card p { color: #e0e1dd; line-height: 1.6; font-size: 15px; opacity: 0.8;}
 
         /* =========================================
-           8.5. MONITOREO ECG (Rediseño con Borde Glass Plateado)
+           8.5. MONITOREO ECG 
            ========================================= */
-        .monitoring-section {
-            padding: 80px 20px 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;
-        }
+        .monitoring-section { padding: 80px 20px 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .monitoring-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
 
         .ecg-container {
             width: 100%; max-width: 900px; height: 150px; 
             border-radius: 20px;
             display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
-            
-            /* 👇 Cambio solicitado: Mismo efecto Glass Plateado que la gráfica 👇 */
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
-            
-            /* Bordes sutiles y sombra blanca (usando la misma animación de la gráfica) */
             border: 1.5px solid rgba(255, 255, 255, 0.1); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
             animation: borderPulseSubtle 3s infinite alternate;
@@ -407,15 +355,25 @@
         }
 
         @keyframes ecgDraw { 0% { stroke-dashoffset: 2000; } 100% { stroke-dashoffset: 0; } }
-        @keyframes ecgColorChange {
-            0%, 25% { stroke: var(--up); } 33%, 58% { stroke: var(--gold); } 66%, 91% { stroke: var(--down); } 100% { stroke: var(--up); }
-        }
+        @keyframes ecgColorChange { 0%, 25% { stroke: var(--up); } 33%, 58% { stroke: var(--gold); } 66%, 91% { stroke: var(--down); } 100% { stroke: var(--up); } }
 
         /* =========================================
-           10. ANIMACIÓN ASISTENCIA (BANNER)
+           10. ANIMACIÓN ASISTENCIA (BANNER) - Y ESTILOS DEL NUEVO BOTÓN
            ========================================= */
         #banner-container { width: 100%; max-width: 1000px; height: 400px; margin: 20px auto; position: relative; background: transparent; }
         #banner-container canvas { display: block; width: 100%; height: 100%; }
+
+        /* Estilos para el nuevo botón flotante sobre el Canvas */
+        .banner-btn {
+            position: absolute;
+            top: 65%; /* Lo sitúa debajo del texto central */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            padding: 15px 40px;
+            z-index: 10;
+            white-space: nowrap;
+        }
 
         /* =========================================
            11. PREGUNTAS FRECUENTES (FAQ)
@@ -457,6 +415,7 @@
            ========================================= */
         @media (max-width: 600px) {
             #banner-container { height: 300px; }
+            .banner-btn { top: 75%; font-size: 14px; padding: 12px 30px; }
             
             .news-footer { height: 28px; }
             .news-label-live { font-size: 10px; padding: 0 12px; }
@@ -471,10 +430,7 @@
             .monitoring-section h2 { font-size: 24px; margin-bottom: 30px; }
             .ecg-container { height: 100px; }
             .ecg-svg { height: 70px; }
-            .mega-slogan {
-                line-height: 1.1; 
-                letter-spacing: -1px; 
-            }
+            .mega-slogan { line-height: 1.1; letter-spacing: -1px; }
         }
     </style>
 </head>
@@ -496,7 +452,8 @@
         <p style="color: var(--gold); letter-spacing: 10px; font-weight: 600; margin-bottom: 15px;">EGADA INSTITUTIONAL TERMINAL</p>
         <h1 class="mega-slogan">+ INFORMACIÓN.<br>- RIESGO.</h1>
         <p class="hero-p">Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.</p>
-        <a href="#" class="btn-pulse">LANZAR TERMINAL</a>
+        
+        <a href="AQUI_TU_ENLACE_TERMINAL" class="btn-pulse">LANZAR TERMINAL</a>
     </section>
 
     <div class="brokers-strip">
@@ -631,6 +588,7 @@
 
     <div id="banner-container">
         <canvas id="canvas"></canvas>
+        <a href="AQUI_TU_ENLACE_TEST" class="btn-pulse banner-btn">Haz tu test de perfil de riesgo</a>
     </div>
 
     <section class="faq-section">
@@ -654,7 +612,8 @@
     <section class="newsletter-section">
         <h2 style="color: var(--gold); margin-bottom: 10px;">Únete a la élite de inversores objetivos.</h2>
         <input type="email" class="email-input" placeholder="[email protected]"><br>
-        <a href="#" class="btn-pulse" style="font-size: 16px; padding: 15px 40px;">Suscribirme ahora</a>
+        
+        <a href="AQUI_TU_ENLACE_NEWSLETTER" class="btn-pulse" style="font-size: 16px; padding: 15px 40px;">Suscribirme ahora</a>
     </section>
 
     <div class="news-footer">
@@ -718,13 +677,17 @@
                 }
                 ctx.shadowBlur = 8; ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 const isMobile = container.offsetWidth < 500;
+                
+                // Ajuste leve de la posición en Y del texto para darle espacio al botón
                 if (isMobile) {
                     ctx.font = "300 29px Arial"; 
-        ctx.fillText("[Asistencia Inteligente", centerX, centerY - 15);
-        ctx.fillText("En cualquier momento]", centerX, centerY + 15);
+                    ctx.fillText("[Asistencia Inteligente", centerX, centerY - 35);
+                    ctx.fillText("En cualquier momento]", centerX, centerY - 5);
                 } else {
-                    ctx.font = "300 25px Arial"; ctx.fillText("[Asistencia Inteligente en cualquier momento]", centerX, centerY);
+                    ctx.font = "300 25px Arial"; 
+                    ctx.fillText("[Asistencia Inteligente en cualquier momento]", centerX, centerY - 25);
                 }
+                
                 const maxLimit = Math.min(container.offsetWidth, container.offsetHeight) * 0.45; const minLimit = 40;
                 radius += growth; if (radius > maxLimit || radius < minLimit) growth = -growth;
                 requestAnimationFrame(draw);
