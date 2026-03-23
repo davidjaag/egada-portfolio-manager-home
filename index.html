@@ -159,7 +159,7 @@
         @keyframes fadeInOptima { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 0.9; transform: scale(1); } }
 
         /* =========================================
-           6. IPHONE MOCKUP Y STATUS BAR
+           6. IPHONE MOCKUP Y ANIMACIÓN SIRI (REFINADA)
            ========================================= */
         .mobile-section { text-align: center; padding: 80px 10px; background: transparent; }
         .transparent-phone-mockup {
@@ -170,7 +170,6 @@
         
         .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 90px; height: 24px; background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; z-index: 100; }
         
-        /* Contenedor principal de la pantalla */
         .iphone-screen {
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
@@ -179,14 +178,13 @@
             z-index: 1;
         }
 
-        /* 👇 LA MAGIA: ANIMACIÓN FLUIDA DE SIRI 👇 */
+        /* 👇 ANIMACIÓN SIRI: MÁS DELGADA Y DIFUMINADA 👇 */
         .siri-container {
             position: absolute;
-            inset: 0px; 
+            inset: -2px; /* Pequeño desfase para cubrir bien el borde */
             border-radius: 54px;
-            padding: 8px; /* Ancho del resplandor de Siri */
+            padding: 3px; /* GROSOR DEL BORDE (Reducido a 3px para elegancia) */
             
-            /* Máscara que "recorta" el centro y deja solo el borde */
             -webkit-mask: 
                 linear-gradient(#fff 0 0) content-box, 
                 linear-gradient(#fff 0 0);
@@ -195,34 +193,26 @@
             
             pointer-events: none;
             z-index: 20; 
-            filter: blur(5px); /* Suaviza el borde interior de la máscara para un look de luz real */
-            animation: pulseSiri 2s ease-in-out infinite alternate;
+            filter: blur(2px); /* Difumina ligeramente la máscara */
         }
 
-        /* El arcoíris gigante desenfocado que gira por debajo de la máscara */
         .siri-container::before {
             content: '';
             position: absolute;
             top: -50%; left: -50%;
             width: 200%; height: 200%;
-            /* Degradado cónico con los colores oficiales de Siri iOS 18 */
             background: conic-gradient(
+                from 0deg,
                 #00d4ff, #2d9cdb, #9b51e0, #ff0f7b, #f89b29, #ff0f7b, #9b51e0, #2d9cdb, #00d4ff
             );
-            animation: spinSiri 5s linear infinite;
-            filter: blur(25px); /* Esto es lo que mezcla los colores en ondas fluidas (waves) */
+            animation: spinSiri 4s linear infinite;
+            filter: blur(15px); /* DIFUMINADO DE COLORES (Waves suaves) */
         }
 
         @keyframes spinSiri {
             100% { transform: rotate(360deg); }
         }
 
-        @keyframes pulseSiri {
-            0% { opacity: 0.7; transform: scale(0.995); }
-            100% { opacity: 1; transform: scale(1.005); }
-        }
-
-        /* Status Bar y Contenidos del Teléfono */
         .phone-status-bar { 
             width: 100%; display: flex; justify-content: space-between; align-items: center; 
             font-size: 11px; color: rgba(255, 255, 255, 0.9); padding: 15px 25px 0 25px; 
