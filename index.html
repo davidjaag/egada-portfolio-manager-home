@@ -109,26 +109,33 @@
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px; 
             
-            border: 1.5px solid rgba(201, 162, 39, 0.3); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(201, 162, 39, 0.1);
-            animation: borderPulseGold 3s infinite alternate;
+            /* Bordes sutiles y sombra blanca para efecto glass */
+            border: 1.5px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
+            animation: borderPulseSubtle 3s infinite alternate;
             overflow: hidden;
         }
 
-        @keyframes borderPulseGold {
-            0% { border-color: rgba(201, 162, 39, 0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 10px rgba(201, 162, 39, 0.05); }
-            100% { border-color: rgba(201, 162, 39, 0.8); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(201, 162, 39, 0.4), inset 0 0 20px rgba(201, 162, 39, 0.1); }
+        /* Definición de la animación de pulso sutil (compartida con ECG) */
+        @keyframes borderPulseSubtle {
+            0% { border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 10px rgba(255, 255, 255, 0.05); }
+            100% { border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 255, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05); }
         }
 
+        /* Franja de luz animada */
         .chart-container::after {
             content: '';
             position: absolute;
             top: 0; left: -100%;
             width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
             transform: skewX(-25deg);
             animation: lightSweep 5s infinite;
             pointer-events: none; 
+        }
+
+        @keyframes lightSweep {
+            to { left: 100%; }
         }
 
         .chart-header {
@@ -139,7 +146,7 @@
         }
 
         .chart-header h3 { font-weight: 700; color: var(--white); font-size: 18px; letter-spacing: 1px; margin-bottom: 5px; }
-        .chart-header p { color: var(--gold); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+        .chart-header p { color: var(--white); opacity: 0.6; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
 
         .chart-wrapper { position: relative; height: 300px; width: 100%; z-index: 2; }
 
@@ -199,6 +206,9 @@
         }
         .asset-logo-container { width: 60px; height: 60px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; }
         .asset-logo-img { width: 100%; height: 100%; object-fit: contain; }
+        
+        /* 👇 Cambio solicitado: Color de % a verde alcista 👇 */
+        .asset-card b { color: var(--up); font-size: 22px; }
 
         /* =========================================
            7. UNIVERSO DE BURBUJAS ANIMADAS
@@ -358,7 +368,7 @@
         .glass-card p { color: #e0e1dd; line-height: 1.6; font-size: 15px; opacity: 0.8;}
 
         /* =========================================
-           8.5. MONITOREO ECG (Actualizado con Borde Dorado y Efecto)
+           8.5. MONITOREO ECG (Rediseño con Borde Glass Plateado)
            ========================================= */
         .monitoring-section {
             padding: 80px 20px 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;
@@ -366,28 +376,19 @@
         .monitoring-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
 
         .ecg-container {
-            width: 100%; max-width: 900px; height: 150px; background: rgba(27, 38, 59, 0.3);
+            width: 100%; max-width: 900px; height: 150px; 
             border-radius: 20px;
             display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
             
-            /* Borde dorado base e sombra interior original */
-            border: 1.5px solid rgba(201, 162, 39, 0.3); 
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 15px rgba(201, 162, 39, 0.1);
+            /* 👇 Cambio solicitado: Mismo efecto Glass Plateado que la gráfica 👇 */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
             
-            /* Animación de pulso dorado para el borde */
-            animation: borderPulseGoldECG 3s infinite alternate;
-        }
-
-        /* Definición de la animación de pulso para el ECG */
-        @keyframes borderPulseGoldECG {
-            0% { 
-                border-color: rgba(201, 162, 39, 0.2); 
-                box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 10px rgba(201, 162, 39, 0.05); 
-            }
-            100% { 
-                border-color: rgba(201, 162, 39, 0.8); 
-                box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 25px rgba(201, 162, 39, 0.3); 
-            }
+            /* Bordes sutiles y sombra blanca (usando la misma animación de la gráfica) */
+            border: 1.5px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
+            animation: borderPulseSubtle 3s infinite alternate;
         }
 
         .ecg-container::before {
@@ -470,10 +471,9 @@
             .monitoring-section h2 { font-size: 24px; margin-bottom: 30px; }
             .ecg-container { height: 100px; }
             .ecg-svg { height: 70px; }
-            /* 👇 AQUÍ ESTÁ LA SOLUCIÓN PARA EL TEXTO DEL HERO 👇 */
             .mega-slogan {
-                line-height: 1.1; /* Le da más espacio vertical entre las dos líneas */
-                letter-spacing: -1px; /* Evita que las letras se amontonen horizontalmente */
+                line-height: 1.1; 
+                letter-spacing: -1px; 
             }
         }
     </style>
@@ -502,13 +502,9 @@
     <div class="brokers-strip">
         <p style="font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Compatible con los principales brokers internacionales</p>
         <div class="brokers-container">
-            <!-- BROKER 1 → pega aquí la URL del logo de Interactive Brokers -->
             <img src="https://play-lh.googleusercontent.com/l6m9l92a4SgtCXGnJX97AXNSSh8eVZPxDLpklXe4QpSE2PGam69wTWzr1sna1fc74no6" alt="Interactive Brokers" class="broker-logo">
-            <!-- BROKER 2 → pega aquí la URL del logo de GBM -->
             <img src="https://play-lh.googleusercontent.com/CnIiSqXPx7e4hWswuiHiS-itNEZwTbwaCg-8WS-NcijipaK3sSVlbOuRPiF-HqJyXRgF" alt="GBM" class="broker-logo">
-            <!-- BROKER 3 → pega aquí la URL del logo de Hapi -->
             <img src="https://play-lh.googleusercontent.com/v6d7GL4d_NkeDSBFeQ4FKiEIIjBD8ON4ZGkWodkxpp_wMSo1amlgB3HYIctVzUV3Q8k" alt="Schwab" class="broker-logo">
-            <!-- BROKER 4 → pega aquí la URL del logo de eToro -->
             <img src="https://etoro-cdn.etorostatic.com/web-client/img/meta/meta-etoro-logo.png" alt="eToro" class="broker-logo">
         </div>
     </div>
@@ -533,7 +529,7 @@
             <div class="iphone-screen">
                 <div class="phone-status-bar">
                     <span class="status-left">9:41</span>
-                    <span class="status-right">5G &nbsp; 80%</span>
+                    <span class="status-right">5G   80%</span>
                 </div>
                 
                 <div class="asset-carousel-container">
@@ -541,33 +537,33 @@
                         <div class="asset-card">
                             <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">NVDA</span>
                             <div class="asset-logo-container"><img src="https://www.techpowerup.com/review/nvidia-app-v1-0/images/small.png" class="asset-logo-img"></div>
-                            <b style="font-size: 22px;">+730%</b>
+                            <b>+730%</b>
                         </div>
                         <div class="asset-card">
                             <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">SPY</span>
                             <div class="asset-logo-container"><img src="https://pbs.twimg.com/media/Foc5p55XEAMpKMe.png" class="asset-logo-img"></div>
-                            <b style="font-size: 22px;">+22%</b>
+                            <b>+22%</b>
                         </div>
                         <div class="asset-card">
                             <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">AAPL</span>
                             <div class="asset-logo-container"><img src="https://images.seeklogo.com/logo-png/42/1/apple-logo-png_seeklogo-427436.png" class="asset-logo-img"></div>
-                            <b style="font-size: 22px;">+145%</b>
+                            <b>+145%</b>
                         </div>
                         
                         <div class="asset-card">
                             <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">TSLA</span>
                             <div class="asset-logo-container"><img src="https://play-lh.googleusercontent.com/b79jRmQK2sZABaN0xI2wIAFrEcBxs0CuDzNTmF088DGrJXbemaMNRvrhqH0St28J7CU" class="asset-logo-img"></div>
-                            <b style="font-size: 22px;">+730%</b>
+                            <b>+730%</b>
                         </div>
                         <div class="asset-card">
                             <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">JPM</span>
                             <div class="asset-logo-container"><img src="https://www.pillar.vc/playlist/wp-content/uploads/sites/3/2020/09/unnamed-1.jpg" class="asset-logo-img"></div>
-                            <b style="font-size: 22px;">+22%</b>
+                            <b>+22%</b>
                         </div>
                         <div class="asset-card">
                             <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">NOW</span>
                             <div class="asset-logo-container"><img src="https://play-lh.googleusercontent.com/tx6KvUHxMaVEPnQZcRn2_Nqn8-cFqQsoJknZBtGRgzYFB_D5PvRmjHU397wLst9YZB0" class="asset-logo-img"></div>
-                            <b style="font-size: 22px;">+145%</b>
+                            <b>+145%</b>
                         </div>
                     </div>
                 </div>
@@ -680,7 +676,7 @@
         for (let i = 0; i < 15; i++) {
             let data = [1];
             for (let j = 1; j < 50; j++) { data.push(data[j-1] * (1 + (Math.random() * 0.04 - 0.018))); }
-            datasets.push({ data: data, borderColor: 'rgba(201, 162, 39, 0.12)', borderWidth: 1.5, pointRadius: 0, tension: 0.4 });
+            datasets.push({ data: data, borderColor: 'rgba(255, 255, 255, 0.08)', borderWidth: 1.5, pointRadius: 0, tension: 0.4 });
         }
         let targetData = [1];
         for (let k = 1; k < 50; k++) { targetData.push(targetData[k-1] * 1.008); }
@@ -723,7 +719,7 @@
                 ctx.shadowBlur = 8; ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 const isMobile = container.offsetWidth < 500;
                 if (isMobile) {
-                    ctx.font = "300 29px Arial"; // "Grosor Tamaño Fuente"
+                    ctx.font = "300 29px Arial"; 
         ctx.fillText("[Asistencia Inteligente", centerX, centerY - 15);
         ctx.fillText("En cualquier momento]", centerX, centerY + 15);
                 } else {
@@ -735,7 +731,6 @@
             }
             draw();
         })();
-    </script>
     </script>
 </body>
 </html>
