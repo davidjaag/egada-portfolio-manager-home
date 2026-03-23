@@ -185,7 +185,24 @@
         .asset-carousel { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: scrollVertical 35s linear infinite; }
         @keyframes scrollVertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
-        .asset-card { background-color: var(--card-bg); backdrop-filter: blur(10px); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; align-items: center; width: 240px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        .asset-card { 
+            /* Efecto Glassmorphism */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            
+            /* Estructura original */
+            border-radius: 28px; 
+            padding: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            width: 240px; 
+        }
         .asset-logo-container { width: 60px; height: 60px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; }
         .asset-logo-img { width: 100%; height: 100%; object-fit: contain; }
 
