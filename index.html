@@ -651,7 +651,9 @@
                 ctx.shadowBlur = 8; ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 const isMobile = container.offsetWidth < 500;
                 if (isMobile) {
-                    ctx.font = "300 20px Arial"; ctx.fillText("[Asistencia Inteligente]", centerX, centerY);
+                    ctx.font = "300 29px Arial"; // "Grosor Tamaño Fuente"
+        ctx.fillText("[Asistencia Inteligente", centerX, centerY - 15);
+        ctx.fillText("En cualquier momento]", centerX, centerY + 15);
                 } else {
                     ctx.font = "300 25px Arial"; ctx.fillText("[Asistencia Inteligente en cualquier momento]", centerX, centerY);
                 }
