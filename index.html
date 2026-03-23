@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EGADA | Portfolio Tech Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================
+           1. CONFIGURACIÓN GLOBAL DE COLORES 
+           ========================================= */
+        :root {
+            --navy: #0d1b2a;        
+            --navy-light: #1b263b;  
+            --gold: #c9a227;        
+            --white: #e0e1dd;       
+            --up: #0ecb81;          
+            --down: #f6465d;        
+            --black-soft: #050a0f;
+            --card-bg: rgba(27, 38, 59, 0.5); 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; overflow-x: hidden; background: var(--navy); }
+
+        body {
+            background: linear-gradient(135deg, var(--navy), var(--black-soft), var(--navy), var(--navy-light));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* =========================================
+           2. TICKER SUPERIOR
+           ========================================= */
+        .ticker-wrap { 
+            width: 100%; 
+            overflow: hidden; 
+            background: rgba(13, 27, 42, 0.2); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+            padding: 12px 0; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
+        .ticker { display: flex; white-space: nowrap; animation: ticker 40s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .ticker__item { display: inline-flex; align-items: center; padding: 0 40px; font-size: 13px; font-weight: 600; }
+
+        /* =========================================
+           3. HERO SECTION
+           ========================================= */
+        .hero { text-align: center; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; }
+        .hero-logo { height: 80px; margin-bottom: 30px; filter: brightness(1.1); display: block; }
+        .mega-slogan { font-size: clamp(35px, 8vw, 90px); font-weight: 900; line-height: 0.9; background: linear-gradient(135deg, #FFF 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -3px; margin-bottom: 30px; }
+        .hero-p { color: #929497; font-size: clamp(16px, 2vw, 22px); max-width: 800px; margin-bottom: 50px; font-weight: 300; }
+
+        .btn-pulse { background: var(--gold); color: var(--navy); padding: 22px 60px; border-radius: 50px; font-weight: 900; text-decoration: none; display: inline-block; font-size: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.6); } 70% { box-shadow: 0 0 0 20px rgba(201, 162, 39, 0); } 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0); } }
+
+        /* =========================================
+           4. FRANJA DE BROKERS COMPATIBLES
+           ========================================= */
+        .brokers-strip { padding: 40px 0; background: rgba(0,0,0,0.2); text-align: center; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .brokers-container { display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; }
+        
+        .broker-logo { 
+            height: 25px; 
+            filter: grayscale(100%) brightness(200%); 
+            opacity: 0.5;
+            animation: brokerPulse 4s infinite ease-in-out;
+        }
+
+        .broker-logo:nth-child(1) { animation-delay: 0s; }
+        .broker-logo:nth-child(2) { animation-delay: 1s; }
+        .broker-logo:nth-child(3) { animation-delay: 2s; }
+        .broker-logo:nth-child(4) { animation-delay: 3s; }
+
+        @keyframes brokerPulse {
+            0%, 100% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; }
+            15% { transform: scale(1.15); filter: grayscale(0%) brightness(100%); opacity: 1; }
+            30% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; }
+        }
+
+        /* =========================================
+           5. GRÁFICA MONTE CARLO 
+           ========================================= */
+        .chart-container { 
+            width: 95%; 
+            max-width: 1000px; 
+            height: 420px; 
+            margin: 60px auto; 
+            padding: 30px; 
+            position: relative; 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px; 
+            
+            border: 1.5px solid rgba(201, 162, 39, 0.3); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(201, 162, 39, 0.1);
+            animation: borderPulseGold 3s infinite alternate;
+            overflow: hidden;
+        }
+
+        @keyframes borderPulseGold {
+            0% { border-color: rgba(201, 162, 39, 0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 10px rgba(201, 162, 39, 0.05); }
+            100% { border-color: rgba(201, 162, 39, 0.8); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(201, 162, 39, 0.4), inset 0 0 20px rgba(201, 162, 39, 0.1); }
+        }
+
+        .chart-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.3), transparent);
+            transform: skewX(-25deg);
+            animation: lightSweep 5s infinite;
+            pointer-events: none; 
+        }
+
+        @keyframes lightSweep {
+            0% { left: -100%; }
+            40% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        .chart-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2; 
+        }
+
+        .chart-header h3 { font-weight: 700; color: var(--white); font-size: 18px; letter-spacing: 1px; margin-bottom: 5px; }
+        .chart-header p { color: var(--gold); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+
+        .chart-wrapper { position: relative; height: 300px; width: 100%; z-index: 2; }
+
+        #monteCarloChart { clip-path: inset(0 100% 0 0); animation: drawChart 6s ease-out forwards; animation-delay: 0.5s; }
+        @keyframes drawChart { 100% { clip-path: inset(0 0 0 0); } }
+
+        .optima-tangencia {
+            position: absolute; bottom: 10px; right: 15px; color: var(--gold); font-size: clamp(16px, 4vw, 26px);
+            font-weight: 900; text-align: right; line-height: 1.1; letter-spacing: 1px; opacity: 0; 
+            animation: fadeInOptima 2s ease-out forwards; animation-delay: 4.5s; text-shadow: 0 0 15px rgba(201, 162, 39, 0.6);
+            pointer-events: none;
+        }
+
+        @keyframes fadeInOptima { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 0.9; transform: scale(1); } }
+
+        /* =========================================
+           6. IPHONE MOCKUP Y STATUS BAR
+           ========================================= */
+        .mobile-section { text-align: center; padding: 80px 10px; background: transparent; }
+        .transparent-phone-mockup {
+            width: 300px; height: 620px; border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 54px;
+            margin: 0 auto; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; 
+        }
+        
+        .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 90px; height: 24px; background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; z-index: 10; }
+        
+        .phone-status-bar { 
+            width: 100%; display: flex; justify-content: space-between; align-items: center; 
+            font-size: 11px; color: rgba(255, 255, 255, 0.9); padding: 15px 25px 0 25px; 
+            margin-bottom: 25px; font-weight: 700; z-index: 5; position: relative;
+        }
+        .status-left { width: 60px; text-align: left; }
+        .status-right { width: 70px; text-align: right; }
+
+        .asset-carousel-container { width: 100%; flex: 1; overflow: hidden; display: flex; justify-content: center; }
+        .asset-carousel { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: scrollVertical 35s linear infinite; }
+        @keyframes scrollVertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+
+        .asset-card { background-color: var(--card-bg); backdrop-filter: blur(10px); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; align-items: center; width: 240px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        .asset-logo-container { width: 60px; height: 60px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; }
+        .asset-logo-img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* =========================================
+           7. UNIVERSO DE BURBUJAS ANIMADAS
+           ========================================= */
+        .bubble-section { padding: 80px 20px; text-align: center; position: relative; overflow: hidden; width: 100%; min-height: 400px; }
+        .bubble-section-title { font-size: 18px; font-weight: 600; color: var(--gold); margin-bottom: 50px; letter-spacing: 1px; text-transform: uppercase; position: relative; z-index: 5; }
+        .bubble-container { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
+        .bubble-item { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; color: white; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .bubble-percent { font-size: 28px; font-weight: 900; }
+        .bubble-ticker { font-size: 12px; opacity: 0.9; margin-top: 5px; font-weight: bold;}
+        .b-cyan { width: 140px; height: 140px; background: radial-gradient(circle at center, rgba(0, 191, 255, 0.6) 0%, rgba(0, 191, 255, 0.1) 100%); border-color: rgba(0, 191, 255, 0.5); animation: dynamicFloat1 6s infinite ease-in-out; }
+        .b-lime { width: 160px; height: 160px; background: radial-gradient(circle at center, rgba(173, 255, 47, 0.5) 0%, rgba(173, 255, 47, 0.1) 100%); border-color: rgba(173, 255, 47, 0.4); animation: dynamicFloat2 7s infinite ease-in-out; }
+        .b-magenta { width: 130px; height: 130px; background: radial-gradient(circle at center, rgba(255, 0, 255, 0.5) 0%, rgba(255, 0, 255, 0.1) 100%); border-color: rgba(255, 0, 255, 0.4); animation: dynamicFloat3 6.5s infinite ease-in-out; }
+        .b-orange { width: 110px; height: 110px; background: radial-gradient(circle at center, rgba(255, 165, 0, 0.6) 0%, rgba(255, 165, 0, 0.2) 100%); border-color: rgba(255, 165, 0, 0.5); animation: dynamicFloat4 8s infinite ease-in-out; }
+
+        .mini-bubble { position: absolute; border-radius: 50%; backdrop-filter: blur(4px); z-index: 1; opacity: 0.6; }
+        .mb-1 { width: 60px; height: 60px; top: 15%; left: 10%; background: radial-gradient(circle, rgba(0, 191, 255, 0.4), transparent); border: 1px solid rgba(0, 191, 255, 0.2); animation: dynamicFloat2 9s infinite ease-in-out reverse; }
+        .mb-2 { width: 80px; height: 80px; top: 60%; left: 80%; background: radial-gradient(circle, rgba(173, 255, 47, 0.3), transparent); border: 1px solid rgba(173, 255, 47, 0.2); animation: dynamicFloat1 11s infinite ease-in-out; }
+        .mb-3 { width: 45px; height: 45px; top: 20%; right: 15%; background: radial-gradient(circle, rgba(255, 0, 255, 0.4), transparent); border: 1px solid rgba(255, 0, 255, 0.2); animation: dynamicFloat3 8s infinite ease-in-out reverse; }
+        .mb-4 { width: 70px; height: 70px; bottom: 10%; left: 20%; background: radial-gradient(circle, rgba(255, 165, 0, 0.3), transparent); border: 1px solid rgba(255, 165, 0, 0.2); animation: dynamicFloat4 10s infinite ease-in-out; }
+        .mb-5 { width: 50px; height: 50px; top: 40%; left: 50%; background: radial-gradient(circle, rgba(201, 162, 39, 0.4), transparent); border: 1px solid rgba(201, 162, 39, 0.2); animation: dynamicFloat1 7s infinite ease-in-out; }
+
+        @keyframes dynamicFloat1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-15px, -20px) scale(0.95); } }
+        @keyframes dynamicFloat2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, 15px) scale(1.02); } }
+        @keyframes dynamicFloat3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-20px, 20px) scale(1.05); } }
+        @keyframes dynamicFloat4 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(15px, -15px); } }
+
+        /* =========================================
+           8. GLASS CARDS 
+           ========================================= */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 40px; 
+            padding: 80px 5%; 
+            width: 100%; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .glass-card-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-bg-shape {
+            position: absolute;
+            border-radius: 24px; 
+            z-index: -1;
+            transition: all 0.5s ease;
+        }
+        
+        .shape-1 {
+            top: -25px; left: -25px; width: 130px; height: 130px;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            box-shadow: 0 10px 30px rgba(255, 81, 47, 0.4);
+        }
+        
+        .shape-2 {
+            bottom: -25px; right: -25px; width: 140px; height: 140px;
+            background: linear-gradient(135deg, #0ecb81, #087a4d);
+            box-shadow: 0 10px 30px rgba(14, 203, 129, 0.4);
+        }
+
+        .shape-3 {
+            top: -25px; right: -25px; width: 120px; height: 120px;
+            background: linear-gradient(135deg, #f1c40f, #e67e22);
+            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
+        }
+
+        .glass-card { 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)); 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 28px; 
+            padding: 40px; 
+            transition: 0.4s ease; 
+            height: 100%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .glass-card-wrapper:hover .glass-card {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+        }
+
+        .glass-card-wrapper:hover .card-bg-shape {
+            transform: scale(1.1) rotate(5deg); 
+            filter: blur(5px);
+        }
+
+        .card-pretitle { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: 700; }
+        .card-badge { display: inline-block; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-size: 11px; letter-spacing: 2px; color: #fff; margin-bottom: 25px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+        .bg-orange { background: linear-gradient(135deg, #ff512f, #dd2476); }
+        .bg-green { background: linear-gradient(135deg, #0ecb81, #087a4d); }
+        .bg-yellow { background: linear-gradient(135deg, #f1c40f, #e67e22); }
+
+        .glass-card h3 { color: var(--gold); font-size: 26px; margin-bottom: 15px; letter-spacing: -0.5px; font-weight: 300;}
+        .glass-card p { color: #e0e1dd; line-height: 1.6; font-size: 15px; opacity: 0.8;}
+
+        /* =========================================
+           8.5. MONITOREO ECG (Actualizado con Borde Dorado y Efecto)
+           ========================================= */
+        .monitoring-section {
+            padding: 80px 20px 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;
+        }
+        .monitoring-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
+
+        .ecg-container {
+            width: 100%; max-width: 900px; height: 150px; background: rgba(27, 38, 59, 0.3);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+            
+            /* Borde dorado base e sombra interior original */
+            border: 1.5px solid rgba(201, 162, 39, 0.3); 
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 15px rgba(201, 162, 39, 0.1);
+            
+            /* Animación de pulso dorado para el borde */
+            animation: borderPulseGoldECG 3s infinite alternate;
+        }
+
+        /* Definición de la animación de pulso para el ECG */
+        @keyframes borderPulseGoldECG {
+            0% { 
+                border-color: rgba(201, 162, 39, 0.2); 
+                box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 10px rgba(201, 162, 39, 0.05); 
+            }
+            100% { 
+                border-color: rgba(201, 162, 39, 0.8); 
+                box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 25px rgba(201, 162, 39, 0.3); 
+            }
+        }
+
+        .ecg-container::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px; z-index: 0;
+        }
+
+        .ecg-svg { width: 100%; height: 100px; position: relative; z-index: 1; }
+
+        .ecg-path {
+            fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+            stroke-dasharray: 2000; stroke-dashoffset: 2000;
+            animation: ecgDraw 4s linear infinite, ecgColorChange 9s infinite;
+            filter: drop-shadow(0 0 6px currentColor); 
+        }
+
+        @keyframes ecgDraw { 0% { stroke-dashoffset: 2000; } 100% { stroke-dashoffset: 0; } }
+        @keyframes ecgColorChange {
+            0%, 25% { stroke: var(--up); } 33%, 58% { stroke: var(--gold); } 66%, 91% { stroke: var(--down); } 100% { stroke: var(--up); }
+        }
+
+        /* =========================================
+           10. ANIMACIÓN ASISTENCIA (BANNER)
+           ========================================= */
+        #banner-container { width: 100%; max-width: 1000px; height: 400px; margin: 20px auto; position: relative; background: transparent; }
+        #banner-container canvas { display: block; width: 100%; height: 100%; }
+
+        /* =========================================
+           11. PREGUNTAS FRECUENTES (FAQ)
+           ========================================= */
+        .faq-section { padding: 80px 20px; text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .faq-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
+        .faq-container { width: 100%; max-width: 800px; text-align: left; }
+        .faq-item { background: rgba(27, 38, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 15px; overflow: hidden; transition: all 0.3s ease; }
+        .faq-item[open] { border-color: rgba(201, 162, 39, 0.4); background: rgba(27, 38, 59, 0.6); }
+        .faq-item summary { padding: 20px 25px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--white); list-style: none; position: relative; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after { content: '+'; color: var(--gold); font-size: 24px; font-weight: 300; transition: transform 0.3s ease; }
+        .faq-item[open] summary::after { content: '−'; transform: rotate(180deg); }
+        .faq-content { padding: 0 25px 20px 25px; color: #929497; line-height: 1.6; font-size: 15px; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           12. NEWSLETTER Y FOOTER
+           ========================================= */
+        .newsletter-section { padding: 100px 20px; text-align: center; width: 100%; background: radial-gradient(circle at center, #1b263b 0%, var(--navy) 100%); }
+        .email-input { width: 90%; max-width: 400px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 50px; color: white; margin-bottom: 20px; outline: none; }
+
+        .news-footer { width: 100%; background: #000; position: fixed; bottom: 0; z-index: 1001; display: flex; align-items: stretch; height: 38px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .news-label-live { background: #e21e26; color: white; font-weight: 900; font-style: italic; padding: 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; border-right: 4px solid #111; z-index: 3; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
+        .news-label-live span { transform: skewX(20deg); }
+        .news-label-breaking { background: #1a1a1a; color: white; font-weight: 900; font-style: italic; padding: 0 25px 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; z-index: 2; position: relative; box-shadow: 5px 0 15px rgba(0,0,0,0.8); }
+        .news-label-breaking span { transform: skewX(20deg); }
+        .news-label-breaking::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: repeating-linear-gradient(-70deg, #e21e26, #e21e26 2px, transparent 2px, transparent 4px); border-left: 2px solid #000; }
+        .news-ticker-container { overflow: hidden; flex: 1; display: flex; align-items: center; padding-left: 10px; }
+        .news-ticker { display: flex; white-space: nowrap; animation: newsScroll 30s linear infinite; }
+        @keyframes newsScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .news-item { padding: 0 50px; font-size: 11px; color: var(--white); font-weight: 400; text-transform: uppercase; letter-spacing: 0.5px; }
+        .news-item b { color: #e21e26; margin-right: 5px; font-weight: 900; font-style: italic; }
+
+        footer { text-align: center; padding: 100px 20px 150px; color: #444; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* =========================================
+           13. MEDIA QUERIES (Móviles)
+           ========================================= */
+        @media (max-width: 600px) {
+            #banner-container { height: 300px; }
+            
+            .news-footer { height: 28px; }
+            .news-label-live { font-size: 10px; padding: 0 12px; }
+            .news-label-breaking { font-size: 10px; padding: 0 15px 0 12px; }
+            .news-item { font-size: 9px; padding: 0 25px; }
+            .news-item b { font-size: 10px; }
+
+            .chart-container { height: 350px; padding: 15px; margin: 40px auto; }
+            .chart-wrapper { height: 220px; }
+            .optima-tangencia { bottom: 5px; right: 5px; }
+            
+            .monitoring-section h2 { font-size: 24px; margin-bottom: 30px; }
+            .ecg-container { height: 100px; }
+            .ecg-svg { height: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker__item">S&P 500 <span style="color:var(--up)">▲ +1.2%</span></div>
+            <div class="ticker__item">NASDAQ <span style="color:var(--up)">▲ +0.9%</span></div>
+            <div class="ticker__item">BTC/USD <span style="color:var(--up)">▲ +2.4%</span></div>
+            <div class="ticker__item">NVDA <span style="color:var(--up)">▲ +5.2%</span></div>
+            <div class="ticker__item">S&P 500 <span style="color:var(--up)">▲ +1.2%</span></div>
+            <div class="ticker__item">NASDAQ <span style="color:var(--up)">▲ +0.9%</span></div>
+        </div>
+    </div>
+
+    <section class="hero">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgOTAiIHdpZHRoPSIzMjAiIGhlaWdodD0iOTAiPgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjkwIiBmaWxsPSIjYzgxMDJlIiByeD0iMiIvPgogIDx0ZXh0IHg9IjIwIiB5PSI1OCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI3MDAiIGxldHRlci1zcGFjaW5nPSIzIiBmaWxsPSIjZmZmZmZmIj5FR0FEQTwvdGV4dD4KICA8dGV4dCB4PSIyMSIgeT0iNzQiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkuNSIgZm9udC13ZWlnaHQ9IjQwMCIgbGV0dGVyLXNwYWNpbmc9IjIuNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjU1KSI+RVNUUkFURUdJQSBHTE9CQUwgREUgQUNUSVZPUzwvdGV4dD4KICA8dGV4dCB4PSIyMSIgeT0iMjIiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiIGZvbnQtd2VpZ2h0PSI0MDAiIGxldHRlci1zcGFjaW5nPSIxLjUiIGZpbGw9IiNjODEwMmUiPkRJTsOBTUlDT1MgQVZBTlpBRE9TPC90ZXh0Pgo8L3N2Zz4=" alt="Logo EGADA" class="hero-logo">
+        <p style="color: var(--gold); letter-spacing: 10px; font-weight: 600; margin-bottom: 15px;">EGADA INSTITUTIONAL TERMINAL</p>
+        <h1 class="mega-slogan">MÁS DATOS.<br>MENOS MIEDO.</h1>
+        <p class="hero-p">Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.</p>
+        <a href="#" class="btn-pulse">LANZAR TERMINAL</a>
+    </section>
+
+    <div class="brokers-strip">
+        <p style="font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Compatible con los principales brokers internacionales</p>
+        <div class="brokers-container">
+            <!-- BROKER 1 → pega aquí la URL del logo de Interactive Brokers -->
+            <img src="URL_LOGO_IBKR_AQUI" alt="Interactive Brokers" class="broker-logo">
+            <!-- BROKER 2 → pega aquí la URL del logo de GBM -->
+            <img src="URL_LOGO_GBM_AQUI" alt="GBM" class="broker-logo">
+            <!-- BROKER 3 → pega aquí la URL del logo de Schwab -->
+            <img src="URL_LOGO_SCHWAB_AQUI" alt="Schwab" class="broker-logo">
+            <!-- BROKER 4 → pega aquí la URL del logo de eToro -->
+            <img src="URL_LOGO_ETORO_AQUI" alt="eToro" class="broker-logo">
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-header">
+            <h3>SIMULACIÓN DE ESCENARIOS <span>MONTE CARLO</span></h3>
+            <p>Proyección estadística a 50 periodos</p>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="monteCarloChart"></canvas>
+            <div class="optima-tangencia">ÓPTIMA<br>TANGENCIA</div>
+        </div>
+    </div>
+
+    <section class="mobile-section">
+        <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 10px;">Tu portafolio sobre la marcha.</h2>
+        <p style="color: #929497; margin-bottom: 50px;">En cualquier lugar y en cualquier momento.</p>
+
+        <div class="transparent-phone-mockup">
+            <div class="dynamic-island"></div>
+            <div class="iphone-screen">
+                <div class="phone-status-bar">
+                    <span class="status-left">9:41</span>
+                    <span class="status-right">5G &nbsp; 80%</span>
+                </div>
+                
+                <div class="asset-carousel-container">
+                    <div class="asset-carousel">
+                        <div class="asset-card">
+                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">NVDA</span>
+                            <div class="asset-logo-container"><img src="URL_LOGO_NVDA_AQUI" class="asset-logo-img"></div>
+                            <b style="font-size: 22px;">+730%</b>
+                        </div>
+                        <div class="asset-card">
+                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">SPY</span>
+                            <div class="asset-logo-container"><img src="URL_LOGO_SPY_AQUI" class="asset-logo-img"></div>
+                            <b style="font-size: 22px;">+22%</b>
+                        </div>
+                        <div class="asset-card">
+                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">AAPL</span>
+                            <div class="asset-logo-container"><img src="URL_LOGO_AAPL_AQUI" class="asset-logo-img"></div>
+                            <b style="font-size: 22px;">+145%</b>
+                        </div>
+                        
+                        <div class="asset-card">
+                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">NVDA</span>
+                            <div class="asset-logo-container"><img src="URL_LOGO_NVDA_AQUI" class="asset-logo-img"></div>
+                            <b style="font-size: 22px;">+730%</b>
+                        </div>
+                        <div class="asset-card">
+                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">SPY</span>
+                            <div class="asset-logo-container"><img src="URL_LOGO_SPY_AQUI" class="asset-logo-img"></div>
+                            <b style="font-size: 22px;">+22%</b>
+                        </div>
+                        <div class="asset-card">
+                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">AAPL</span>
+                            <div class="asset-logo-container"><img src="URL_LOGO_AAPL_AQUI" class="asset-logo-img"></div>
+                            <b style="font-size: 22px;">+145%</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bubble-section">
+        <p class="bubble-section-title">Portafolios objetivo para tu perfil de riesgo</p>
+        
+        <div class="mini-bubble mb-1"></div>
+        <div class="mini-bubble mb-2"></div>
+        <div class="mini-bubble mb-3"></div>
+        <div class="mini-bubble mb-4"></div>
+        <div class="mini-bubble mb-5"></div>
+
+        <div class="bubble-container">
+            <div class="bubble-item b-cyan"><span class="bubble-percent">30%</span><span class="bubble-ticker">NVDA</span></div>
+            <div class="bubble-item b-lime"><span class="bubble-percent">30%</span><span class="bubble-ticker">GLDN</span></div>
+            <div class="bubble-item b-magenta"><span class="bubble-percent">30%</span><span class="bubble-ticker">WMT</span></div>
+            <div class="bubble-item b-orange"><span class="bubble-percent">10%</span><span class="bubble-ticker">SPX</span></div>
+        </div>
+    </section>
+
+    <section class="grid">
+        <div class="glass-card-wrapper">
+            <div class="card-bg-shape shape-1"></div>
+            <div class="glass-card">
+                <span class="card-pretitle">- CORE -</span>
+                <div class="card-badge bg-orange">ALGO</div>
+                <h3>Markowitz Pro</h3>
+                <p>Construimos tu Frontera Eficiente personalizada buscando el máximo Sharpe Ratio posible para tu perfil.</p>
+            </div>
+        </div>
+
+        <div class="glass-card-wrapper">
+            <div class="card-bg-shape shape-2"></div>
+            <div class="glass-card">
+                <span class="card-pretitle">- SAFETY -</span>
+                <div class="card-badge bg-green">RISK</div>
+                <h3>Control de Riesgo</h3>
+                <p>Monitoreamos tu Maximum Drawdown y Value at Risk para que nunca arriesgues más de lo planeado.</p>
+            </div>
+        </div>
+
+        <div class="glass-card-wrapper">
+            <div class="card-bg-shape shape-3"></div>
+            <div class="glass-card">
+                <span class="card-pretitle">- ACTION -</span>
+                <div class="card-badge bg-yellow">EXEC</div>
+                <h3>Alertas de Ejecución</h3>
+                <p>Recibe notificaciones precisas de rebalanceo. Sabrás exactamente qué vender y qué comprar cada semana.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="monitoring-section">
+        <h2>Monitoreo Semanal y Puntual</h2>
+        <div class="ecg-container">
+            <svg class="ecg-svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
+                <path class="ecg-path" d="M 0 50 L 150 50 L 170 40 L 190 50 L 220 50 L 235 10 L 265 90 L 280 50 L 310 50 L 330 60 L 350 50 L 500 50 L 520 40 L 540 50 L 570 50 L 585 10 L 615 90 L 630 50 L 660 50 L 680 60 L 700 50 L 850 50 L 870 40 L 890 50 L 920 50 L 935 10 L 965 90 L 980 50 L 1000 50" />
+            </svg>
+        </div>
+    </section>
+
+    <div id="banner-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <section class="faq-section">
+        <h2>Preguntas Frecuentes</h2>
+        <div class="faq-container">
+            <details class="faq-item">
+                <summary>¿Cuál es la primera pregunta frecuente de prueba?</summary>
+                <div class="faq-content">
+                    <p>Este es un texto de relleno que podrás editar más adelante.</p>
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary>¿Cuál es la segunda pregunta frecuente de prueba?</summary>
+                <div class="faq-content">
+                    <p>Este es un texto de relleno que podrás editar más adelante.</p>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <section class="newsletter-section">
+        <h2 style="color: var(--gold); margin-bottom: 10px;">Únete a la élite de inversores objetivos.</h2>
+        <input type="email" class="email-input" placeholder="[email protected]"><br>
+        <a href="#" class="btn-pulse" style="font-size: 16px; padding: 15px 40px;">Suscribirme ahora</a>
+    </section>
+
+    <div class="news-footer">
+        <div class="news-label-live"><span>LIVE</span></div>
+        <div class="news-label-breaking"><span>BREAKING NEWS</span></div>
+        <div class="news-ticker-container">
+            <div class="news-ticker">
+                <div class="news-item"><b>MARKET:</b> La Fed mantiene tasas sin cambios.</div>
+                <div class="news-item"><b>ALERT:</b> Tu portafolio sugiere rebalanceo.</div>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>© 2026 EGADA Portfolio Manager | Ciudad de México</p></footer>
+
+    <script>
+        const ctx = document.getElementById('monteCarloChart').getContext('2d');
+        const datasets = [];
+        for (let i = 0; i < 15; i++) {
+            let data = [1];
+            for (let j = 1; j < 50; j++) { data.push(data[j-1] * (1 + (Math.random() * 0.04 - 0.018))); }
+            datasets.push({ data: data, borderColor: 'rgba(201, 162, 39, 0.12)', borderWidth: 1.5, pointRadius: 0, tension: 0.4 });
+        }
+        let targetData = [1];
+        for (let k = 1; k < 50; k++) { targetData.push(targetData[k-1] * 1.008); }
+        datasets.push({ data: targetData, borderColor: 'rgba(201, 162, 39, 0.25)', borderWidth: 8, pointRadius: 0, tension: 0 });
+        datasets.push({ label: 'Objetivo EGADA', data: targetData, borderColor: '#c9a227', borderWidth: 2, pointRadius: 0, tension: 0 });
+        new Chart(ctx, {
+            type: 'line',
+            data: { labels: Array.from({length: 50}, (_, i) => i), datasets: datasets },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#888', font: {size: 10} } } },
+                animation: false 
+            }
+        });
+    </script>
+    <script>
+        (function() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('banner-container');
+            let radius = 80; let growth = 0.9; let history = []; let trailLength = 45; 
+            function resize() {
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = container.offsetWidth * dpr; canvas.height = container.offsetHeight * dpr;
+                ctx.scale(dpr, dpr);
+            }
+            window.addEventListener('resize', resize); resize();
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const centerX = container.offsetWidth / 2; const centerY = container.offsetHeight / 2;
+                history.push(radius); if (history.length > trailLength) history.shift();
+                for (let i = 0; i < history.length; i++) {
+                    const opacity = i / history.length;
+                    ctx.beginPath(); ctx.arc(centerX, centerY, history[i], 0, Math.PI * 2);
+                    ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 255, 255, 0.9)"; 
+                    ctx.lineWidth = 0.1 + (i * 0.02); 
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.4})`; ctx.stroke();
+                }
+                ctx.shadowBlur = 8; ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                const isMobile = container.offsetWidth < 500;
+                if (isMobile) {
+                    ctx.font = "300 20px Arial"; ctx.fillText("[Asistencia Inteligente]", centerX, centerY);
+                } else {
+                    ctx.font = "300 25px Arial"; ctx.fillText("[Asistencia Inteligente en cualquier momento]", centerX, centerY);
+                }
+                const maxLimit = Math.min(container.offsetWidth, container.offsetHeight) * 0.45; const minLimit = 40;
+                radius += growth; if (radius > maxLimit || radius < minLimit) growth = -growth;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+    </script>
+    </script>
+</body>
+</html>
