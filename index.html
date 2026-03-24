@@ -46,35 +46,52 @@
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         /* =========================================
-           2. TICKER SUPERIOR
+           2. TICKER SUPERIOR (SEAMLESS LOOP)
            ========================================= */
         .ticker-wrap { 
-            width: 100%; 
-            overflow: hidden; 
-            background: rgba(13, 27, 42, 0.2); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
-            padding: 12px 0; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
+            width: 100%; overflow: hidden; background: rgba(13, 27, 42, 0.2); 
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 12px 0; 
+            position: sticky; top: 0; z-index: 1000; 
         }
-        .ticker { display: flex; white-space: nowrap; animation: ticker 40s linear infinite; }
-        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .ticker { 
+            display: flex; white-space: nowrap; width: max-content;
+            animation: ticker 25s linear infinite; 
+        }
+        @keyframes ticker { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
         .ticker__item { display: inline-flex; align-items: center; padding: 0 40px; font-size: 13px; font-weight: 600; }
 
         /* =========================================
-           3. HERO SECTION
+           3. HERO SECTION (TÍTULO ANIMADO)
            ========================================= */
         .hero { text-align: center; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; }
         .hero-logo { 
-            height: 120px; 
-            margin: 0 auto 30px auto; 
-            filter: brightness(1.1); 
-            display: block; 
+            height: 120px; margin: 0 auto 30px auto; filter: brightness(1.1); display: block; 
         }
-        .mega-slogan { font-size: clamp(35px, 8vw, 90px); font-weight: 900; line-height: 0.9; background: linear-gradient(135deg, #FFF 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -3px; margin-bottom: 30px; }
+        
+        /* 👇 TÍTULO CON EFECTO DE LUZ (SHIMMER) 👇 */
+        .mega-slogan { 
+            font-size: clamp(35px, 8vw, 90px); 
+            font-weight: 900; 
+            line-height: 0.9; 
+            letter-spacing: -3px; 
+            margin-bottom: 30px; 
+            
+            /* El degradado es 200% más ancho para poder moverlo */
+            background: linear-gradient(to right, #FFF 20%, var(--gold) 50%, #FFF 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            animation: shineTitle 6s linear infinite;
+        }
+        
+        @keyframes shineTitle { 
+            to { background-position: 200% center; } 
+        }
+
         .hero-p { color: #929497; font-size: clamp(16px, 2vw, 22px); max-width: 800px; margin-bottom: 50px; font-weight: 300; }
 
         .btn-pulse { background: var(--gold); color: var(--navy); padding: 22px 60px; border-radius: 50px; font-weight: 900; text-decoration: none; display: inline-block; font-size: 20px; animation: pulse 2s infinite; }
@@ -85,150 +102,55 @@
            ========================================= */
         .brokers-strip { padding: 40px 0; background: rgba(0,0,0,0.2); text-align: center; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .brokers-container { display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; }
-        
-        .broker-logo { 
-            height: 60px; 
-            filter: grayscale(100%) brightness(200%); 
-            opacity: 0.5;
-            animation: brokerPulse 4s infinite ease-in-out;
-            border-radius: 12px;
-        }
-
+        .broker-logo { height: 60px; filter: grayscale(100%) brightness(200%); opacity: 0.5; animation: brokerPulse 4s infinite ease-in-out; border-radius: 12px; }
         .broker-logo:nth-child(1) { animation-delay: 0s; }
         .broker-logo:nth-child(2) { animation-delay: 1s; }
         .broker-logo:nth-child(3) { animation-delay: 2s; }
         .broker-logo:nth-child(4) { animation-delay: 3s; }
-
-        @keyframes brokerPulse {
-            0%, 100% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; }
-            15% { transform: scale(1.15); filter: grayscale(0%) brightness(100%); opacity: 1; }
-            30% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; }
-        }
+        @keyframes brokerPulse { 0%, 100% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; } 15% { transform: scale(1.15); filter: grayscale(0%) brightness(100%); opacity: 1; } 30% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; } }
 
         /* =========================================
            5. GRÁFICA MONTE CARLO (PLATEADA/GLASS)
            ========================================= */
         .chart-container { 
-            width: 95%; 
-            max-width: 1000px; 
-            height: 420px; 
-            margin: 60px auto; 
-            padding: 30px; 
-            position: relative; 
+            width: 95%; max-width: 1000px; height: 420px; margin: 60px auto; padding: 30px; position: relative; 
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px; 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; 
             border: 1.5px solid rgba(255, 255, 255, 0.1); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
-            animation: borderPulseSubtle 3s infinite alternate;
-            overflow: hidden;
+            animation: borderPulseSubtle 3s infinite alternate; overflow: hidden;
         }
 
-        @keyframes borderPulseSubtle {
-            0% { border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 10px rgba(255, 255, 255, 0.05); }
-            100% { border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 255, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05); }
-        }
+        @keyframes borderPulseSubtle { 0% { border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 10px rgba(255, 255, 255, 0.05); } 100% { border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 255, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05); } }
 
-        .chart-container::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: skewX(-25deg);
-            animation: lightSweep 5s infinite;
-            pointer-events: none; 
-        }
+        .chart-container::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); transform: skewX(-25deg); animation: lightSweep 5s infinite; pointer-events: none; }
+        @keyframes lightSweep { to { left: 100%; } }
 
-        @keyframes lightSweep {
-            to { left: 100%; }
-        }
-
-        .chart-header {
-            text-align: center;
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 2; 
-        }
-
+        .chart-header { text-align: center; margin-bottom: 25px; position: relative; z-index: 2; }
         .chart-header h3 { font-weight: 700; color: var(--white); font-size: 18px; letter-spacing: 1px; margin-bottom: 5px; }
         .chart-header p { color: var(--white); opacity: 0.6; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
 
         .chart-wrapper { position: relative; height: 300px; width: 100%; z-index: 2; }
-
         #monteCarloChart { clip-path: inset(0 100% 0 0); animation: drawChart 6s ease-out forwards; animation-delay: 0.5s; }
         @keyframes drawChart { 100% { clip-path: inset(0 0 0 0); } }
 
-        .optima-tangencia {
-            position: absolute; bottom: 10px; right: 15px; color: var(--gold); font-size: clamp(16px, 4vw, 26px);
-            font-weight: 900; text-align: right; line-height: 1.1; letter-spacing: 1px; opacity: 0; 
-            animation: fadeInOptima 2s ease-out forwards; animation-delay: 4.5s; text-shadow: 0 0 15px rgba(201, 162, 39, 0.6);
-            pointer-events: none;
-        }
-
+        .optima-tangencia { position: absolute; bottom: 10px; right: 15px; color: var(--gold); font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-align: right; line-height: 1.1; letter-spacing: 1px; opacity: 0; animation: fadeInOptima 2s ease-out forwards; animation-delay: 4.5s; text-shadow: 0 0 15px rgba(201, 162, 39, 0.6); pointer-events: none; }
         @keyframes fadeInOptima { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 0.9; transform: scale(1); } }
 
         /* =========================================
-           6. IPHONE MOCKUP Y ANIMACIÓN SIRI (REFINADA)
+           6. IPHONE MOCKUP Y ANIMACIÓN SIRI
            ========================================= */
         .mobile-section { text-align: center; padding: 80px 10px; background: transparent; }
-        .transparent-phone-mockup {
-            width: 300px; height: 620px; border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 54px;
-            margin: 0 auto; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; 
-        }
-        
+        .transparent-phone-mockup { width: 300px; height: 620px; border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 54px; margin: 0 auto; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
         .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 90px; height: 24px; background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; z-index: 100; }
         
-        .iphone-screen {
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            position: relative;
-            border-radius: 54px;
-            z-index: 1;
-        }
+        .iphone-screen { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; border-radius: 54px; z-index: 1; }
 
-        /* 👇 ANIMACIÓN SIRI: MÁS DELGADA Y DIFUMINADA 👇 */
-        .siri-container {
-            position: absolute;
-            inset: -2px; 
-            border-radius: 54px;
-            padding: 3px; 
-            
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            
-            pointer-events: none;
-            z-index: 20; 
-            filter: blur(2px); 
-        }
+        .siri-container { position: absolute; inset: -2px; border-radius: 54px; padding: 3px; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 20; filter: blur(2px); }
+        .siri-container::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, #00d4ff, #2d9cdb, #9b51e0, #ff0f7b, #f89b29, #ff0f7b, #9b51e0, #2d9cdb, #00d4ff); animation: spinSiri 4s linear infinite; filter: blur(15px); }
+        @keyframes spinSiri { 100% { transform: rotate(360deg); } }
 
-        .siri-container::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(
-                from 0deg,
-                #00d4ff, #2d9cdb, #9b51e0, #ff0f7b, #f89b29, #ff0f7b, #9b51e0, #2d9cdb, #00d4ff
-            );
-            animation: spinSiri 4s linear infinite;
-            filter: blur(15px); 
-        }
-
-        @keyframes spinSiri {
-            100% { transform: rotate(360deg); }
-        }
-
-        .phone-status-bar { 
-            width: 100%; display: flex; justify-content: space-between; align-items: center; 
-            font-size: 11px; color: rgba(255, 255, 255, 0.9); padding: 15px 25px 0 25px; 
-            margin-bottom: 25px; font-weight: 700; z-index: 5; position: relative;
-        }
+        .phone-status-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: rgba(255, 255, 255, 0.9); padding: 15px 25px 0 25px; margin-bottom: 25px; font-weight: 700; z-index: 5; position: relative; }
         .status-left { width: 60px; text-align: left; }
         .status-right { width: 70px; text-align: right; }
 
@@ -236,24 +158,9 @@
         .asset-carousel { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: scrollVertical 35s linear infinite; }
         @keyframes scrollVertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
-        .asset-card { 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); 
-            backdrop-filter: blur(24px); 
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.4);
-            border-left: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border-radius: 28px; 
-            padding: 25px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            width: 240px; 
-        }
+        .asset-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.4); border-left: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; align-items: center; width: 240px; }
         .asset-logo-container { width: 60px; height: 60px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; }
         .asset-logo-img { width: 100%; height: 100%; object-fit: contain; }
-        
         .asset-card b { color: var(--up); font-size: 22px; }
 
         /* =========================================
@@ -263,58 +170,16 @@
         .bubble-section-title { font-size: 18px; font-weight: 600; color: var(--gold); margin-bottom: 50px; letter-spacing: 1px; text-transform: uppercase; position: relative; z-index: 5; }
         .bubble-container { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
         
-        .bubble-item { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            border-radius: 50%; color: white; 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
+        .bubble-item { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; color: white; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
         .bubble-percent { font-size: 28px; font-weight: 900; }
         .bubble-ticker { font-size: 12px; opacity: 0.9; margin-top: 5px; font-weight: bold;}
         
-        .b-cyan { 
-            width: 140px; height: 140px; 
-            background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(0, 191, 255, 0.05)); 
-            border: 1px solid rgba(0, 191, 255, 0.2);
-            border-top: 1.5px solid rgba(0, 191, 255, 0.6);
-            border-left: 1.5px solid rgba(0, 191, 255, 0.6);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 191, 255, 0.15);
-            animation: dynamicFloat1 6s infinite ease-in-out; 
-        }
-        
-        .b-lime { 
-            width: 160px; height: 160px; 
-            background: linear-gradient(135deg, rgba(173, 255, 47, 0.25), rgba(173, 255, 47, 0.05)); 
-            border: 1px solid rgba(173, 255, 47, 0.2);
-            border-top: 1.5px solid rgba(173, 255, 47, 0.6);
-            border-left: 1.5px solid rgba(173, 255, 47, 0.6);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(173, 255, 47, 0.15);
-            animation: dynamicFloat2 7s infinite ease-in-out; 
-        }
-        
-        .b-magenta { 
-            width: 130px; height: 130px; 
-            background: linear-gradient(135deg, rgba(255, 0, 255, 0.25), rgba(255, 0, 255, 0.05)); 
-            border: 1px solid rgba(255, 0, 255, 0.2);
-            border-top: 1.5px solid rgba(255, 0, 255, 0.6);
-            border-left: 1.5px solid rgba(255, 0, 255, 0.6);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(255, 0, 255, 0.15);
-            animation: dynamicFloat3 6.5s infinite ease-in-out; 
-        }
-        
-        .b-orange { 
-            width: 110px; height: 110px; 
-            background: linear-gradient(135deg, rgba(255, 165, 0, 0.25), rgba(255, 165, 0, 0.05)); 
-            border: 1px solid rgba(255, 165, 0, 0.2);
-            border-top: 1.5px solid rgba(255, 165, 0, 0.6);
-            border-left: 1.5px solid rgba(255, 165, 0, 0.6);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(255, 165, 0, 0.15);
-            animation: dynamicFloat4 8s infinite ease-in-out; 
-        }
+        .b-cyan { width: 140px; height: 140px; background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(0, 191, 255, 0.05)); border: 1px solid rgba(0, 191, 255, 0.2); border-top: 1.5px solid rgba(0, 191, 255, 0.6); border-left: 1.5px solid rgba(0, 191, 255, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 191, 255, 0.15); animation: dynamicFloat1 6s infinite ease-in-out; }
+        .b-lime { width: 160px; height: 160px; background: linear-gradient(135deg, rgba(173, 255, 47, 0.25), rgba(173, 255, 47, 0.05)); border: 1px solid rgba(173, 255, 47, 0.2); border-top: 1.5px solid rgba(173, 255, 47, 0.6); border-left: 1.5px solid rgba(173, 255, 47, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(173, 255, 47, 0.15); animation: dynamicFloat2 7s infinite ease-in-out; }
+        .b-magenta { width: 130px; height: 130px; background: linear-gradient(135deg, rgba(255, 0, 255, 0.25), rgba(255, 0, 255, 0.05)); border: 1px solid rgba(255, 0, 255, 0.2); border-top: 1.5px solid rgba(255, 0, 255, 0.6); border-left: 1.5px solid rgba(255, 0, 255, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(255, 0, 255, 0.15); animation: dynamicFloat3 6.5s infinite ease-in-out; }
+        .b-orange { width: 110px; height: 110px; background: linear-gradient(135deg, rgba(255, 165, 0, 0.25), rgba(255, 165, 0, 0.05)); border: 1px solid rgba(255, 165, 0, 0.2); border-top: 1.5px solid rgba(255, 165, 0, 0.6); border-left: 1.5px solid rgba(255, 165, 0, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(255, 165, 0, 0.15); animation: dynamicFloat4 8s infinite ease-in-out; }
 
         .mini-bubble { position: absolute; border-radius: 50%; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1; opacity: 0.8; }
-        
         .mb-1 { width: 60px; height: 60px; top: 15%; left: 10%; background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(0, 191, 255, 0.05)); border: 1px solid rgba(0, 191, 255, 0.2); border-top: 1px solid rgba(0, 191, 255, 0.5); border-left: 1px solid rgba(0, 191, 255, 0.5); animation: dynamicFloat2 9s infinite ease-in-out reverse; }
         .mb-2 { width: 80px; height: 80px; top: 60%; left: 80%; background: linear-gradient(135deg, rgba(173, 255, 47, 0.2), rgba(173, 255, 47, 0.05)); border: 1px solid rgba(173, 255, 47, 0.2); border-top: 1px solid rgba(173, 255, 47, 0.5); border-left: 1px solid rgba(173, 255, 47, 0.5); animation: dynamicFloat1 11s infinite ease-in-out; }
         .mb-3 { width: 45px; height: 45px; top: 20%; right: 15%; background: linear-gradient(135deg, rgba(255, 0, 255, 0.2), rgba(255, 0, 255, 0.05)); border: 1px solid rgba(255, 0, 255, 0.2); border-top: 1px solid rgba(255, 0, 255, 0.5); border-left: 1px solid rgba(255, 0, 255, 0.5); animation: dynamicFloat3 8s infinite ease-in-out reverse; }
@@ -329,16 +194,7 @@
         /* =========================================
            8. GLASS CARDS 
            ========================================= */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 40px; 
-            padding: 80px 5%; 
-            width: 100%; 
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding: 80px 5%; width: 100%; max-width: 1200px; margin: 0 auto; }
         .glass-card-wrapper { position: relative; z-index: 1; }
         .card-bg-shape { position: absolute; border-radius: 24px; z-index: -1; transition: all 0.5s ease; }
         
@@ -347,18 +203,9 @@
         .shape-3 { top: -25px; right: -25px; width: 120px; height: 120px; background: linear-gradient(135deg, #f1c40f, #e67e22); box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4); }
 
         .glass-card { 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)); 
-            backdrop-filter: blur(24px); 
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            border-top: 1px solid rgba(255, 255, 255, 0.4);
-            border-left: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 28px; 
-            padding: 40px; 
-            transition: 0.4s ease; 
-            height: 100%;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            display: flex; flex-direction: column; align-items: flex-start;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.4); border-left: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 28px; padding: 40px; transition: 0.4s ease; height: 100%; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; align-items: flex-start;
         }
 
         .glass-card-wrapper:hover .glass-card { transform: translateY(-5px); box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.5); border: 1px solid rgba(201, 162, 39, 0.3); }
@@ -366,11 +213,9 @@
 
         .card-pretitle { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: 700; }
         .card-badge { display: inline-block; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-size: 11px; letter-spacing: 2px; color: #fff; margin-bottom: 25px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-
         .bg-orange { background: linear-gradient(135deg, #ff512f, #dd2476); }
         .bg-green { background: linear-gradient(135deg, #0ecb81, #087a4d); }
         .bg-yellow { background: linear-gradient(135deg, #f1c40f, #e67e22); }
-
         .glass-card h3 { color: var(--gold); font-size: 26px; margin-bottom: 15px; letter-spacing: -0.5px; font-weight: 300;}
         .glass-card p { color: #e0e1dd; line-height: 1.6; font-size: 15px; opacity: 0.8;}
 
@@ -381,32 +226,14 @@
         .monitoring-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
 
         .ecg-container {
-            width: 100%; max-width: 900px; height: 150px; 
-            border-radius: 20px;
-            display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
-            animation: borderPulseSubtle 3s infinite alternate;
+            width: 100%; max-width: 900px; height: 150px; border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05); animation: borderPulseSubtle 3s infinite alternate;
         }
 
-        .ecg-container::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px; z-index: 0;
-        }
-
+        .ecg-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 20px 20px; z-index: 0; }
         .ecg-svg { width: 100%; height: 100px; position: relative; z-index: 1; }
-
-        .ecg-path {
-            fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
-            stroke-dasharray: 2000; stroke-dashoffset: 2000;
-            animation: ecgDraw 4s linear infinite, ecgColorChange 9s infinite;
-            filter: drop-shadow(0 0 6px currentColor); 
-        }
-
+        .ecg-path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: ecgDraw 4s linear infinite, ecgColorChange 9s infinite; filter: drop-shadow(0 0 6px currentColor); }
         @keyframes ecgDraw { 0% { stroke-dashoffset: 2000; } 100% { stroke-dashoffset: 0; } }
         @keyframes ecgColorChange { 0%, 25% { stroke: var(--up); } 33%, 58% { stroke: var(--gold); } 66%, 91% { stroke: var(--down); } 100% { stroke: var(--up); } }
 
@@ -415,20 +242,10 @@
            ========================================= */
         #banner-container { width: 100%; max-width: 1000px; height: 400px; margin: 20px auto; position: relative; background: transparent; }
         #banner-container canvas { display: block; width: 100%; height: 100%; }
-
-        .banner-btn {
-            position: absolute;
-            top: 65%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-            padding: 15px 40px;
-            z-index: 10;
-            white-space: nowrap;
-        }
+        .banner-btn { position: absolute; top: 65%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; padding: 15px 40px; z-index: 10; white-space: nowrap; }
 
         /* =========================================
-           11. SMART INSTALL PROMPT (NUEVO)
+           11. SMART INSTALL PROMPT
            ========================================= */
         #install-prompt {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
@@ -458,21 +275,22 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
-           13. NEWSLETTER Y FOOTER
+           13. NEWSLETTER Y FOOTER (SEAMLESS LOOP FIX)
            ========================================= */
         .newsletter-section { padding: 100px 20px; text-align: center; width: 100%; background: radial-gradient(circle at center, #1b263b 0%, var(--navy) 100%); }
         .email-input { width: 90%; max-width: 400px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 50px; color: white; margin-bottom: 20px; outline: none; }
 
         .news-footer { width: 100%; background: #000; position: fixed; bottom: 0; z-index: 1001; display: flex; align-items: stretch; height: 38px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .news-label-live { background: #e21e26; color: white; font-weight: 900; font-style: italic; padding: 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; border-right: 4px solid #111; z-index: 3; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
+        .news-label-live { background: #e21e26; color: white; font-weight: 900; font-style: italic; padding: 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; border-right: 4px solid #111; z-index: 3; box-shadow: 2px 0 10px rgba(0,0,0,0.5); flex-shrink: 0; white-space: nowrap; }
         .news-label-live span { transform: skewX(20deg); }
-        .news-label-breaking { background: #1a1a1a; color: white; font-weight: 900; font-style: italic; padding: 0 25px 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; z-index: 2; position: relative; box-shadow: 5px 0 15px rgba(0,0,0,0.8); }
+        .news-label-breaking { background: #1a1a1a; color: white; font-weight: 900; font-style: italic; padding: 0 25px 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; z-index: 2; position: relative; box-shadow: 5px 0 15px rgba(0,0,0,0.8); flex-shrink: 0; white-space: nowrap; }
         .news-label-breaking span { transform: skewX(20deg); }
         .news-label-breaking::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: repeating-linear-gradient(-70deg, #e21e26, #e21e26 2px, transparent 2px, transparent 4px); border-left: 2px solid #000; }
+        
         .news-ticker-container { overflow: hidden; flex: 1; display: flex; align-items: center; padding-left: 10px; }
-        .news-ticker { display: flex; white-space: nowrap; animation: newsScroll 30s linear infinite; }
-        @keyframes newsScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .news-item { padding: 0 50px; font-size: 11px; color: var(--white); font-weight: 400; text-transform: uppercase; letter-spacing: 0.5px; }
+        .news-ticker { display: flex; white-space: nowrap; width: max-content; animation: newsScroll 15s linear infinite; }
+        @keyframes newsScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .news-item { padding: 0 40px; font-size: 11px; color: var(--white); font-weight: 400; text-transform: uppercase; letter-spacing: 0.5px; }
         .news-item b { color: #e21e26; margin-right: 5px; font-weight: 900; font-style: italic; }
 
         footer { text-align: center; padding: 100px 20px 150px; color: #444; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -509,17 +327,21 @@
             <div class="ticker__item">NASDAQ <span style="color:var(--up)">▲ +0.9%</span></div>
             <div class="ticker__item">BTC/USD <span style="color:var(--up)">▲ +2.4%</span></div>
             <div class="ticker__item">NVDA <span style="color:var(--up)">▲ +5.2%</span></div>
+            
             <div class="ticker__item">S&P 500 <span style="color:var(--up)">▲ +1.2%</span></div>
             <div class="ticker__item">NASDAQ <span style="color:var(--up)">▲ +0.9%</span></div>
+            <div class="ticker__item">BTC/USD <span style="color:var(--up)">▲ +2.4%</span></div>
+            <div class="ticker__item">NVDA <span style="color:var(--up)">▲ +5.2%</span></div>
         </div>
     </div>
 
     <section class="hero">
         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgOTAiIHdpZHRoPSIzMjAiIGhlaWdodD0iOTAiPgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjkwIiBmaWxsPSIjYzgxMDJlIiByeD0iMiIvPgogIDx0ZXh0IHg9IjIwIiB5PSI1OCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI3MDAiIGxldHRlci1zcGFjaW5nPSIzIiBmaWxsPSIjZmZmZmZmIj5FR0FEQTwvdGV4dD4KICA8dGV4dCB4PSIyMSIgeT0iNzQiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkuNSIgZm9udC13ZWlnaHQ9IjQwMCIgbGV0dGVyLXNwYWNpbmc9IjIuNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjU1KSI+RVNUUkFURUdJQSBHTE9CQUwgREUgQUNUSVZPUzwvdGV4dD4KICA8dGV4dCB4PSIyMSIgeT0iMjIiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiIGZvbnQtd2VpZ2h0PSI0MDAiIGxldHRlci1zcGFjaW5nPSIxLjUiIGZpbGw9IiNjODEwMmUiPkRJTsOBTUlDT1MgQVZBTlpBRE9TPC90ZXh0Pgo8L3N2Zz4=" alt="Logo EGADA" class="hero-logo">
         <p style="color: var(--gold); letter-spacing: 10px; font-weight: 600; margin-bottom: 15px;">EGADA INSTITUTIONAL TERMINAL</p>
-        <h1 class="mega-slogan">+ INFORMACIÓN.<br>- RIESGO.</h1>
-        <p class="hero-p">Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.</p>
         
+        <h1 class="mega-slogan">+ INFORMACIÓN.<br>- RIESGO.</h1>
+        
+        <p class="hero-p">Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.</p>
         <a href="AQUI_TU_ENLACE_TERMINAL" class="btn-pulse">LANZAR TERMINAL</a>
     </section>
 
@@ -692,6 +514,8 @@
             <div class="news-ticker">
                 <div class="news-item"><b>MARKET:</b> La Fed mantiene tasas sin cambios.</div>
                 <div class="news-item"><b>ALERT:</b> Tu portafolio sugiere rebalanceo.</div>
+                <div class="news-item"><b>MARKET:</b> La Fed mantiene tasas sin cambios.</div>
+                <div class="news-item"><b>ALERT:</b> Tu portafolio sugiere rebalanceo.</div>
             </div>
         </div>
     </div>
@@ -777,7 +601,6 @@
             draw();
         })();
     </script>
-    
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const prompt = document.getElementById('install-prompt');
