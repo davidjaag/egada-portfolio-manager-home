@@ -1,29 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
-
-<meta name="theme-color" content="#0d1b2a">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="EGADA">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EGADA | Portfolio Tech Demo</title>
-    <head>
-    <meta charset="UTF-8">
-    <title>EGADA | Portfolio Tech Demo</title>
     
     <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     
-    <link rel="apple-touch-icon" href="favicon.png">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    ...
-</head>
+    <meta name="theme-color" content="#0d1b2a">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="EGADA">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
     <style>
         /* =========================================
            1. CONFIGURACIÓN GLOBAL DE COLORES 
@@ -113,7 +106,7 @@
         }
 
         /* =========================================
-           5. GRÁFICA MONTE CARLO 
+           5. GRÁFICA MONTE CARLO (PLATEADA/GLASS)
            ========================================= */
         .chart-container { 
             width: 95%; 
@@ -199,9 +192,9 @@
         /* 👇 ANIMACIÓN SIRI: MÁS DELGADA Y DIFUMINADA 👇 */
         .siri-container {
             position: absolute;
-            inset: -2px; /* Pequeño desfase para cubrir bien el borde */
+            inset: -2px; 
             border-radius: 54px;
-            padding: 3px; /* GROSOR DEL BORDE (Reducido a 3px para elegancia) */
+            padding: 3px; 
             
             -webkit-mask: 
                 linear-gradient(#fff 0 0) content-box, 
@@ -211,7 +204,7 @@
             
             pointer-events: none;
             z-index: 20; 
-            filter: blur(2px); /* Difumina ligeramente la máscara */
+            filter: blur(2px); 
         }
 
         .siri-container::before {
@@ -224,7 +217,7 @@
                 #00d4ff, #2d9cdb, #9b51e0, #ff0f7b, #f89b29, #ff0f7b, #9b51e0, #2d9cdb, #00d4ff
             );
             animation: spinSiri 4s linear infinite;
-            filter: blur(15px); /* DIFUMINADO DE COLORES (Waves suaves) */
+            filter: blur(15px); 
         }
 
         @keyframes spinSiri {
@@ -382,7 +375,7 @@
         .glass-card p { color: #e0e1dd; line-height: 1.6; font-size: 15px; opacity: 0.8;}
 
         /* =========================================
-           8.5. MONITOREO ECG 
+           8.5. MONITOREO ECG (PLATEADO/GLASS)
            ========================================= */
         .monitoring-section { padding: 80px 20px 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .monitoring-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
@@ -418,7 +411,7 @@
         @keyframes ecgColorChange { 0%, 25% { stroke: var(--up); } 33%, 58% { stroke: var(--gold); } 66%, 91% { stroke: var(--down); } 100% { stroke: var(--up); } }
 
         /* =========================================
-           10. ANIMACIÓN ASISTENCIA (BANNER) - Y ESTILOS DEL NUEVO BOTÓN
+           10. ANIMACIÓN ASISTENCIA Y BOTÓN
            ========================================= */
         #banner-container { width: 100%; max-width: 1000px; height: 400px; margin: 20px auto; position: relative; background: transparent; }
         #banner-container canvas { display: block; width: 100%; height: 100%; }
@@ -435,7 +428,22 @@
         }
 
         /* =========================================
-           11. PREGUNTAS FRECUENTES (FAQ)
+           11. SMART INSTALL PROMPT (NUEVO)
+           ========================================= */
+        #install-prompt {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
+            background: rgba(27, 38, 59, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 20px; display: none; z-index: 9999;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp { from { bottom: -100px; opacity: 0; } to { bottom: 80px; opacity: 1; } }
+        .prompt-header { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
+        .prompt-icon { width: 45px; height: 45px; border-radius: 10px; }
+        .prompt-instructions { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; font-size: 12px; text-align: center; color: var(--gold); font-weight: 600; }
+        .close-prompt { position: absolute; top: 10px; right: 15px; color: #fff; cursor: pointer; font-weight: 900; }
+
+        /* =========================================
+           12. PREGUNTAS FRECUENTES (FAQ)
            ========================================= */
         .faq-section { padding: 80px 20px; text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .faq-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
@@ -450,7 +458,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
-           12. NEWSLETTER Y FOOTER
+           13. NEWSLETTER Y FOOTER
            ========================================= */
         .newsletter-section { padding: 100px 20px; text-align: center; width: 100%; background: radial-gradient(circle at center, #1b263b 0%, var(--navy) 100%); }
         .email-input { width: 90%; max-width: 400px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 50px; color: white; margin-bottom: 20px; outline: none; }
@@ -470,7 +478,7 @@
         footer { text-align: center; padding: 100px 20px 150px; color: #444; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.05); }
 
         /* =========================================
-           13. MEDIA QUERIES (Móviles)
+           14. MEDIA QUERIES (Móviles)
            ========================================= */
         @media (max-width: 600px) {
             #banner-container { height: 300px; }
@@ -511,6 +519,7 @@
         <p style="color: var(--gold); letter-spacing: 10px; font-weight: 600; margin-bottom: 15px;">EGADA INSTITUTIONAL TERMINAL</p>
         <h1 class="mega-slogan">+ INFORMACIÓN.<br>- RIESGO.</h1>
         <p class="hero-p">Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.</p>
+        
         <a href="AQUI_TU_ENLACE_TERMINAL" class="btn-pulse">LANZAR TERMINAL</a>
     </section>
 
@@ -585,7 +594,8 @@
                         </div>
                     </div>
                 </div>
-            </div> </div>
+            </div>
+        </div>
     </section>
 
     <section class="bubble-section">
@@ -688,6 +698,20 @@
 
     <footer><p>© 2026 EGADA Portfolio Manager | Ciudad de México</p></footer>
 
+    <div id="install-prompt">
+        <span class="close-prompt" onclick="this.parentElement.style.display='none'">×</span>
+        <div class="prompt-header">
+            <img src="favicon.png" class="prompt-icon" alt="EGADA">
+            <div class="prompt-text">
+                <h4>Instalar EGADA Terminal</h4>
+                <p>Acceso rápido en tu pantalla de inicio</p>
+            </div>
+        </div>
+        <div class="prompt-instructions" id="instruction-text">
+            Toca compartir y "Agregar a inicio"
+        </div>
+    </div>
+
     <script>
         const ctx = document.getElementById('monteCarloChart').getContext('2d');
         const datasets = [];
@@ -752,6 +776,27 @@
             }
             draw();
         })();
+    </script>
+    
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const prompt = document.getElementById('install-prompt');
+            const instruction = document.getElementById('instruction-text');
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+            if (!isStandalone) {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                const isAndroid = /Android/.test(navigator.userAgent);
+
+                if (isIOS) {
+                    instruction.innerHTML = 'Toca el icono <img src="https://img.icons8.com/ios/20/ffffff/upload--v1.png" style="vertical-align:middle"> y luego "Agregar a inicio"';
+                    setTimeout(() => { prompt.style.display = 'block'; }, 3000);
+                } else if (isAndroid) {
+                    instruction.innerText = 'Toca los tres puntos (⋮) y elige "Instalar aplicación"';
+                    setTimeout(() => { prompt.style.display = 'block'; }, 3000);
+                }
+            }
+        });
     </script>
 </body>
 </html>
