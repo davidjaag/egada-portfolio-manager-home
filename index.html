@@ -1,637 +1,3356 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EGADA | Portfolio Management</title>
-    
-    <link rel="icon" href="favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
-    
-    <meta name="theme-color" content="#0d1b2a">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="EGADA | Portfolio Management">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EGADA | Plataforma de Inteligencia de Portafolio</title>
+  <meta name="theme-color" content="#060d1a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="EGADA | Portfolio Management" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --navy: #0d1b2a;
+      --navy-light: #1b263b;
+      --black-soft: #020e1e;
+      --bg: #060d1a;
+      --bg2: #0a1628;
+      --panel: rgba(27, 38, 59, 0.38);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #e0e1dd;
+      --sub: #9aacbf;
+      --gold: #f1c40f;
+      --cyan: #2be0ed;
+      --ok: #0ecb81;
+      --danger: #f6465d;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        /* =========================================
-           1. CONFIGURACIÓN GLOBAL DE COLORES 
-           ========================================= */
-        :root {
-            --navy: #0d1b2a;        
-            --navy-light: #1b263b;  
-            --gold: #c9a227;        
-            --white: #e0e1dd;       
-            --up: #0ecb81;          
-            --down: #f6465d;        
-            --black-soft: #020e1e;
-            --card-bg: rgba(27, 38, 59, 0.5); 
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+    }
+    body { --mx: 50%; --my: 50%; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { width: 100%; overflow-x: hidden; background: var(--navy); }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -24%;
+      z-index: -3;
+      background:
+        radial-gradient(600px 340px at 8% 8%, rgba(43, 224, 237, 0.16), transparent 62%),
+        radial-gradient(700px 430px at 92% -6%, rgba(241, 196, 15, 0.13), transparent 58%),
+        radial-gradient(640px 360px at 50% 100%, rgba(92, 103, 255, 0.12), transparent 66%);
+      animation: bgDrift 18s ease-in-out infinite alternate;
+    }
+    @keyframes bgDrift {
+      from { transform: translateY(-10px) scale(1); }
+      to { transform: translateY(14px) scale(1.02); }
+    }
 
-        body {
-            background: linear-gradient(135deg, var(--navy), var(--black-soft), var(--navy), var(--navy-light));
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--white);
-            font-family: 'Inter', sans-serif;
-        }
+    #particleLayer {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: .55;
+    }
 
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .wrap { width: min(1220px, 92vw); margin: 0 auto; }
+    section { padding: 58px 0; }
+    section.hero {
+      padding-top: 22px;
+      padding-bottom: 58px;
+    }
+    .brand-intro {
+      padding: 24px 0 8px;
+      display: grid;
+      place-items: center;
+    }
+    .brand-intro img {
+      width: min(320px, 62vw);
+      height: auto;
+      filter: drop-shadow(0 0 20px rgba(241, 196, 15, .16));
+    }
 
-        /* =========================================
-           2. TICKER SUPERIOR (SEAMLESS LOOP)
-           ========================================= */
-        .ticker-wrap { 
-            width: 100%; overflow: hidden; background: rgba(13, 27, 42, 0.2); 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 12px 0; 
-            position: sticky; top: 0; z-index: 1000; 
-        }
-        .ticker { 
-            display: flex; white-space: nowrap; width: max-content;
-            animation: ticker 25s linear infinite; 
-        }
-        @keyframes ticker { 
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-50%); } 
-        }
-        .ticker__item { display: inline-flex; align-items: center; padding: 0 10px; font-size: 13px; font-weight: 600; }
+    .top-ticker {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(14px);
+      background: rgba(6, 13, 26, 0.72);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: inline-flex;
+      min-width: 200%;
+      animation: ticker 26s linear infinite;
+    }
+    .ticker-item {
+      padding: 12px 18px;
+      color: var(--sub);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .ticker-item b { color: var(--ok); font-weight: 800; }
+    @keyframes ticker { to { transform: translateX(-50%); } }
 
-        /* =========================================
-           3. HERO SECTION (TÍTULO ANIMADO)
-           ========================================= */
-        .hero { text-align: center; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; }
-        .hero-logo { 
-            height: 120px; margin: 0 auto 30px auto; filter: brightness(1.1); display: block; 
-        }
-        
-        .mega-slogan { 
-            font-size: clamp(35px, 8vw, 90px); 
-            font-weight: 900; 
-            line-height: 0.9; 
-            letter-spacing: -3px; 
-            margin-bottom: 30px; 
-            background: linear-gradient(to right, #FFF 20%, var(--gold) 50%, #FFF 80%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            animation: shineTitle 6s linear infinite;
-        }
-        
-        @keyframes shineTitle { 
-            to { background-position: 200% center; } 
-        }
+    .hero {
+      min-height: min(74vh, 920px);
+      display: grid;
+      align-items: start;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 34px;
+      align-items: stretch;
+      justify-items: center;
+    }
+    .hero-main-block {
+      text-align: center;
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      justify-items: center;
+    }
+    .kicker {
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    h1 {
+      font-size: clamp(35px, 8vw, 90px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -3px;
+      margin-bottom: 30px;
+      background: linear-gradient(to right, #fff 20%, var(--gold) 50%, #fff 80%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shineTitle 6s linear infinite;
+    }
+    @keyframes shineTitle { to { background-position: 200% center; } }
+    h1 .gold { color: var(--gold); }
+    .lead {
+      margin-top: 0;
+      color: #929497;
+      font-size: clamp(16px, 2vw, 22px);
+      line-height: 1.5;
+      max-width: 760px;
+      margin-bottom: 50px;
+      font-weight: 300;
+    }
+    .hero-actions { margin-top: 0; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .hero-main-logo {
+      margin: 0 0 4px;
+    }
+    .hero-main-logo img {
+      width: min(320px, 58vw);
+      height: auto;
+      filter: brightness(1.1) drop-shadow(0 0 20px rgba(241, 196, 15, .18));
+    }
+    .btn {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      border: 1px solid transparent;
+      font-weight: 800;
+      letter-spacing: .2px;
+      transition: .25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: #0b1629;
+      box-shadow: 0 0 0 0 rgba(241, 196, 15, .5);
+      animation: pulse 2.4s infinite;
+    }
+    .btn-primary.wide {
+      min-width: min(560px, 100%);
+      justify-content: center;
+      padding: 16px 28px;
+      font-size: clamp(17px, 2vw, 21px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, .018);
+      border-color: var(--line);
+      color: var(--text);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .btn:hover { transform: translateY(-2px); }
+    @keyframes pulse {
+      70% { box-shadow: 0 0 0 16px rgba(241, 196, 15, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
+    }
 
-        .hero-p { color: #929497; font-size: clamp(16px, 2vw, 22px); max-width: 800px; margin-bottom: 50px; font-weight: 300; }
+    .glass {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: rgba(10, 15, 26, 0.58);
+      backdrop-filter: blur(16px) saturate(1.1);
+      -webkit-backdrop-filter: blur(16px) saturate(1.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, background-color 0.28s ease;
+    }
+    .glass:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.42);
+      background: rgba(10, 15, 26, 0.62);
+    }
 
-        .btn-pulse { background: var(--gold); color: var(--navy); padding: 22px 60px; border-radius: 50px; font-weight: 900; text-decoration: none; display: inline-block; font-size: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.6); } 70% { box-shadow: 0 0 0 20px rgba(201, 162, 39, 0); } 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0); } }
+    /* Terminal / Heatmap / Evaluación: brillo de caja (::after; ::before = cursor) + resplandor en iconos */
+    .th-card.glass,
+    .eval-compat.glass {
+      position: relative;
+      overflow: hidden;
+    }
+    .th-card.glass::after,
+    .eval-compat.glass::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      background:
+        radial-gradient(ellipse 130% 90% at 50% -18%, rgba(241, 196, 15, 0.22), transparent 54%),
+        radial-gradient(85% 55% at 100% 85%, rgba(43, 224, 237, 0.12), transparent 48%);
+      transition: opacity 0.55s ease;
+    }
+    .th-card.glass.reveal.show::after,
+    .eval-compat.glass.reveal.show::after {
+      opacity: 0.42;
+    }
+    .th-card.glass:hover::after,
+    .eval-compat.glass:hover::after {
+      opacity: 0.88;
+    }
+    .th-card.glass.cursor-react::before,
+    .eval-compat.glass.cursor-react::before {
+      z-index: 2;
+    }
+    .th-card.glass.cursor-react > *,
+    .eval-compat.glass.cursor-react > * {
+      position: relative;
+      z-index: 3;
+    }
+    .th-card.glass.reveal.show .th-ibox {
+      box-shadow:
+        0 0 26px rgba(241, 196, 15, 0.42),
+        0 0 20px rgba(241, 196, 15, 0.22);
+    }
+    .th-card.glass:hover .th-ibox {
+      box-shadow:
+        0 0 36px rgba(241, 196, 15, 0.65),
+        0 0 64px rgba(241, 196, 15, 0.28);
+      filter: brightness(1.07);
+    }
+    .eval-compat.glass.reveal.show .eval-icon-cyan {
+      box-shadow:
+        0 0 28px rgba(43, 224, 237, 0.45),
+        0 8px 24px rgba(43, 224, 237, 0.22);
+    }
+    .eval-compat.glass:hover .eval-icon-cyan {
+      box-shadow:
+        0 0 40px rgba(43, 224, 237, 0.62),
+        0 0 52px rgba(43, 224, 237, 0.28);
+      filter: brightness(1.09);
+    }
 
-        /* =========================================
-           4. FRANJA DE BROKERS COMPATIBLES
-           ========================================= */
-        .brokers-strip { padding: 40px 0; background: rgba(0,0,0,0.2); text-align: center; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .brokers-container { display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; }
-        .broker-logo { height: 60px; filter: grayscale(100%) brightness(200%); opacity: 0.5; animation: brokerPulse 4s infinite ease-in-out; border-radius: 12px; }
-        .broker-logo:nth-child(1) { animation-delay: 0s; }
-        .broker-logo:nth-child(2) { animation-delay: 1s; }
-        .broker-logo:nth-child(3) { animation-delay: 2s; }
-        .broker-logo:nth-child(4) { animation-delay: 3s; }
-        @keyframes brokerPulse { 0%, 100% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; } 15% { transform: scale(1.15); filter: grayscale(0%) brightness(100%); opacity: 1; } 30% { transform: scale(1); filter: grayscale(100%) brightness(200%); opacity: 0.5; } }
+    .hero-card {
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      width: min(820px, 100%);
+      margin: 0 auto;
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: -45% auto auto -35%;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(43, 224, 237, .22), transparent 66%);
+      animation: floatOrb 9s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes floatOrb {
+      50% {
+        transform: translate(min(38px, 8vw), min(20px, 4vw));
+      }
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, .14);
+    }
+    .metric:last-child { border-bottom: none; }
+    .metric .l {
+      color: var(--sub);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 12px;
+    }
+    .metric .v {
+      font-size: clamp(14px, 2vw, 20px);
+      font-weight: 800;
+      text-align: right;
+      line-height: 1.15;
+      max-width: 58%;
+    }
+    .status-up { color: var(--ok); font-weight: 800; font-size: 12px; }
 
-        /* =========================================
-           5. GRÁFICA MONTE CARLO (PLATEADA/GLASS)
-           ========================================= */
-        .chart-container { 
-            width: 95%; max-width: 1000px; height: 420px; margin: 60px auto; padding: 30px; position: relative; 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; 
-            border: 1.5px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05);
-            animation: borderPulseSubtle 3s infinite alternate; overflow: hidden;
-        }
+    .title-center { text-align: center; margin-bottom: 12px; }
+    .title-center h2 { font-size: clamp(28px, 4.2vw, 54px); letter-spacing: -1px; }
+    .title-center p { margin-top: 10px; color: var(--sub); }
+    .kw { color: var(--gold); font-weight: 700; }
 
-        @keyframes borderPulseSubtle { 0% { border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 10px rgba(255, 255, 255, 0.05); } 100% { border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 255, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05); } }
+    .perf-layout {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .perf-card {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 520px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+    .perf-dashboard-inner {
+      background: transparent;
+      border-radius: 12px;
+      padding: 20px 22px 18px;
+      border: none;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      --chart-gold: var(--gold);
+      --chart-green: #2ecc71;
+      --chart-muted: #8b949e;
+      --chart-grid: #1c2331;
+      --chart-btn: #151a23;
+    }
+    .perf-dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .perf-dashboard-header .title-container h2 {
+      color: var(--text);
+      font-size: clamp(18px, 2.2vw, 24px);
+      font-weight: 600;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.5px;
+    }
+    .perf-dashboard-header .title-container p {
+      color: var(--chart-muted);
+      font-size: 14px;
+      margin: 0;
+    }
+    .perf-dashboard-badges { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .perf-badge-ia {
+      color: var(--chart-gold);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: default;
+    }
+    .perf-badge-interactive {
+      background: var(--chart-btn);
+      color: var(--chart-muted);
+      font-size: 10px;
+      padding: 6px 11px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .perf-chart-container {
+      position: relative;
+      height: min(400px, 52vh);
+      width: 100%;
+      min-height: 260px;
+    }
+    .perf-chart-container canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .moving-tooltip {
+      position: absolute;
+      display: none;
+      background: #000;
+      border: 1px solid var(--chart-gold);
+      color: var(--text);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      white-space: nowrap;
+      z-index: 10;
+      transform: translateX(-50%) translateY(-100%);
+      margin-top: -15px;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .moving-tooltip span.real { color: var(--chart-gold); font-weight: 500; }
+    .moving-tooltip span.marko { color: var(--chart-muted); }
+    .moving-tooltip .number-val { font-family: "Courier New", Courier, monospace; font-weight: 600; }
+    .perf-dashboard-footer {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .perf-timeframes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 4px;
+    }
+    .perf-time-btn {
+      background: transparent;
+      border: 1px solid var(--chart-grid);
+      color: var(--chart-muted);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .perf-time-btn.active {
+      background-color: var(--chart-gold);
+      color: #0a0f1a;
+      border-color: var(--chart-gold);
+      font-weight: 600;
+    }
+    .perf-time-btn:hover:not(.active) {
+      border-color: var(--chart-muted);
+      color: var(--text);
+    }
+    .perf-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 13px;
+      color: var(--chart-muted);
+    }
+    .perf-legend-item { display: flex; align-items: center; gap: 8px; }
+    .perf-legend-color { width: 16px; height: 2px; flex-shrink: 0; }
+    .perf-legend-color.bg-gold { background-color: var(--chart-gold); }
+    .perf-legend-color.bg-green {
+      height: 0;
+      border-top: 2px dashed var(--chart-green);
+    }
+    .perf-side {
+      padding: 10px;
+      display: grid;
+      gap: 10px;
+      align-content: center;
+      justify-items: center;
+      justify-self: stretch;
+      align-self: center;
+    }
+    .perf-side-main {
+      --perf-progress: 0;
+      --ring-thickness: 10px;
+      width: min(220px, 100%);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.08), transparent 46%),
+        linear-gradient(145deg, rgba(6, 13, 26, 0.84), rgba(10, 22, 40, 0.82));
+      backdrop-filter: blur(14px) saturate(1.08);
+      -webkit-backdrop-filter: blur(14px) saturate(1.08);
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.35),
+        inset 0 0 22px rgba(255, 255, 255, 0.08),
+        0 0 18px rgba(255, 255, 255, 0.08);
+      animation: perfOrbPulse 6s ease-in-out infinite;
+    }
+    .perf-side-main::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      z-index: 1;
+      pointer-events: none;
+      background: conic-gradient(#f1c40f calc(var(--perf-progress) * 1%), rgba(255, 255, 255, 0.18) 0);
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 calc(100% - var(--ring-thickness) + 1px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 calc(100% - var(--ring-thickness) + 1px));
+      transition: background 0.55s ease;
+    }
+    .perf-side-main > div {
+      position: relative;
+      z-index: 2;
+      background: var(--bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 10px 14px;
+      min-width: min(150px, 88%);
+    }
+    .perf-side-main small {
+      color: rgba(255, 255, 255, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 11px;
+      display: block;
+    }
+    .perf-side-main strong {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(30px, 3.2vw, 42px);
+      line-height: 1;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+    }
+    @keyframes perfOrbPulse {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        box-shadow:
+          0 12px 28px rgba(0, 0, 0, 0.35),
+          inset 0 0 22px rgba(255, 255, 255, 0.08),
+          0 0 18px rgba(255, 255, 255, 0.08);
+      }
+      50% {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow:
+          0 16px 34px rgba(0, 0, 0, 0.42),
+          inset 0 0 28px rgba(255, 255, 255, 0.12),
+          0 0 24px rgba(255, 255, 255, 0.12);
+      }
+    }
+    .perf-side-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .perf-side-grid .mini-kpi {
+      padding: 10px;
+    }
+    .perf-side-grid .mini-kpi strong {
+      font-size: 20px;
+    }
+    .mini-kpi {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255, 255, 255, .014);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .mini-kpi small { color: var(--sub); text-transform: uppercase; letter-spacing: 1px; font-size: 11px; }
+    .mini-kpi strong { display: block; margin-top: 4px; font-size: 20px; color: var(--gold); }
 
-        .chart-container::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); transform: skewX(-25deg); animation: lightSweep 5s infinite; pointer-events: none; }
-        @keyframes lightSweep { to { left: 100%; } }
+    .bubble-card {
+      margin-top: clamp(34px, 6vw, 74px);
+      padding: 16px;
+      position: relative;
+      overflow: visible;
+      min-height: 250px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    .bubble-card h3 { font-size: clamp(28px, 4.2vw, 42px); margin-bottom: 10px; line-height: 1.02; letter-spacing: -0.8px; }
+    .bubble-card p { color: var(--sub); font-size: 13px; margin-bottom: 10px; }
+    .bubble-wrap {
+      position: relative;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      z-index: 2;
+    }
+    .mini-bubble {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 1;
+      opacity: 0.9;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      border-left: 1px solid rgba(255, 255, 255, 0.5);
+      filter: blur(3px);
+      pointer-events: none;
+    }
+    .mb-1 { width: 60px; height: 60px; top: -20px; left: 8%; background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03)); animation: dynamicFloat2 9s infinite ease-in-out reverse; }
+    .mb-2 { width: 80px; height: 80px; bottom: -30px; right: 10%; background: linear-gradient(135deg, rgba(255,255,255,0.11), rgba(255,255,255,0.025)); animation: dynamicFloat1 11s infinite ease-in-out; }
+    .mb-3 { width: 45px; height: 45px; top: 16px; right: 15%; background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03)); animation: dynamicFloat3 8s infinite ease-in-out reverse; }
+    .mb-4 { width: 70px; height: 70px; bottom: -10px; left: 14%; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.025)); animation: dynamicFloat4 10s infinite ease-in-out; }
+    .mb-5 { width: 50px; height: 50px; top: 56px; left: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); animation: dynamicFloat1 7s infinite ease-in-out; }
+    @keyframes dynamicFloat1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-15px, -20px) scale(0.95); } }
+    @keyframes dynamicFloat2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, 15px) scale(1.02); } }
+    @keyframes dynamicFloat3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-20px, 20px) scale(1.05); } }
+    @keyframes dynamicFloat4 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(15px, -15px); } }
+    .alloc-bubble {
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, .32);
+      color: #fff;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .35), inset 0 0 22px rgba(255,255,255,.14);
+      animation: bubbleDrift 7s ease-in-out infinite;
+    }
+    .alloc-bubble b { display: block; font-size: 20px; line-height: 1; }
+    .alloc-bubble span { font-size: 11px; opacity: .9; margin-top: 2px; }
+    .b1 { width: 140px; height: 140px; background: linear-gradient(135deg, rgba(255,255,255,0.11), rgba(255,255,255,0.02)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255, 255, 255, 0.12); animation: dynamicFloat1 6s infinite ease-in-out; }
+    .b2 { width: 160px; height: 160px; background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.025)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255, 255, 255, 0.14); animation: dynamicFloat2 7s infinite ease-in-out; }
+    .b3 { width: 130px; height: 130px; background: linear-gradient(135deg, rgba(255,255,255,0.11), rgba(255,255,255,0.02)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255, 255, 255, 0.12); animation: dynamicFloat3 6.5s infinite ease-in-out; }
+    .b4 { width: 110px; height: 110px; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255, 255, 255, 0.12); animation: dynamicFloat4 8s infinite ease-in-out; }
+    @keyframes bubbleDrift {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.03); }
+    }
 
-        .chart-header { text-align: center; margin-bottom: 25px; position: relative; z-index: 2; }
-        .chart-header h3 { font-weight: 700; color: var(--white); font-size: 18px; letter-spacing: 1px; margin-bottom: 5px; }
-        .chart-header p { color: var(--white); opacity: 0.6; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+    .feature-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .feature {
+      min-height: 210px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .038), rgba(255, 255, 255, .008));
+      backdrop-filter: blur(16px) saturate(1.12);
+      -webkit-backdrop-filter: blur(16px) saturate(1.12);
+      transition: .25s ease;
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature::after {
+      content: "";
+      position: absolute;
+      inset: -30% auto auto -30%;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(241, 196, 15, .16), transparent 68%);
+      opacity: 0;
+      transition: .25s ease;
+      pointer-events: none;
+    }
+    .feature:hover { transform: translateY(-3px); border-color: rgba(255, 255, 255, .35); }
+    .feature:hover::after { opacity: 1; }
+    .feature .icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      color: var(--gold);
+      font-size: 36px;
+      background: transparent;
+      border: none;
+      filter: drop-shadow(0 0 12px rgba(241, 196, 15, .45));
+    }
+    .feature .icon .material-symbols-outlined {
+      font-size: 34px;
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+    .feature h3 { font-size: 16px; margin-bottom: 8px; }
+    .feature p { color: var(--sub); font-size: 14px; line-height: 1.45; }
 
-        .chart-wrapper { position: relative; height: 300px; width: 100%; z-index: 2; }
-        #monteCarloChart { clip-path: inset(0 100% 0 0); animation: drawChart 6s ease-out forwards; animation-delay: 0.5s; }
-        @keyframes drawChart { 100% { clip-path: inset(0 0 0 0); } }
+    .terminal-heatmap {
+      margin-top: clamp(44px, 7vw, 88px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .ecg-strip {
+      margin-top: 16px;
+      border: 1px solid rgba(43, 224, 237, .25);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(8, 17, 34, .48);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: grid;
+      gap: 8px;
+    }
+    .ecg-strip--in-terminal {
+      margin-top: 12px;
+      border: 1px solid rgba(43, 224, 237, .22);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(5, 14, 28, .38);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      gap: 6px;
+    }
+    .ecg-strip .head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #c9d6ea;
+      font-size: 12px;
+      letter-spacing: .2px;
+    }
+    .ecg-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f1c40f;
+      box-shadow: 0 0 10px rgba(241, 196, 15, .9);
+      animation: ecgDotShift 6.2s ease-in-out infinite;
+    }
+    @keyframes ecgDotShift {
+      0%, 100% {
+        background: #f1c40f;
+        box-shadow: 0 0 10px rgba(241, 196, 15, .9);
+      }
+      50% {
+        background: #0ecb81;
+        box-shadow: 0 0 10px rgba(14, 203, 129, .9);
+      }
+    }
+    #ecgCanvas {
+      width: 100%;
+      height: 54px;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, .85);
+      background: var(--bg);
+    }
+    .th-card {
+      padding: 16px;
+      min-height: 250px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .th-card h3 { font-size: 17px; margin-bottom: 8px; }
+    .th-card p { color: var(--sub); font-size: 13px; line-height: 1.5; }
+    .terminal-heatmap > .th-card:last-child .heatmap-grid {
+      flex: 1;
+      min-height: 180px;
+      align-self: stretch;
+    }
+    .terminal-glow {
+      margin-top: 10px;
+      border: 1px solid rgba(43, 224, 237, .32);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(43, 224, 237, .08);
+      color: #dff7ff;
+      font-size: 12px;
+      box-shadow: inset 0 0 20px rgba(43, 224, 237, .08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+    }
+    .terminal-glow::after {
+      content: "";
+      position: absolute;
+      inset: -30% auto auto -30%;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(43, 224, 237, .16), transparent 68%);
+      opacity: .45;
+      pointer-events: none;
+      animation: terminalGlowPulse 3.2s ease-in-out infinite;
+    }
+    @keyframes terminalGlowPulse {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: .35; }
+      50% { transform: translate(10px, -8px) scale(1.06); opacity: .62; }
+    }
+    .terminal-glow-text,
+    .terminal-glow-icons {
+      position: relative;
+      z-index: 1;
+    }
+    .terminal-glow-text {
+      color: #dff7ff;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .terminal-glow-icons {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .terminal-glow-icon {
+      display: grid;
+      place-items: center;
+      color: #fff;
+    }
+    .terminal-glow-icon .material-symbols-outlined {
+      font-size: 22px;
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+      filter: drop-shadow(0 0 9px rgba(43, 224, 237, 0.22));
+    }
+    .terminal-file-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      line-height: 1;
+      color: var(--bg);
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+    }
+    .terminal-file-chip.pdf {
+      background: #ffffff;
+    }
+    .terminal-file-chip.xls {
+      background: #ffffff;
+    }
+    .terminal-carousel {
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.012);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 10px 0;
+    }
+    .terminal-carousel-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      animation: scrollAssetsX 26s linear infinite;
+      padding: 0 10px;
+    }
+    @keyframes scrollAssetsX {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .t-asset-card {
+      width: 160px;
+      min-height: 120px;
+      border-radius: 16px;
+      padding: 10px;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(255,255,255,.048), rgba(255,255,255,.006));
+      border: 1px solid rgba(255,255,255,.16);
+      border-top: 1px solid rgba(255,255,255,.32);
+      border-left: 1px solid rgba(255,255,255,.32);
+      box-shadow: 0 8px 20px rgba(0,0,0,.35);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      flex: 0 0 auto;
+    }
+    .t-asset-card .tk { color: var(--gold); font-size: 12px; font-weight: 700; }
+    .t-asset-logo { width: 46px; height: 46px; border-radius: 10px; background: rgba(255,255,255,.05); overflow: hidden; }
+    .t-asset-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .t-asset-card b { color: var(--ok); font-size: 20px; }
+    .th-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .th-ibox {
+      width: 76px;
+      height: 76px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #0d1b2a;
+      background: var(--gold);
+      box-shadow: 0 0 20px rgba(241, 196, 15, .22);
+      flex: 0 0 auto;
+      transition: box-shadow 0.45s ease, filter 0.45s ease;
+    }
+    .th-ibox .material-symbols-outlined {
+      font-size: 42px;
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+    .th-head h3 {
+      font-size: clamp(24px, 3.2vw, 40px);
+      letter-spacing: -1px;
+      color: var(--text);
+      margin: 0;
+      line-height: 1.05;
+    }
+    .th-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .th-badge {
+      font-size: 10px;
+      letter-spacing: .35px;
+      padding: 3px 7px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+    .th-badge.primary { background: var(--gold); color: #0d1b2a; font-weight: 800; }
+    .th-badge.secondary { border: 1px solid var(--gold); color: var(--gold); font-weight: 700; }
+    .heatmap-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-auto-rows: 22px;
+      gap: 6px;
+    }
+    .heat {
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 8px;
+      transition: background-color .45s ease;
+      overflow: hidden;
+    }
+    .heat:nth-child(1) { grid-column: span 4; grid-row: span 2; }
+    .heat:nth-child(2) { grid-column: span 3; grid-row: span 2; }
+    .heat:nth-child(3) { grid-column: span 5; grid-row: span 3; }
+    .heat:nth-child(4) { grid-column: span 5; grid-row: span 2; }
+    .heat:nth-child(5) { grid-column: span 4; grid-row: span 2; }
+    .heat:nth-child(6) { grid-column: span 3; grid-row: span 2; }
+    .heat:nth-child(7) { grid-column: span 3; grid-row: span 2; }
+    .heat:nth-child(8) { grid-column: span 4; grid-row: span 2; }
+    .heat:nth-child(9) { grid-column: span 5; grid-row: span 2; }
+    .heat:nth-child(10){ grid-column: span 4; grid-row: span 2; }
+    .heat:nth-child(11){ grid-column: span 5; grid-row: span 2; }
+    .heat:nth-child(12){ grid-column: span 3; grid-row: span 2; }
+    .heat .sym {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .4px;
+      color: #f2f7ff;
+      position: relative;
+      z-index: 1;
+    }
+    .heat .ret {
+      font-size: 11px;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+    }
 
-        .optima-tangencia { position: absolute; bottom: 10px; right: 15px; color: var(--gold); font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-align: right; line-height: 1.1; letter-spacing: 1px; opacity: 0; animation: fadeInOptima 2s ease-out forwards; animation-delay: 4.5s; text-shadow: 0 0 15px rgba(201, 162, 39, 0.6); pointer-events: none; }
-        @keyframes fadeInOptima { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 0.9; transform: scale(1); } }
+    .compat-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    .compat-copy { padding: 22px; }
+    .compat-copy h3 { font-size: clamp(24px, 3.2vw, 40px); margin-bottom: 12px; letter-spacing: -1px; }
+    .compat-copy p { color: var(--sub); line-height: 1.6; margin-bottom: 10px; }
+    .compat-copy .strong { color: #dce8fb; }
 
-        /* =========================================
-           6. IPHONE MOCKUP Y ANIMACIÓN SIRI
-           ========================================= */
-        .mobile-section { text-align: center; padding: 10px 10px; background: transparent; }
-        .transparent-phone-mockup { width: 300px; height: 620px; border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 54px; margin: 0 auto; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-        .dynamic-island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 90px; height: 24px; background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; z-index: 100; }
-        
-        .iphone-screen { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; border-radius: 54px; z-index: 1; }
+    .eval-compat {
+      margin-top: clamp(44px, 7vw, 88px);
+    }
+    .eval-compat-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .eval-icon-cyan {
+      width: 76px;
+      height: 76px;
+      border-radius: 14px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      background: #2be0ed;
+      color: #0d1b2a;
+      box-shadow: 0 8px 24px rgba(43, 224, 237, 0.22);
+      transition: box-shadow 0.45s ease, filter 0.45s ease;
+    }
+    .eval-icon-cyan .material-symbols-outlined {
+      font-size: 42px;
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+    .eval-compat-head-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .eval-compat-head-text h3 {
+      font-size: clamp(24px, 3.2vw, 40px);
+      margin-bottom: 0;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+    .eval-cyan-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 0;
+    }
+    .eval-compat .kw {
+      color: #2be0ed;
+    }
+    .eval-cyan-badge {
+      font-size: 10px;
+      letter-spacing: 0.35px;
+      padding: 4px 9px;
+      border-radius: 4px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+    .eval-cyan-badge--solid {
+      background: #2be0ed;
+      color: #0d1b2a;
+    }
+    .eval-cyan-badge--outline {
+      border: 1px solid #2be0ed;
+      color: #2be0ed;
+      background: transparent;
+      font-weight: 700;
+    }
+    .eval-compat .eval-list-compat {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 0;
+      list-style: none;
+    }
+    .eval-compat .eval-list-compat li {
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.55;
+      padding-left: 0;
+    }
+    .eval-compat .eval-list-compat li::before {
+      content: "·";
+      color: var(--sub);
+      font-weight: 800;
+      margin-right: 8px;
+    }
 
-        .siri-container { position: absolute; inset: -2px; border-radius: 54px; padding: 3px; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 20; filter: blur(2px); }
-        .siri-container::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, #00d4ff, #2d9cdb, #9b51e0, #ff0f7b, #f89b29, #ff0f7b, #9b51e0, #2d9cdb, #00d4ff); animation: spinSiri 4s linear infinite; filter: blur(15px); }
-        @keyframes spinSiri { 100% { transform: rotate(360deg); } }
+    .broker-seq {
+      padding: 0;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      align-self: center;
+      width: 100%;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    .broker-mosaic {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      align-content: center;
+      position: relative;
+      padding-bottom: 28px;
+    }
+    .broker-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 10px 6px;
+      min-height: 160px;
+      will-change: transform;
+    }
+    .broker-cell .broker-icon {
+      width: min(118px, 28vw);
+      height: min(118px, 28vw);
+      border-radius: 28px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+    .broker-cell .broker-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .broker-cell .broker-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--sub);
+      text-align: center;
+      line-height: 1.25;
+      max-width: 160px;
+    }
+    .broker-more {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      text-align: right;
+      font-weight: 700;
+      color: rgba(224, 229, 236, 0.88);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      padding-top: 0;
+      margin: 0;
+      pointer-events: none;
+    }
+    .broker-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255, 255, 255, .016);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      transform-origin: left center;
+      animation: brokerFocus 8s ease-in-out infinite;
+    }
+    .broker-card:nth-child(2){ animation-delay: 1.2s; }
+    .broker-card:nth-child(3){ animation-delay: 2.4s; }
+    .broker-card:nth-child(4){ animation-delay: 3.6s; }
+    .broker-card:nth-child(5){ animation-delay: 4.8s; }
+    @keyframes brokerFocus {
+      0%, 70%, 100% {
+        transform: translateX(0) scale(1);
+        border-color: var(--line);
+        box-shadow: none;
+      }
+      14%, 24% {
+        transform: translateX(9px) scale(1.03);
+        border-color: rgba(241, 196, 15, .5);
+        box-shadow: 0 0 0 1px rgba(241, 196, 15, .2), 0 14px 28px rgba(0, 0, 0, .35);
+      }
+    }
+    .broker-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .018));
+      border: 1px solid rgba(255, 255, 255, .16);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      overflow: hidden;
+      padding: 4px;
+    }
+    .broker-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .broker-card b { font-size: 14px; }
+    .broker-card span { color: var(--sub); font-size: 12px; }
+    .broker-chip {
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(40, 209, 124, .36);
+      color: var(--ok);
+      font-size: 11px;
+      font-weight: 700;
+    }
 
-        .phone-status-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: rgba(255, 255, 255, 0.9); padding: 15px 25px 0 25px; margin-bottom: 25px; font-weight: 700; z-index: 5; position: relative; }
-        .status-left { width: 60px; text-align: left; }
-        .status-right { width: 70px; text-align: right; }
+    .hub-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+    .hub-copy { padding: 20px; }
+    .hub-copy h3 { font-size: clamp(24px, 3vw, 40px); margin-bottom: 10px; letter-spacing: -1px; }
+    .hub-copy p { color: var(--sub); line-height: 1.6; margin-bottom: 10px; }
 
-        .asset-carousel-container { width: 100%; flex: 1; overflow: hidden; display: flex; justify-content: center; position: relative; z-index: 5;}
-        .asset-carousel { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: scrollVertical 35s linear infinite; }
-        @keyframes scrollVertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+    .hub-orbit {
+      min-height: min(440px, 92vw);
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      padding: 24px 16px 32px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    /* HUB sin glass: resalte de cursor desactivado en el article para no tapar la órbita */
+    .hub-orbit.cursor-react {
+      overflow: visible;
+    }
+    .hub-orbit.cursor-react::before {
+      display: none;
+    }
+    .hub-orbit-visual {
+      position: relative;
+      width: min(460px, 94vw);
+      height: min(460px, 94vw);
+      display: grid;
+      place-items: center;
+      --hub-r: min(186px, 41vw);
+    }
+    /* Misma jerarquía visual que tools_view._TOOL_META: íconos sin caja, solo color + glow */
+    .hub-center {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      place-items: center;
+      background: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .hub-center img {
+      width: min(240px, 58vw);
+      max-width: none;
+      height: auto;
+      filter: drop-shadow(0 0 28px rgba(255, 255, 255, .22));
+    }
+    .orbit-ring {
+      position: absolute;
+      width: calc(var(--hub-r) * 2 + 48px);
+      height: calc(var(--hub-r) * 2 + 48px);
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, .18);
+      pointer-events: none;
+      animation: ringPulse 3.8s ease-in-out infinite;
+    }
+    .orbit-ring.r2 {
+      width: calc(var(--hub-r) * 2 + 96px);
+      height: calc(var(--hub-r) * 2 + 96px);
+      border-style: solid;
+      border-color: rgba(43, 224, 237, .1);
+      border-dasharray: none;
+      animation-delay: 1.2s;
+    }
+    @keyframes ringPulse {
+      0%, 100% { opacity: .42; transform: scale(1); }
+      50% { opacity: .9; transform: scale(1.035); }
+    }
 
-        .asset-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.4); border-left: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; align-items: center; width: 240px; }
-        .asset-logo-container { width: 60px; height: 60px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; }
-        .asset-logo-img { width: 100%; height: 100%; object-fit: contain; }
-        .asset-card b { color: var(--up); font-size: 22px; }
+    .hub-sat-layer {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      animation: hubOrbit 52s linear infinite;
+      z-index: 4;
+    }
+    @keyframes hubOrbit {
+      to { transform: rotate(360deg); }
+    }
+    .hub-sat {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 60px;
+      height: 60px;
+      margin: -30px 0 0 -30px;
+      --angle: 0deg;
+      transform: rotate(var(--angle)) translateY(calc(-1 * var(--hub-r)));
+      animation: hubEmerge 1.15s cubic-bezier(.22, 1, .36, 1) forwards;
+      animation-delay: calc(var(--i) * 0.09s);
+      opacity: 0;
+    }
+    @keyframes hubEmerge {
+      from {
+        opacity: 0;
+        transform: rotate(var(--angle)) translateY(0) scale(0.15);
+      }
+      to {
+        opacity: 1;
+        transform: rotate(var(--angle)) translateY(calc(-1 * var(--hub-r))) scale(1);
+      }
+    }
+    .hub-sat-inner {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      animation: hubOrbitRev 52s linear infinite;
+    }
+    @keyframes hubOrbitRev {
+      to { transform: rotate(-360deg); }
+    }
+    .hub-float {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      animation: hubFloat 3.4s ease-in-out infinite;
+      animation-delay: calc(1.1s + var(--i) * 0.12s);
+    }
+    @keyframes hubFloat {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      33% { transform: translateY(-5px) translateX(2px); }
+      66% { transform: translateY(3px) translateX(-2px); }
+    }
+    .hub-sat .material-symbols-outlined {
+      font-size: 48px;
+      line-height: 1;
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+      color: var(--icon-c);
+      filter:
+        drop-shadow(0 0 8px var(--icon-c))
+        drop-shadow(0 0 16px var(--icon-c))
+        drop-shadow(0 0 24px var(--icon-c));
+      animation: hubNeon 2.4s ease-in-out infinite;
+    }
+    @keyframes hubNeon {
+      0%, 100% { opacity: .9; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.06); }
+    }
+    .cursor-react {
+      position: relative;
+      overflow: hidden;
+    }
+    .cursor-react::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      background:
+        radial-gradient(240px circle at var(--mx) var(--my), rgba(43, 224, 237, .11), transparent 48%),
+        radial-gradient(300px circle at calc(var(--mx) - 10%) calc(var(--my) + 6%), rgba(241, 196, 15, .08), transparent 52%);
+      opacity: .34;
+      transition: opacity .35s ease;
+      z-index: 0;
+    }
+    .cursor-react:hover::before { opacity: .8; }
+    .cursor-react > * { position: relative; z-index: 1; }
 
-        /* =========================================
-           7. UNIVERSO DE BURBUJAS ANIMADAS (GLASS + INTENSO)
-           ========================================= */
-        .bubble-section { padding: 40px 60px; text-align: center; position: relative; overflow: hidden; width: 100%; min-height: 400px; }
-        .bubble-section-title { font-size: 18px; font-weight: 600; color: var(--gold); margin-bottom: 50px; letter-spacing: 1px; text-transform: uppercase; position: relative; z-index: 5; }
-        .bubble-container { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
-        
-        .bubble-item { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            border-radius: 50%; color: white; 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            border-top: 1px solid rgba(255, 255, 255, 0.6); 
-            border-left: 1px solid rgba(255, 255, 255, 0.6);
-        }
-        .bubble-percent { font-size: 28px; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.6); }
-        .bubble-ticker { font-size: 12px; opacity: 0.9; margin-top: 5px; font-weight: bold;}
-        
-        .b-cyan { width: 140px; height: 140px; background: linear-gradient(135deg, rgba(0, 191, 255, 0.85), rgba(0, 191, 255, 0.2)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(0, 191, 255, 0.8); animation: dynamicFloat1 6s infinite ease-in-out; }
-        .b-lime { width: 160px; height: 160px; background: linear-gradient(135deg, rgba(173, 255, 47, 0.75), rgba(173, 255, 47, 0.15)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(173, 255, 47, 0.6); animation: dynamicFloat2 7s infinite ease-in-out; }
-        .b-magenta { width: 130px; height: 130px; background: linear-gradient(135deg, rgba(255, 0, 255, 0.85), rgba(255, 0, 255, 0.2)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255, 0, 255, 0.8); animation: dynamicFloat3 6.5s infinite ease-in-out; }
-        .b-orange { width: 110px; height: 110px; background: linear-gradient(135deg, rgba(255, 165, 0, 0.85), rgba(255, 165, 0, 0.2)); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255, 165, 0, 0.8); animation: dynamicFloat4 8s infinite ease-in-out; }
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .55s ease-out, transform .65s cubic-bezier(.22, 1, .36, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal.show { opacity: 1; transform: translateY(0); }
 
-        .mini-bubble { 
-            position: absolute; border-radius: 50%; z-index: 1; opacity: 0.9;
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            border-top: 1px solid rgba(255, 255, 255, 0.5); 
-            border-left: 1px solid rgba(255, 255, 255, 0.5);
-            filter: blur(3px); 
-        }
-        .mb-1 { width: 60px; height: 60px; top: 40px; left: 10%; background: linear-gradient(135deg, rgba(0, 191, 255, 0.6), rgba(0, 191, 255, 0.05)); animation: dynamicFloat2 9s infinite ease-in-out reverse; }
-        .mb-2 { width: 80px; height: 80px; bottom: 40px; right: 10%; background: linear-gradient(135deg, rgba(173, 255, 47, 0.5), rgba(173, 255, 47, 0.05)); animation: dynamicFloat1 11s infinite ease-in-out; }
-        .mb-3 { width: 45px; height: 45px; top: 90px; right: 15%; background: linear-gradient(135deg, rgba(255, 0, 255, 0.6), rgba(255, 0, 255, 0.05)); animation: dynamicFloat3 8s infinite ease-in-out reverse; }
-        .mb-4 { width: 70px; height: 70px; bottom: 60px; left: 15%; background: linear-gradient(135deg, rgba(255, 165, 0, 0.6), rgba(255, 165, 0, 0.05)); animation: dynamicFloat4 10s infinite ease-in-out; }
-        .mb-5 { width: 50px; height: 50px; top: 200px; left: 50%; background: linear-gradient(135deg, rgba(201, 162, 39, 0.6), rgba(201, 162, 39, 0.05)); animation: dynamicFloat1 7s infinite ease-in-out; }
+    @media (prefers-reduced-motion: reduce) {
+      body::before {
+        animation: none !important;
+      }
+      .ticker-track,
+      .terminal-carousel-track,
+      .asset-carousel {
+        animation: none !important;
+      }
+      h1 {
+        animation: none !important;
+        background-position: 50% center;
+      }
+      .btn-primary {
+        animation: none !important;
+      }
+      .hero-card::after {
+        animation: none !important;
+      }
+      .ecg-dot {
+        animation: none !important;
+      }
+      .siri-container::before {
+        animation: none !important;
+      }
+      .orbit-ring {
+        animation: none !important;
+      }
+      .bubble-item,
+      .mini-bubble {
+        animation: none !important;
+      }
+      .broker-card {
+        animation: none !important;
+      }
+      #install-prompt {
+        animation: none !important;
+      }
+      .hub-sat-layer,
+      .hub-sat-inner,
+      .hub-float,
+      .hub-sat .material-symbols-outlined,
+      .terminal-glow::after,
+      .heat::after {
+        animation: none !important;
+      }
+      .perf-side-main {
+        animation: none !important;
+      }
+      .hub-sat {
+        animation: none !important;
+        opacity: 1;
+        transform: rotate(var(--angle)) translateY(calc(-1 * var(--hub-r))) scale(1);
+      }
+      .reveal {
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+    }
 
-        @keyframes dynamicFloat1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-15px, -20px) scale(0.95); } }
-        @keyframes dynamicFloat2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, 15px) scale(1.02); } }
-        @keyframes dynamicFloat3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-20px, 20px) scale(1.05); } }
-        @keyframes dynamicFloat4 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(15px, -15px); } }
+    .ia-app-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+    .ia-copy { padding: 20px; }
+    .ia-copy h3 { font-size: clamp(24px, 3vw, 38px); margin-bottom: 10px; letter-spacing: -1px; }
+    .ia-copy p { color: var(--sub); line-height: 1.6; }
+    .ia-list { margin-top: 10px; display: grid; gap: 7px; }
+    .ia-list li {
+      list-style: none;
+      font-size: 14px;
+      line-height: 1.42;
+      color: #dae5f8;
+    }
+    .ia-list li::before { content: "•"; color: var(--gold); margin-right: 8px; }
 
-        /* =========================================
-           8. GLASS CARDS 
-           ========================================= */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding: 80px 5%; width: 100%; max-width: 1200px; margin: 0 auto; }
-        .glass-card-wrapper { position: relative; z-index: 1; }
-        .card-bg-shape { position: absolute; border-radius: 24px; z-index: -1; transition: all 0.5s ease; }
-        
-        .shape-1 { top: -25px; left: -25px; width: 130px; height: 130px; background: linear-gradient(135deg, #ff512f, #dd2476); box-shadow: 0 10px 30px rgba(255, 81, 47, 0.4); }
-        .shape-2 { bottom: -25px; right: -25px; width: 140px; height: 140px; background: linear-gradient(135deg, #0ecb81, #087a4d); box-shadow: 0 10px 30px rgba(14, 203, 129, 0.4); }
-        .shape-3 { top: -25px; right: -25px; width: 120px; height: 120px; background: linear-gradient(135deg, #f1c40f, #e67e22); box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4); }
+    .ia-icon-shell {
+      min-height: 0;
+      position: relative;
+      overflow: visible;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    .ia-icon-shell::before {
+      content: none;
+    }
+    @keyframes iaHalo {
+      0%, 100% { opacity: .6; transform: scale(.96); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+    #iaIconCanvas {
+      width: 100%;
+      height: auto;
+      max-height: min(340px, 42vmin);
+      aspect-ratio: 1 / 1;
+      display: block;
+    }
+    .ia-caption {
+      position: absolute;
+      left: 16px; right: 16px; bottom: 14px;
+      text-align: center;
+      color: var(--sub);
+      font-size: 13px;
+    }
 
-        .glass-card { 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.4); border-left: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 28px; padding: 40px; transition: 0.4s ease; height: 100%; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; align-items: flex-start;
-        }
+    .device-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .device-card { padding: 16px; }
+    .device-card h4 {
+      color: var(--gold);
+      letter-spacing: .2px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      text-transform: uppercase;
+    }
+    .device-card p { color: var(--sub); font-size: 13px; line-height: 1.45; margin-bottom: 12px; }
+    .mock-row {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+    }
+    .mock {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .03);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 18px rgba(43, 224, 237, .06);
+    }
+    .mock::before {
+      content: "Placeholder para interfaz real";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(255, 255, 255, .48);
+      font-size: 11px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+    .mock.has-image::before {
+      content: none;
+    }
+    .mock img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: rgba(0, 0, 0, 0.22);
+    }
+    .mock.phone-v.has-image,
+    .mock.phone-h.has-image {
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+    .phone-v { height: 220px; border-radius: 28px; }
+    .phone-h { height: 150px; border-radius: 24px; }
+    .desk-v { height: 180px; }
+    .desk-h { height: 180px; }
 
-        .glass-card-wrapper:hover .glass-card { transform: translateY(-5px); box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.5); border: 1px solid rgba(201, 162, 39, 0.3); }
-        .glass-card-wrapper:hover .card-bg-shape { transform: scale(1.1) rotate(5deg); filter: blur(5px); }
+    .platform-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .mobile-section {
+      text-align: center;
+      padding: 14px 10px 6px;
+      background: transparent;
+    }
+    .mobile-section h2 {
+      font-size: clamp(28px, 4.6vw, 42px);
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.6px;
+    }
+    .mobile-section > p {
+      color: #929497;
+      margin-bottom: 34px;
+    }
+    .transparent-phone-mockup {
+      width: min(300px, 88vw);
+      aspect-ratio: 300 / 620;
+      height: auto;
+      max-height: min(620px, 86dvh);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: min(54px, 14vw);
+      margin: 0 auto;
+      position: relative;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(5, 12, 24, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 24px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      z-index: 100;
+    }
+    .iphone-screen {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-radius: 54px;
+      z-index: 1;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008));
+      backdrop-filter: blur(28px) saturate(1.12);
+      -webkit-backdrop-filter: blur(28px) saturate(1.12);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -18px 36px rgba(0, 0, 0, 0.18);
+    }
+    .siri-container {
+      position: absolute;
+      inset: 1px;
+      border-radius: 54px;
+      padding: 2px;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 20;
+      filter: blur(1px);
+    }
+    .siri-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, #00d4ff, #2d9cdb, #9b51e0, #ff0f7b, #f89b29, #ff0f7b, #9b51e0, #2d9cdb, #00d4ff);
+      animation: spinSiri 4s linear infinite;
+      filter: blur(15px);
+    }
+    @keyframes spinSiri { 100% { transform: rotate(360deg); } }
+    .phone-status-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.9);
+      padding: 15px 25px 0 25px;
+      margin-bottom: 25px;
+      font-weight: 700;
+      z-index: 5;
+      position: relative;
+    }
+    .status-left { width: 60px; text-align: left; }
+    .status-right { width: 70px; text-align: right; }
+    .asset-carousel-container {
+      width: 100%;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      z-index: 5;
+      padding-bottom: 18px;
+    }
+    .mobile-ia-holder {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 18px 12px;
+      z-index: 5;
+      position: relative;
+      gap: 12px;
+    }
+    .mobile-ia-stage {
+      width: min(278px, 94%);
+      height: min(278px, 94vw);
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      position: relative;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      justify-self: center;
+      align-self: center;
+      flex: 0 0 auto;
+    }
+    .mobile-ia-holder #iaIconCanvas {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      border-radius: 50%;
+    }
+    .mobile-ia-caption {
+      text-align: center;
+      color: #dce8fb;
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: .2px;
+      width: 100%;
+      max-width: 92%;
+      margin: 0 auto;
+      flex: 0 0 auto;
+    }
+    .asset-carousel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: scrollVertical 35s linear infinite;
+      will-change: transform;
+    }
+    @keyframes scrollVertical {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+    .asset-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.048), rgba(255, 255, 255, 0.006));
+      backdrop-filter: blur(28px) saturate(1.1);
+      -webkit-backdrop-filter: blur(28px) saturate(1.1);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-top: 1px solid rgba(255, 255, 255, 0.28);
+      border-left: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      border-radius: 28px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 240px;
+    }
+    .asset-ticker {
+      font-size: 13px;
+      color: var(--gold);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .asset-logo-container {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .asset-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .asset-card b {
+      color: var(--up);
+      font-size: 22px;
+    }
+    .platform {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .014);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .platform h4 { color: var(--gold); margin-bottom: 8px; font-size: 15px; }
+    .platform p { color: var(--sub); font-size: 13px; line-height: 1.45; }
 
-        .card-pretitle { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: 700; }
-        .card-badge { display: inline-block; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-size: 11px; letter-spacing: 2px; color: #fff; margin-bottom: 25px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .bg-orange { background: linear-gradient(135deg, #ff512f, #dd2476); }
-        .bg-green { background: linear-gradient(135deg, #0ecb81, #087a4d); }
-        .bg-yellow { background: linear-gradient(135deg, #f1c40f, #e67e22); }
-        .glass-card h3 { color: var(--gold); font-size: 26px; margin-bottom: 15px; letter-spacing: -0.5px; font-weight: 300;}
-        .glass-card p { color: #e0e1dd; line-height: 1.6; font-size: 15px; opacity: 0.8;}
+    .faq-wrap { margin-top: 22px; display: grid; gap: 10px; }
+    .faq-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .014);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      text-align: left;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .faq-q .plus { color: var(--gold); font-size: 20px; line-height: 1; transition: .25s ease; }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .35s ease;
+      padding: 0 16px;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .faq-item.open .faq-a { max-height: 230px; padding: 0 16px 14px; }
+    .faq-item.open .plus { transform: rotate(45deg); }
 
-        /* =========================================
-           8.5. MONITOREO ECG (PLATEADO/GLASS)
-           ========================================= */
-        .monitoring-section { padding: 0px 20px 20px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .monitoring-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
+    .cta-band {
+      margin-top: 34px;
+      padding: 26px;
+      border-radius: 20px;
+      border: 1px solid rgba(241, 196, 15, .28);
+      background: linear-gradient(145deg, rgba(241, 196, 15, .05), rgba(241, 196, 15, .012));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      text-align: center;
+    }
+    .cta-band h3 { font-size: clamp(24px, 4vw, 42px); letter-spacing: -1px; margin-bottom: 8px; }
+    .cta-band p { color: var(--sub); margin-bottom: 14px; }
 
-        .ecg-container {
-            width: 100%; max-width: 900px; height: 150px; border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 15px rgba(255, 255, 255, 0.05); animation: borderPulseSubtle 3s infinite alternate;
-        }
+    footer {
+      margin-top: 20px;
+      border-top: 1px solid var(--line);
+      padding: 24px 0 38px;
+      text-align: center;
+      color: #7d8aa0;
+      font-size: 13px;
+    }
 
-        .ecg-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 20px 20px; z-index: 0; }
-        .ecg-svg { width: 100%; height: 100px; position: relative; z-index: 1; }
-        .ecg-path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: ecgDraw 4s linear infinite, ecgColorChange 9s infinite; filter: drop-shadow(0 0 6px currentColor); }
-        @keyframes ecgDraw { 0% { stroke-dashoffset: 2000; } 100% { stroke-dashoffset: 0; } }
-        @keyframes ecgColorChange { 0%, 25% { stroke: var(--up); } 33%, 58% { stroke: var(--gold); } 66%, 91% { stroke: var(--down); } 100% { stroke: var(--up); } }
+    /* Instalar app web (PWA) en móvil */
+    #install-prompt {
+      position: fixed;
+      bottom: max(80px, calc(env(safe-area-inset-bottom, 0px) + 56px));
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 400px;
+      background: rgba(15, 22, 38, 0.78);
+      backdrop-filter: blur(22px) saturate(1.08);
+      -webkit-backdrop-filter: blur(22px) saturate(1.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      padding: 20px 44px 20px 20px;
+      display: none;
+      z-index: 10050;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      animation: installSlideUp 0.5s ease-out;
+    }
+    @keyframes installSlideUp {
+      from {
+        bottom: -100px;
+        opacity: 0;
+      }
+      to {
+        bottom: max(80px, calc(env(safe-area-inset-bottom, 0px) + 56px));
+        opacity: 1;
+      }
+    }
+    #install-prompt .prompt-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+    #install-prompt .prompt-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    #install-prompt .prompt-text h4 {
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+    }
+    #install-prompt .prompt-text p {
+      color: var(--sub);
+      font-size: 13px;
+      margin: 0;
+    }
+    #install-prompt .prompt-instructions {
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12px;
+      text-align: center;
+      color: var(--gold);
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    #install-prompt .close-prompt {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 22px;
+      line-height: 1;
+      opacity: 0.85;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    #install-prompt .close-prompt:hover {
+      opacity: 1;
+    }
 
-        /* =========================================
-           10. ANIMACIÓN ASISTENCIA Y BOTÓN
-           ========================================= */
-        #banner-container { width: 100%; max-width: 1000px; height: 400px; margin: 20px auto; position: relative; background: transparent; }
-        #banner-container canvas { display: block; width: 100%; height: 100%; }
-        .banner-btn { position: absolute; top: 65%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; padding: 15px 40px; z-index: 10; white-space: nowrap; }
-
-        /* =========================================
-           11. SMART INSTALL PROMPT
-           ========================================= */
-        #install-prompt {
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
-            background: rgba(27, 38, 59, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 20px; display: none; z-index: 9999;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: slideUp 0.5s ease-out;
-        }
-        @keyframes slideUp { from { bottom: -100px; opacity: 0; } to { bottom: 80px; opacity: 1; } }
-        .prompt-header { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
-        .prompt-icon { width: 45px; height: 45px; border-radius: 10px; }
-        .prompt-instructions { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; font-size: 12px; text-align: center; color: var(--gold); font-weight: 600; }
-        .close-prompt { position: absolute; top: 10px; right: 15px; color: #fff; cursor: pointer; font-weight: 900; }
-
-        /* =========================================
-           12. PREGUNTAS FRECUENTES (FAQ)
-           ========================================= */
-        .faq-section { padding: 80px 20px; text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        .faq-section h2 { font-size: 32px; font-weight: 800; color: var(--white); margin-bottom: 50px; letter-spacing: -0.5px; }
-        .faq-container { width: 100%; max-width: 800px; text-align: left; }
-        .faq-item { background: rgba(27, 38, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 15px; overflow: hidden; transition: all 0.3s ease; }
-        .faq-item[open] { border-color: rgba(201, 162, 39, 0.4); background: rgba(27, 38, 59, 0.6); }
-        .faq-item summary { padding: 20px 25px; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--white); list-style: none; position: relative; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-        .faq-item summary::-webkit-details-marker { display: none; }
-        .faq-item summary::after { content: '+'; color: var(--gold); font-size: 24px; font-weight: 300; transition: transform 0.3s ease; }
-        .faq-item[open] summary::after { content: '−'; transform: rotate(180deg); }
-        .faq-content { padding: 0 25px 20px 25px; color: #929497; line-height: 1.6; font-size: 15px; animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* =========================================
-           13. NEWSLETTER Y FOOTER (SEAMLESS LOOP FIX)
-           ========================================= */
-        .newsletter-section { padding: 100px 20px; text-align: center; width: 100%; background: radial-gradient(circle at center, #1b263b 0%, var(--navy) 100%); }
-        .email-input { width: 90%; max-width: 400px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 50px; color: white; margin-bottom: 20px; outline: none; }
-
-        .news-footer { width: 100%; background: #000; position: fixed; bottom: 0; z-index: 1001; display: flex; align-items: stretch; height: 38px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .news-label-live { background: #e21e26; color: white; font-weight: 900; font-style: italic; padding: 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; border-right: 4px solid #111; z-index: 3; box-shadow: 2px 0 10px rgba(0,0,0,0.5); flex-shrink: 0; white-space: nowrap; }
-        .news-label-live span { transform: skewX(20deg); }
-        .news-label-breaking { background: #1a1a1a; color: white; font-weight: 900; font-style: italic; padding: 0 25px 0 20px; font-size: 13px; display: flex; align-items: center; letter-spacing: 1px; transform: skewX(-20deg); margin-left: -15px; z-index: 2; position: relative; box-shadow: 5px 0 15px rgba(0,0,0,0.8); flex-shrink: 0; white-space: nowrap; }
-        .news-label-breaking span { transform: skewX(20deg); }
-        .news-label-breaking::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: repeating-linear-gradient(-70deg, #e21e26, #e21e26 2px, transparent 2px, transparent 4px); border-left: 2px solid #000; }
-        
-        .news-ticker-container { overflow: hidden; flex: 1; display: flex; align-items: center; padding-left: 10px; }
-        .news-ticker { display: flex; white-space: nowrap; width: max-content; animation: newsScroll 15s linear infinite; }
-        @keyframes newsScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .news-item { padding: 0 40px; font-size: 11px; color: var(--white); font-weight: 400; text-transform: uppercase; letter-spacing: 0.5px; }
-        .news-item b { color: #e21e26; margin-right: 5px; font-weight: 900; font-style: italic; }
-
-        footer { text-align: center; padding: 100px 20px 150px; color: #444; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.05); }
-
-        /* =========================================
-           14. MEDIA QUERIES (Móviles)
-           ========================================= */
-        @media (max-width: 600px) {
-            #banner-container { height: 300px; }
-            .banner-btn { top: 75%; font-size: 14px; padding: 12px 30px; }
-            
-            .news-footer { height: 28px; }
-            .news-label-live { font-size: 10px; padding: 0 12px; }
-            .news-label-breaking { font-size: 10px; padding: 0 15px 0 12px; }
-            .news-item { font-size: 9px; padding: 0 25px; }
-            .news-item b { font-size: 10px; }
-
-            .chart-container { height: 350px; padding: 15px; margin: 40px auto; }
-            .chart-wrapper { height: 220px; }
-            .optima-tangencia { bottom: 5px; right: 5px; }
-            
-            .monitoring-section h2 { font-size: 24px; margin-bottom: 30px; }
-            .ecg-container { height: 100px; }
-            .ecg-svg { height: 70px; }
-            .mega-slogan { line-height: 1.1; letter-spacing: -1px; }
-        }
-    </style>
+    @media (max-width: 1050px) {
+      .hero-grid,
+      .perf-layout,
+      .terminal-heatmap,
+      .compat-grid,
+      .hub-grid,
+      .ia-app-grid,
+      .device-grid {
+        grid-template-columns: 1fr;
+      }
+      /* Móvil / tablet estrecha: mockup arriba, texto debajo */
+      .ia-app-grid .ia-icon-shell {
+        order: 1;
+      }
+      .ia-app-grid .ia-copy {
+        order: 2;
+      }
+      /* Brokers arriba, copy “compatible” debajo */
+      .compat-grid .broker-seq {
+        order: 1;
+      }
+      .compat-grid .compat-copy {
+        order: 2;
+      }
+      .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .platform-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 680px) {
+      section { padding: 52px 0; }
+      section.hero {
+        padding-top: 14px;
+      }
+      h1 {
+        font-size: clamp(34px, 11vw, 54px);
+        letter-spacing: -0.6px;
+        line-height: 1.08;
+      }
+      /* Menor hueco entre brokers y HUB rotatorio */
+      section.section-brokers {
+        padding-bottom: 22px;
+      }
+      section.section-hub-rotatory {
+        padding-top: 22px;
+      }
+      .hub-grid {
+        margin-top: 22px;
+      }
+      /* HUB rotatorio: evita clipping y mantiene proporciones circulares en móvil */
+      .hub-orbit {
+        min-height: min(520px, 130vw);
+        padding: 30px 8px 42px;
+        overflow: visible;
+      }
+      .hub-orbit-visual {
+        width: min(430px, 98vw);
+        height: min(430px, 98vw);
+        --hub-r: min(148px, 34vw);
+      }
+      .hub-sat {
+        width: 56px;
+        height: 56px;
+        margin: -28px 0 0 -28px;
+      }
+      .hub-sat .material-symbols-outlined {
+        font-size: 44px;
+      }
+      /* Más aire entre burbujas de asignación y “Elementos operativos…” */
+      section.section-dashboard-ref {
+        padding-bottom: clamp(56px, 14vw, 96px);
+      }
+      section.section-app-features {
+        padding-top: clamp(48px, 12vw, 88px);
+      }
+      section.section-app-features .title-center {
+        margin-bottom: clamp(18px, 4vw, 28px);
+      }
+      .ia-app-grid {
+        gap: 22px;
+      }
+      .compat-grid {
+        gap: 22px;
+      }
+      .feature-grid,
+      .platform-grid,
+      .mock-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
+  <canvas id="particleLayer"></canvas>
 
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <div class="ticker__item">S&P 500 <span style="color:var(--up)">▲ +1.2%</span></div>
-            <div class="ticker__item">NASDAQ <span style="color:var(--up)">▲ +0.9%</span></div>
-            <div class="ticker__item">BTC/USD <span style="color:var(--up)">▲ +2.4%</span></div>
-            <div class="ticker__item">NVDA <span style="color:var(--up)">▲ +5.2%</span></div>
-            
-            <div class="ticker__item">S&P 500 <span style="color:var(--up)">▲ +1.2%</span></div>
-            <div class="ticker__item">NASDAQ <span style="color:var(--up)">▲ +0.9%</span></div>
-            <div class="ticker__item">BTC/USD <span style="color:var(--up)">▲ +2.4%</span></div>
-            <div class="ticker__item">NVDA <span style="color:var(--up)">▲ +5.2%</span></div>
-        </div>
+  <div class="top-ticker">
+    <div class="ticker-track">
+      <div class="ticker-item">Dashboard en tiempo real <b>• LIVE</b></div>
+      <div class="ticker-item">Markowitz + CAPM <b>• ACTIVO</b></div>
+      <div class="ticker-item">Terminal de acciones <b>• OPERATIVO</b></div>
+      <div class="ticker-item">Heatmap global <b>• MARKET VIEW</b></div>
+      <div class="ticker-item">Resumen semanal viernes cierre <b>• EMAIL</b></div>
+      <div class="ticker-item">Dashboard en tiempo real <b>• LIVE</b></div>
+      <div class="ticker-item">Markowitz + CAPM <b>• ACTIVO</b></div>
+      <div class="ticker-item">Terminal de acciones <b>• OPERATIVO</b></div>
+      <div class="ticker-item">Heatmap global <b>• MARKET VIEW</b></div>
+      <div class="ticker-item">Resumen semanal viernes cierre <b>• EMAIL</b></div>
     </div>
+  </div>
 
-    <section class="hero">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgOTAiIHdpZHRoPSIzMjAiIGhlaWdodD0iOTAiPgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjkwIiBmaWxsPSIjYzgxMDJlIiByeD0iMiIvPgogIDx0ZXh0IHg9IjIwIiB5PSI1OCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI3MDAiIGxldHRlci1zcGFjaW5nPSIzIiBmaWxsPSIjZmZmZmZmIj5FR0FEQTwvdGV4dD4KICA8dGV4dCB4PSIyMSIgeT0iNzQiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkuNSIgZm9udC13ZWlnaHQ9IjQwMCIgbGV0dGVyLXNwYWNpbmc9IjIuNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjU1KSI+RVNUUkFURUdJQSBHTE9CQUwgREUgQUNUSVZPUzwvdGV4dD4KICA8dGV4dCB4PSIyMSIgeT0iMjIiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiIGZvbnQtd2VpZ2h0PSI0MDAiIGxldHRlci1zcGFjaW5nPSIxLjUiIGZpbGw9IiNjODEwMmUiPkRJTsOBTUlDT1MgQVZBTlpBRE9TPC90ZXh0Pgo8L3N2Zz4=" alt="Logo EGADA" class="hero-logo">
-        <p style="color: var(--gold); letter-spacing: 10px; font-weight: 600; margin-bottom: 15px;">EGADA INSTITUTIONAL TERMINAL</p>
-        
-        <h1 class="mega-slogan">+ INFORMACIÓN.<br>- RIESGO.</h1>
-        
-        <p class="hero-p">Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.</p>
-        <a href="AQUI_TU_ENLACE_TERMINAL" class="btn-pulse">LANZAR TERMINAL</a>
-    </section>
-
-    <div class="brokers-strip">
-        <p style="font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Compatible con los principales brokers internacionales</p>
-        <div class="brokers-container">
-            <img src="https://play-lh.googleusercontent.com/l6m9l92a4SgtCXGnJX97AXNSSh8eVZPxDLpklXe4QpSE2PGam69wTWzr1sna1fc74no6" alt="Interactive Brokers" class="broker-logo">
-            <img src="https://play-lh.googleusercontent.com/CnIiSqXPx7e4hWswuiHiS-itNEZwTbwaCg-8WS-NcijipaK3sSVlbOuRPiF-HqJyXRgF" alt="GBM" class="broker-logo">
-            <img src="https://play-lh.googleusercontent.com/v6d7GL4d_NkeDSBFeQ4FKiEIIjBD8ON4ZGkWodkxpp_wMSo1amlgB3HYIctVzUV3Q8k" alt="Schwab" class="broker-logo">
-            <img src="https://etoro-cdn.etorostatic.com/web-client/img/meta/meta-etoro-logo.png" alt="eToro" class="broker-logo">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="reveal show hero-main-block">
+        <div class="hero-main-logo">
+          <img src="../Desktop/egada-flet/assets/logo.svg" alt="EGADA" />
         </div>
+        <div class="kicker">EGADA INSTITUTIONAL TERMINAL</div>
+        <h1>+ INFORMACIÓN.<br />- RIESGO.</h1>
+        <p class="lead">
+          Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary wide" href="#">Lanzar terminal</a>
+        </div>
+      </div>
+      <div class="glass hero-card reveal">
+        <div class="metric"><span class="l">Info descargable</span><span class="v">PDF + EXCEL EN CUALQUIER DISPOSITIVO</span></div>
+        <div class="metric"><span class="l">Analisis financiero</span><span class="v">SUSTENTO FUERTE + REPORTE EJECUTIVO EXPLICATIVO</span></div>
+        <div class="metric"><span class="l">Terminales financieras</span><span class="v">MULTIPLATAFORMA CON DATOS DESCARGABLES</span></div>
+        <div class="metric"><span class="l">HUB + newsletter</span><span class="v">NEWSLETTER FINANCIERO Y HERRAMIENTAS TODO EN UNO</span></div>
+      </div>
     </div>
+  </section>
 
-    <div class="chart-container">
-        <div class="chart-header">
-            <h3>SIMULACIÓN DE ESCENARIOS <span>MONTE CARLO</span></h3>
-            <p>Proyección estadística a 50 periodos</p>
+  <section class="section-dashboard-ref">
+    <div class="wrap">
+      <div class="title-center reveal">
+        <h2>Referencia visual directa del dashboard EGADA</h2>
+        <p>Gráfica de rendimiento animada y <span class="kw">asignación estricta</span> por activos, como en tu flujo real de operación.</p>
+      </div>
+
+      <div class="perf-layout">
+        <div class="perf-card reveal">
+          <div class="perf-dashboard-inner">
+            <div class="perf-dashboard-header">
+              <div class="title-container">
+                <h2>Rendimiento del Portafolio</h2>
+              </div>
+              <div class="perf-dashboard-badges">
+                <div class="perf-badge-interactive">✨ Explicación IA</div>
+              </div>
+            </div>
+            <div class="perf-chart-container">
+              <canvas id="portfolioChart"></canvas>
+              <div class="moving-tooltip" id="movingTooltip">
+                <span class="real">Real: <span id="realDataValue" class="number-val">+0.0%</span></span> |
+                <span class="marko">Markowitz: <span id="markoDataValue" class="number-val">+0.0%</span></span>
+              </div>
+            </div>
+            <div class="perf-dashboard-footer">
+              <div class="perf-timeframes">
+                <button type="button" class="perf-time-btn">1D</button>
+                <button type="button" class="perf-time-btn active">7D</button>
+                <button type="button" class="perf-time-btn">1M</button>
+                <button type="button" class="perf-time-btn">3M</button>
+                <button type="button" class="perf-time-btn">6M</button>
+                <button type="button" class="perf-time-btn">1A</button>
+                <button type="button" class="perf-time-btn">5A</button>
+                <button type="button" class="perf-time-btn">TOTAL</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="chart-wrapper">
-            <canvas id="monteCarloChart"></canvas>
-            <div class="optima-tangencia">ÓPTIMA<br>TANGENCIA</div>
+        <aside class="glass perf-side reveal">
+          <div class="perf-side-main" id="perfOrb">
+            <div>
+              <small>Resultado acumulado</small>
+              <strong id="kpiReturn">+0.0%</strong>
+            </div>
+          </div>
+          <div class="perf-side-grid">
+            <div class="mini-kpi"><small>Volatilidad actual</small><strong>12.4%</strong></div>
+            <div class="mini-kpi"><small>Sharpe ratio</small><strong>1.18</strong></div>
+            <div class="mini-kpi"><small>Estado de señal</small><strong style="color:var(--ok)">SIN REBALANCEO</strong></div>
+            <div class="mini-kpi"><small>Rendimiento esperado</small><strong>+14.6%</strong></div>
+          </div>
+        </aside>
+      </div>
+
+      <article class="bubble-card reveal">
+        <h3>Asignación por activo con pesos estrictos</h3>
+        <p>Los porcentajes definidos por el modelo deben mantenerse para preservar el perfil de riesgo y objetivo.</p>
+        <div class="bubble-wrap">
+          <div class="mini-bubble mb-1"></div>
+          <div class="mini-bubble mb-2"></div>
+          <div class="mini-bubble mb-3"></div>
+          <div class="mini-bubble mb-4"></div>
+          <div class="mini-bubble mb-5"></div>
+          <div class="alloc-bubble b1"><div><b>30%</b><span>NVDA</span></div></div>
+          <div class="alloc-bubble b2"><div><b>30%</b><span>GLDN</span></div></div>
+          <div class="alloc-bubble b3"><div><b>30%</b><span>WMT</span></div></div>
+          <div class="alloc-bubble b4"><div><b>10%</b><span>SPX</span></div></div>
         </div>
+      </article>
     </div>
+  </section>
 
-    <section class="mobile-section">
-        <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 10px;">Tu portafolio sobre la marcha.</h2>
-        <p style="color: #929497; margin-bottom: 50px;">En cualquier lugar y en cualquier momento.</p>
+  <section class="section-app-features">
+    <div class="wrap">
+      <div class="title-center reveal">
+        <h2>Elementos operativos clave de la app</h2>
+        <p>Terminales de acciones, heatmap global y módulos de análisis con estilo visual conectado.</p>
+      </div>
 
-        <div class="transparent-phone-mockup">
+      <div class="feature-grid">
+        <article class="feature reveal">
+          <div class="icon"><span class="material-symbols-outlined">dashboard</span></div>
+          <h3>Dashboard ejecutivo</h3>
+          <p>KPIs de activos bajo gestión, alertas, métricas de riesgo y estado de mercado en una sola vista.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon"><span class="material-symbols-outlined">analytics</span></div>
+          <h3>Análisis Markowitz/CAPM</h3>
+          <p>Frontera eficiente, portafolio de tangencia, mínima varianza y diagnóstico cuantitativo explicable.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon"><span class="material-symbols-outlined">receipt_long</span></div>
+          <h3>Registro de operaciones</h3>
+          <p>Estructura de compras y ventas para mantener trazabilidad y coherencia entre ejecución y resultados.</p>
+        </article>
+      </div>
+
+      <div class="terminal-heatmap">
+        <article class="glass th-card reveal">
+          <div class="th-head">
+            <div class="th-ibox"><span class="material-symbols-outlined">candlestick_chart</span></div>
+            <div>
+              <h3>Terminal de acciones</h3>
+              <div class="th-badges">
+                <span class="th-badge primary">Data Descargable</span>
+                <span class="th-badge secondary">LIVE DATA</span>
+              </div>
+            </div>
+          </div>
+          <p>
+            Visualiza contexto por activo y señales relevantes de desempeño. Diseñado para ejecutar solo cuando
+            existe motivo de rebalanceo, no por variaciones de ruido intradía.
+          </p>
+          <div class="terminal-glow">
+            <span class="terminal-glow-text">Descarga datos historicos en PDF y Excel multiplataforma</span>
+            <span class="terminal-glow-icons" aria-hidden="true">
+              <span class="terminal-glow-icon"><span class="material-symbols-outlined">download</span></span>
+              <span class="terminal-file-chip pdf">PDF</span>
+              <span class="terminal-file-chip xls">XLS</span>
+            </span>
+          </div>
+          <div class="terminal-carousel">
+            <div class="terminal-carousel-track">
+              <div class="t-asset-card"><span class="tk">NVDA</span><div class="t-asset-logo"><img src="https://www.techpowerup.com/review/nvidia-app-v1-0/images/small.png" alt="NVDA"></div><b>+730%</b></div>
+              <div class="t-asset-card"><span class="tk">SPY</span><div class="t-asset-logo"><img src="https://pbs.twimg.com/media/Foc5p55XEAMpKMe.png" alt="SPY"></div><b>+22%</b></div>
+              <div class="t-asset-card"><span class="tk">AAPL</span><div class="t-asset-logo"><img src="https://images.seeklogo.com/logo-png/42/1/apple-logo-png_seeklogo-427436.png" alt="AAPL"></div><b>+145%</b></div>
+              <div class="t-asset-card"><span class="tk">TSLA</span><div class="t-asset-logo"><img src="https://play-lh.googleusercontent.com/b79jRmQK2sZABaN0xI2wIAFrEcBxs0CuDzNTmF088DGrJXbemaMNRvrhqH0St28J7CU" alt="TSLA"></div><b>+180%</b></div>
+              <div class="t-asset-card"><span class="tk">JPM</span><div class="t-asset-logo"><img src="https://www.pillar.vc/playlist/wp-content/uploads/sites/3/2020/09/unnamed-1.jpg" alt="JPM"></div><b>+31%</b></div>
+              <div class="t-asset-card"><span class="tk">NOW</span><div class="t-asset-logo"><img src="https://play-lh.googleusercontent.com/tx6KvUHxMaVEPnQZcRn2_Nqn8-cFqQsoJknZBtGRgzYFB_D5PvRmjHU397wLst9YZB0" alt="NOW"></div><b>+94%</b></div>
+              <div class="t-asset-card"><span class="tk">NVDA</span><div class="t-asset-logo"><img src="https://www.techpowerup.com/review/nvidia-app-v1-0/images/small.png" alt="NVDA"></div><b>+730%</b></div>
+              <div class="t-asset-card"><span class="tk">SPY</span><div class="t-asset-logo"><img src="https://pbs.twimg.com/media/Foc5p55XEAMpKMe.png" alt="SPY"></div><b>+22%</b></div>
+              <div class="t-asset-card"><span class="tk">AAPL</span><div class="t-asset-logo"><img src="https://images.seeklogo.com/logo-png/42/1/apple-logo-png_seeklogo-427436.png" alt="AAPL"></div><b>+145%</b></div>
+              <div class="t-asset-card"><span class="tk">TSLA</span><div class="t-asset-logo"><img src="https://play-lh.googleusercontent.com/b79jRmQK2sZABaN0xI2wIAFrEcBxs0CuDzNTmF088DGrJXbemaMNRvrhqH0St28J7CU" alt="TSLA"></div><b>+180%</b></div>
+            </div>
+          </div>
+          <div class="ecg-strip ecg-strip--in-terminal reveal">
+            <div class="head">
+              <span class="ecg-dot"></span>
+              <span>Monitorio de tus activos 24/7 y elementos visuales para mejorar tu experiencia EGADA</span>
+            </div>
+            <canvas id="ecgCanvas"></canvas>
+          </div>
+        </article>
+        <article class="glass th-card reveal">
+          <div class="th-head">
+            <div class="th-ibox"><span class="material-symbols-outlined">grid_view</span></div>
+            <div>
+              <h3>Heatmap global</h3>
+              <div class="th-badges">
+                <span class="th-badge primary">Sectores GICS</span>
+                <span class="th-badge secondary">LIVE DATA</span>
+              </div>
+            </div>
+          </div>
+          <p>
+            Lectura rápida del mercado por intensidad y dirección. Permite detectar concentración de riesgo y zonas de presión.
+          </p>
+          <div class="heatmap-grid" id="heatmapGrid">
+            <div class="heat" data-sym="AAPL" style="--delay:.1"><span class="sym">AAPL</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="MSFT" style="--delay:.2"><span class="sym">MSFT</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="NVDA" style="--delay:.3"><span class="sym">NVDA</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="AMZN" style="--delay:.4"><span class="sym">AMZN</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="GOOGL" style="--delay:.5"><span class="sym">GOOGL</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="META" style="--delay:.6"><span class="sym">META</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="SPY" style="--delay:.7"><span class="sym">SPY</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="QQQ" style="--delay:.8"><span class="sym">QQQ</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="TSLA" style="--delay:.9"><span class="sym">TSLA</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="JPM" style="--delay:1.0"><span class="sym">JPM</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="WMT" style="--delay:1.1"><span class="sym">WMT</span><span class="ret">+0.00%</span></div>
+            <div class="heat" data-sym="GLD" style="--delay:1.2"><span class="sym">GLD</span><span class="ret">+0.00%</span></div>
+          </div>
+        </article>
+      </div>
+      <article class="glass compat-copy reveal eval-compat">
+        <div class="eval-compat-head">
+          <div class="eval-icon-cyan" aria-hidden="true">
+            <span class="material-symbols-outlined">workspace_premium</span>
+          </div>
+          <div class="eval-compat-head-text">
+            <h3>Evaluación Profesional de Portafolio Existente</h3>
+            <div class="eval-cyan-badges">
+              <span class="eval-cyan-badge eval-cyan-badge--solid">MARKOWITZ + MONTE CARLO</span>
+              <span class="eval-cyan-badge eval-cyan-badge--outline">ANÁLISIS COMPLETO</span>
+            </div>
+          </div>
+        </div>
+        <p>
+          Evalúa carteras personalizadas con análisis profesional detallado, compara contra portafolios óptimos y recibe
+          <span class="kw">explicación IA</span> para entender decisiones de rebalanceo con criterio técnico.
+        </p>
+        <ul class="eval-list-compat">
+          <li>Diagnóstico de eficiencia con frontera Markowitz y portafolio tangente.</li>
+          <li>8 gráficos profesionales para composición, correlación, riesgo y desempeño.</li>
+          <li>Recomendaciones accionables con exportación ejecutiva.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-brokers">
+    <div class="wrap">
+      <div class="compat-grid">
+        <article class="glass compat-copy reveal">
+          <h3>Compatible con los principales brokers internacionales</h3>
+          <p class="strong">
+            Tú tienes el control de tus recursos y operas con tu broker de preferencia.
+          </p>
+          <p>
+            Debes comprar los activos del portafolio asignado a tus expectativas y perfil de riesgo.
+            Después registras esas posiciones en EGADA para seguimiento en tiempo real.
+          </p>
+          <p>
+            No es necesario revisar diario. El modelo ignora ruido y solo sugiere operaciones cuando
+            existe condición real de rebalanceo.
+          </p>
+          <p>
+            Recibirás correo de notificación cuando toque rebalancear y resumen semanal de rendimiento
+            los viernes al cierre.
+          </p>
+        </article>
+        <article class="broker-seq reveal">
+          <div class="broker-mosaic" id="brokerMosaicGrid">
+            <div class="broker-cell">
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/l6m9l92a4SgtCXGnJX97AXNSSh8eVZPxDLpklXe4QpSE2PGam69wTWzr1sna1fc74no6" alt="Interactive Brokers"></div>
+              <span class="broker-name">Interactive Brokers</span>
+            </div>
+            <div class="broker-cell">
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/CnIiSqXPx7e4hWswuiHiS-itNEZwTbwaCg-8WS-NcijipaK3sSVlbOuRPiF-HqJyXRgF" alt="GBM"></div>
+              <span class="broker-name">GBM+</span>
+            </div>
+            <div class="broker-cell">
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/v6d7GL4d_NkeDSBFeQ4FKiEIIjBD8ON4ZGkWodkxpp_wMSo1amlgB3HYIctVzUV3Q8k" alt="Charles Schwab"></div>
+              <span class="broker-name">Charles Schwab</span>
+            </div>
+            <div class="broker-cell">
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/atHG9zZA-f4mLrpWICOsOV7xqUYwPGJba4cNWw86WkdpL7kFuMpTFf4TR0_xyujj55U" alt="Broker compatible 1"></div>
+              <span class="broker-name">Broker compatible 1</span>
+            </div>
+            <div class="broker-cell">
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/fL4njISMsR9QoNfRjbiZAP0t4dmCOWpXqFb1vmcL69nFHk_h1vVgLIgu-lLkuzvVID0" alt="Broker compatible 2"></div>
+              <span class="broker-name">Broker compatible 2</span>
+            </div>
+            <div class="broker-cell">
+              <div class="broker-icon"><img src="https://etoro-cdn.etorostatic.com/web-client/img/meta/meta-etoro-logo.png" alt="eToro"></div>
+              <span class="broker-name">eToro</span>
+            </div>
+            <p class="broker-more">Y otros...</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-hub-rotatory">
+    <div class="wrap">
+      <div class="hub-grid">
+        <article class="hub-orbit reveal">
+          <div class="hub-orbit-visual" aria-hidden="true">
+            <div class="orbit-ring"></div>
+            <div class="orbit-ring r2"></div>
+            <div class="hub-center">
+              <img src="NEWSLETTERS.svg" alt="HUB financiero / Newsletters" />
+            </div>
+            <!-- Íconos y colores alineados con views/tools_view.py _TOOL_META -->
+            <div class="hub-sat-layer">
+              <div class="hub-sat" style="--i:0; --angle:calc(0 * 45deg - 90deg); --icon-c:#4ade80;" title="Simulador de préstamo">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">account_balance</span></div></div>
+              </div>
+              <div class="hub-sat" style="--i:1; --angle:calc(1 * 45deg - 90deg); --icon-c:#a78bfa;" title="Convertidor de divisas">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">currency_exchange</span></div></div>
+              </div>
+              <div class="hub-sat" style="--i:2; --angle:calc(2 * 45deg - 90deg); --icon-c:#fb923c;" title="Interés compuesto">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">trending_up</span></div></div>
+              </div>
+              <div class="hub-sat" style="--i:3; --angle:calc(3 * 45deg - 90deg); --icon-c:#60a5fa;" title="Planificador de retiro">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">savings</span></div></div>
+              </div>
+              <div class="hub-sat" style="--i:4; --angle:calc(4 * 45deg - 90deg); --icon-c:#f87171;" title="Calculadora fiscal">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">gavel</span></div></div>
+              </div>
+              <div class="hub-sat" style="--i:5; --angle:calc(5 * 45deg - 90deg); --icon-c:#14b8a6;" title="Valuación empresas y proyectos">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">assessment</span></div></div>
+              </div>
+              <div class="hub-sat" style="--i:6; --angle:calc(6 * 45deg - 90deg); --icon-c:#38bdf8;" title="Real State">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">domain</span></div></div>
+              </div>
+              <div class="hub-sat" style="--i:7; --angle:calc(7 * 45deg - 90deg); --icon-c:#d97706;" title="Consultoría personalizada">
+                <div class="hub-sat-inner"><div class="hub-float"><span class="material-symbols-outlined">groups_2</span></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="glass hub-copy reveal">
+          <h3>HUB financiero y newsletters</h3>
+          <p>
+            El HUB concentra herramientas de simulación y análisis aplicado para decisiones patrimoniales.
+            Newsletters complementa la estrategia con contexto ejecutivo y señal de mercado relevante.
+          </p>
+          <p>
+            El usuario opera con una sola lógica: analizar, ejecutar en broker, registrar en EGADA y recibir
+            seguimiento guiado por modelo.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="ia-app-grid">
+        <article class="glass ia-copy reveal">
+          <h3>Asistencia Inteligente integrada</h3>
+          <p>
+            La asistencia se mantiene dentro del flujo operativo. Ayuda a interpretar métricas,
+            contexto de noticias y prioridades de ejecución con lenguaje claro.
+          </p>
+          <ul class="ia-list">
+            <li>Interacción por texto y voz dentro de la app.</li>
+            <li>Explicación contextual de riesgo y desempeño.</li>
+            <li>Resúmenes IA enfocados en utilidad operativa.</li>
+            <li>Control por límites de plan y protección anti-abuso.</li>
+          </ul>
+        </article>
+        <article class="ia-icon-shell reveal">
+          <div class="transparent-phone-mockup">
             <div class="dynamic-island"></div>
-            
             <div class="iphone-screen">
-                <div class="siri-container"></div>
-                
-                <div class="phone-status-bar">
-                    <span class="status-left">9:41</span>
-                    <span class="status-right">5G   80%</span>
+              <div class="siri-container"></div>
+              <div class="phone-status-bar">
+                <span class="status-left">9:41</span>
+                <span class="status-right">5G 80%</span>
+              </div>
+              <div class="mobile-ia-holder">
+                <div class="mobile-ia-stage">
+                  <canvas id="iaIconCanvas"></canvas>
                 </div>
-                
-                <div class="asset-carousel-container">
-                    <div class="asset-carousel">
-                        <div class="asset-card">
-                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">NVDA</span>
-                            <div class="asset-logo-container"><img src="https://www.techpowerup.com/review/nvidia-app-v1-0/images/small.png" class="asset-logo-img"></div>
-                            <b>+730%</b>
-                        </div>
-                        <div class="asset-card">
-                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">SPY</span>
-                            <div class="asset-logo-container"><img src="https://pbs.twimg.com/media/Foc5p55XEAMpKMe.png" class="asset-logo-img"></div>
-                            <b>+22%</b>
-                        </div>
-                        <div class="asset-card">
-                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">AAPL</span>
-                            <div class="asset-logo-container"><img src="https://images.seeklogo.com/logo-png/42/1/apple-logo-png_seeklogo-427436.png" class="asset-logo-img"></div>
-                            <b>+145%</b>
-                        </div>
-                        
-                        <div class="asset-card">
-                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">TSLA</span>
-                            <div class="asset-logo-container"><img src="https://play-lh.googleusercontent.com/b79jRmQK2sZABaN0xI2wIAFrEcBxs0CuDzNTmF088DGrJXbemaMNRvrhqH0St28J7CU" class="asset-logo-img"></div>
-                            <b>+730%</b>
-                        </div>
-                        <div class="asset-card">
-                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">JPM</span>
-                            <div class="asset-logo-container"><img src="https://www.pillar.vc/playlist/wp-content/uploads/sites/3/2020/09/unnamed-1.jpg" class="asset-logo-img"></div>
-                            <b>+22%</b>
-                        </div>
-                        <div class="asset-card">
-                            <span style="font-size: 13px; color:var(--gold); margin-bottom:10px; font-weight:700;">NOW</span>
-                            <div class="asset-logo-container"><img src="https://play-lh.googleusercontent.com/tx6KvUHxMaVEPnQZcRn2_Nqn8-cFqQsoJknZBtGRgzYFB_D5PvRmjHU397wLst9YZB0" class="asset-logo-img"></div>
-                            <b>+145%</b>
-                        </div>
-                    </div>
-                </div>
+                <p class="mobile-ia-caption">[Asistencia Inteligente en cualquier momento]</p>
+              </div>
             </div>
-        </div>
-    </section>
+          </div>
+        </article>
+      </div>
 
-    <section class="bubble-section">
-        <p class="bubble-section-title">Portafolios objetivo para tu perfil de riesgo</p>
-        
-        <div class="mini-bubble mb-1"></div>
-        <div class="mini-bubble mb-2"></div>
-        <div class="mini-bubble mb-3"></div>
-        <div class="mini-bubble mb-4"></div>
-        <div class="mini-bubble mb-5"></div>
-
-        <div class="bubble-container">
-            <div class="bubble-item b-cyan"><span class="bubble-percent">30%</span><span class="bubble-ticker">NVDA</span></div>
-            <div class="bubble-item b-lime"><span class="bubble-percent">30%</span><span class="bubble-ticker">GLDN</span></div>
-            <div class="bubble-item b-magenta"><span class="bubble-percent">30%</span><span class="bubble-ticker">WMT</span></div>
-            <div class="bubble-item b-orange"><span class="bubble-percent">10%</span><span class="bubble-ticker">SPX</span></div>
-        </div>
-    </section>
-
-    <section class="grid">
-        <div class="glass-card-wrapper">
-            <div class="card-bg-shape shape-1"></div>
-            <div class="glass-card">
-                <span class="card-pretitle">- CORE -</span>
-                <div class="card-badge bg-orange">ALGO</div>
-                <h3>Markowitz Pro</h3>
-                <p>Construimos tu Frontera Eficiente personalizada buscando el máximo Sharpe Ratio posible para tu perfil.</p>
+      <div class="device-grid">
+        <article class="glass device-card reveal">
+          <h4>iPhone · Vertical y horizontal</h4>
+          <p>Vertical para quickview operativo. Horizontal para mayor contexto visual y lectura comparativa.</p>
+          <div class="mock-row">
+            <div class="mock phone-v has-image">
+              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-c7bb46d1-c03d-41e6-af34-bffadd1543b8.png" alt="Vista iPhone vertical EGADA" />
             </div>
-        </div>
-
-        <div class="glass-card-wrapper">
-            <div class="card-bg-shape shape-2"></div>
-            <div class="glass-card">
-                <span class="card-pretitle">- SAFETY -</span>
-                <div class="card-badge bg-green">RISK</div>
-                <h3>Control de Riesgo</h3>
-                <p>Monitoreamos tu Maximum Drawdown y Value at Risk para que nunca arriesgues más de lo planeado.</p>
+            <div class="mock phone-h has-image">
+              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-44068517-330f-4711-978b-002278a026c1.png" alt="Vista iPhone horizontal EGADA" />
             </div>
-        </div>
-
-        <div class="glass-card-wrapper">
-            <div class="card-bg-shape shape-3"></div>
-            <div class="glass-card">
-                <span class="card-pretitle">- ACTION -</span>
-                <div class="card-badge bg-yellow">EXEC</div>
-                <h3>Alertas de Ejecución</h3>
-                <p>Recibe notificaciones precisas de rebalanceo. Sabrás exactamente qué vender y qué comprar cada semana.</p>
+          </div>
+        </article>
+        <article class="glass device-card reveal">
+          <h4>Mac/PC · Vista de análisis</h4>
+          <p>Espacio ideal para monitoreo completo, terminales y detalle de métricas avanzadas.</p>
+          <div class="mock-row">
+            <div class="mock desk-v has-image">
+              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-6cb6f553-29c3-446a-b5f0-c79fd2188840.png" alt="Vista dashboard EGADA" />
             </div>
-        </div>
-    </section>
+            <div class="mock desk-h has-image">
+              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-e18e40e0-ccea-4985-9d06-34d316955648.png" alt="Vista newsletters EGADA" />
+            </div>
+          </div>
+        </article>
+      </div>
 
-    <section class="monitoring-section">
-        <h2>Monitoreo Semanal y Puntual</h2>
-        <div class="ecg-container">
-            <svg class="ecg-svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
-                <path class="ecg-path" d="M 0 50 L 150 50 L 170 40 L 190 50 L 220 50 L 235 10 L 265 90 L 280 50 L 310 50 L 330 60 L 350 50 L 500 50 L 520 40 L 540 50 L 570 50 L 585 10 L 615 90 L 630 50 L 660 50 L 680 60 L 700 50 L 850 50 L 870 40 L 890 50 L 920 50 L 935 10 L 965 90 L 980 50 L 1000 50" />
-            </svg>
-        </div>
-    </section>
-
-    <div id="banner-container">
-        <canvas id="canvas"></canvas>
-        <a href="AQUI_TU_ENLACE_TEST" class="btn-pulse banner-btn">Haz tu test de perfil de riesgo</a>
+      <div class="platform-grid">
+        <article class="platform reveal">
+          <h4>Web de escritorio</h4>
+          <p>Mayor superficie para análisis profundo, comparativos y operación de precisión.</p>
+        </article>
+        <article class="platform reveal">
+          <h4>App móvil</h4>
+          <p>Control de estado, alertas y decisiones puntuales desde cualquier lugar.</p>
+        </article>
+        <article class="platform reveal">
+          <h4>Experiencia continua</h4>
+          <p>Misma lógica de datos y proceso operativo en ambos canales para evitar fricción.</p>
+        </article>
+      </div>
     </div>
+  </section>
 
-    <section class="faq-section">
-        <h2>Preguntas Frecuentes</h2>
-        <div class="faq-container">
-            <details class="faq-item">
-                <summary>¿Cuál es la primera pregunta frecuente de prueba?</summary>
-                <div class="faq-content">
-                    <p>Este es un texto de relleno que podrás editar más adelante.</p>
-                </div>
-            </details>
-            <details class="faq-item">
-                <summary>¿Cuál es la segunda pregunta frecuente de prueba?</summary>
-                <div class="faq-content">
-                    <p>Este es un texto de relleno que podrás editar más adelante.</p>
-                </div>
-            </details>
+  <section>
+    <div class="wrap">
+      <div class="title-center reveal">
+        <h2>Preguntas frecuentes</h2>
+        <p>Dudas generales de nuevos usuarios al iniciar en EGADA.</p>
+      </div>
+      <div class="faq-wrap">
+        <div class="faq-item reveal">
+          <button class="faq-q" type="button">¿EGADA ejecuta operaciones directamente en mi broker?<span class="plus">+</span></button>
+          <div class="faq-a">No. EGADA no ejecuta operaciones por ti. Te indica cuándo conviene rebalancear según el modelo. Tú mantienes el control de ejecución.</div>
         </div>
-    </section>
-
-    <section class="newsletter-section">
-        <h2 style="color: var(--gold); margin-bottom: 10px;">Únete a la élite de inversores objetivos.</h2>
-        <input type="email" class="email-input" placeholder="[email protected]"><br>
-        <a href="AQUI_TU_ENLACE_NEWSLETTER" class="btn-pulse" style="font-size: 16px; padding: 15px 40px;">Suscribirme ahora</a>
-    </section>
-
-    <div class="news-footer">
-        <div class="news-label-live"><span>LIVE</span></div>
-        <div class="news-label-breaking"><span>BREAKING NEWS</span></div>
-        <div class="news-ticker-container">
-            <div class="news-ticker">
-                <div class="news-item"><b>MARKET:</b> La Fed mantiene tasas sin cambios.</div>
-                <div class="news-item"><b>ALERT:</b> Tu portafolio sugiere rebalanceo.</div>
-                <div class="news-item"><b>MARKET:</b> La Fed mantiene tasas sin cambios.</div>
-                <div class="news-item"><b>ALERT:</b> Tu portafolio sugiere rebalanceo.</div>
-            </div>
+        <div class="faq-item reveal">
+          <button class="faq-q" type="button">¿Tengo que revisar la app todos los días?<span class="plus">+</span></button>
+          <div class="faq-a">No. La lógica está diseñada para filtrar ruido. Recibirás notificaciones solo cuando sea necesario actuar y resumen semanal los viernes al cierre.</div>
         </div>
+        <div class="faq-item reveal">
+          <button class="faq-q" type="button">¿Cómo inicio si ya tengo cuenta en un broker?<span class="plus">+</span></button>
+          <div class="faq-a">Compras en tu broker los activos de tu portafolio asignado, luego los registras en EGADA para seguimiento en tiempo real y control de rebalanceo.</div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q" type="button">¿Qué aporta la Asistencia Inteligente?<span class="plus">+</span></button>
+          <div class="faq-a">Explica resultados y contexto de mercado en lenguaje claro, para que entiendas el porqué de cada señal antes de ejecutar una operación.</div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q" type="button">¿La plataforma funciona en web y app móvil?<span class="plus">+</span></button>
+          <div class="faq-a">Sí. Puedes analizar en escritorio y dar seguimiento en móvil con continuidad de datos y experiencia consistente.</div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q" type="button">¿Qué recibo por correo de forma automática?<span class="plus">+</span></button>
+          <div class="faq-a">Notificaciones de rebalanceo cuando aplica y un resumen semanal de rendimiento con cierre de viernes para seguimiento ejecutivo.</div>
+        </div>
+      </div>
+
+      <div class="cta-band reveal">
+        <h3>Opera menos por impulso, más por método.</h3>
+        <p>EGADA te avisa cuándo actuar. El resto del tiempo, tu estrategia sigue su curso.</p>
+        <a class="btn btn-primary" href="#">Solicitar acceso</a>
+      </div>
     </div>
+  </section>
 
-    <footer><p>© 2026 EGADA Portfolio Manager | Ciudad de México</p></footer>
-
-    <div id="install-prompt">
-        <span class="close-prompt" onclick="this.parentElement.style.display='none'">×</span>
-        <div class="prompt-header">
-            <img src="favicon.png" class="prompt-icon" alt="EGADA">
-            <div class="prompt-text">
-                <h4>Instalar EGADA Terminal</h4>
-                <p>Acceso rápido en tu pantalla de inicio</p>
-            </div>
-        </div>
-        <div class="prompt-instructions" id="instruction-text">
-            Toca compartir y "Agregar a inicio"
-        </div>
+  <div id="install-prompt" role="dialog" aria-labelledby="install-prompt-title">
+    <button type="button" class="close-prompt" aria-label="Cerrar">×</button>
+    <div class="prompt-header">
+      <img src="favicon.png" class="prompt-icon" alt="" width="45" height="45" />
+      <div class="prompt-text">
+        <h4 id="install-prompt-title">Instalar EGADA Terminal</h4>
+        <p>Acceso rápido desde tu pantalla de inicio</p>
+      </div>
     </div>
+    <div class="prompt-instructions" id="instruction-text"></div>
+  </div>
 
-    <script>
-        const ctx = document.getElementById('monteCarloChart').getContext('2d');
-        const datasets = [];
-        for (let i = 0; i < 15; i++) {
-            let data = [1];
-            for (let j = 1; j < 50; j++) { data.push(data[j-1] * (1 + (Math.random() * 0.04 - 0.018))); }
-            datasets.push({ data: data, borderColor: 'rgba(255, 255, 255, 0.08)', borderWidth: 1.5, pointRadius: 0, tension: 0.4 });
+  <footer>
+    © 2026 EGADA Portfolio Manager · Ciudad de México · Plataforma de inteligencia de portafolio
+  </footer>
+
+  <script>
+    const egadaPrefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Subtle stagger for elegant reveals
+    document.querySelectorAll(".reveal").forEach((el, i) => {
+      el.style.setProperty("--reveal-delay", `${(i % 8) * 45}ms`);
+    });
+
+    // Instalar app en móvil (iOS / Android) — no mostrar si ya está en modo standalone
+    (function () {
+      const promptEl = document.getElementById("install-prompt");
+      const instruction = document.getElementById("instruction-text");
+      const closeBtn = promptEl?.querySelector(".close-prompt");
+      if (!promptEl || !instruction) return;
+
+      const isStandalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        (window.navigator && window.navigator.standalone === true);
+      if (isStandalone) return;
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isAndroid = /Android/.test(navigator.userAgent);
+
+      if (isIOS) {
+        instruction.innerHTML =
+          'Toca el icono <img src="https://img.icons8.com/ios/20/ffffff/upload--v1.png" alt="" width="20" height="20" style="vertical-align:middle" /> y luego <strong>Agregar a inicio</strong>';
+      } else if (isAndroid) {
+        instruction.innerHTML =
+          'Toca los tres puntos (<strong>⋮</strong>) y elige <strong>Instalar aplicación</strong>';
+      } else {
+        return;
+      }
+
+      setTimeout(() => {
+        promptEl.style.display = "block";
+      }, 3000);
+
+      closeBtn?.addEventListener("click", () => {
+        promptEl.style.display = "none";
+      });
+    })();
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("show"); });
+    }, { threshold: 0.14 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // Cursor-linked ambient light across cards/blocks
+    const cursorReactive = document.querySelectorAll(".glass, .feature, .platform, .cta-band, .broker-card, .hub-orbit, .transparent-phone-mockup, .eval-compat, .perf-card");
+    cursorReactive.forEach((el) => el.classList.add("cursor-react"));
+    document.addEventListener("pointermove", (e) => {
+      cursorReactive.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 100;
+        const y = ((e.clientY - r.top) / r.height) * 100;
+        if (x >= 0 && x <= 100 && y >= 0 && y <= 100) {
+          el.style.setProperty("--mx", `${x}%`);
+          el.style.setProperty("--my", `${y}%`);
         }
-        let targetData = [1];
-        for (let k = 1; k < 50; k++) { targetData.push(targetData[k-1] * 1.008); }
-        datasets.push({ data: targetData, borderColor: 'rgba(201, 162, 39, 0.25)', borderWidth: 8, pointRadius: 0, tension: 0 });
-        datasets.push({ label: 'Objetivo EGADA', data: targetData, borderColor: '#c9a227', borderWidth: 2, pointRadius: 0, tension: 0 });
-        new Chart(ctx, {
-            type: 'line',
-            data: { labels: Array.from({length: 50}, (_, i) => i), datasets: datasets },
+      });
+    });
+
+    // FAQ
+    document.querySelectorAll(".faq-q").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btn.closest(".faq-item").classList.toggle("open");
+      });
+    });
+
+    // Tilt for feature cards
+    document.querySelectorAll(".feature").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `translateY(-3px) rotateX(${(-y * 6).toFixed(2)}deg) rotateY(${(x * 8).toFixed(2)}deg)`;
+      });
+      card.addEventListener("mouseleave", () => { card.style.transform = ""; });
+    });
+
+    // Particle background (login-style dynamic ambient)
+    (function () {
+      const canvas = document.getElementById("particleLayer");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let w = 0, h = 0;
+      const P = [];
+      const N = 52;
+      function clampParticlesToView() {
+        for (const p of P) {
+          p.x = Math.min(Math.max(p.x, -20), w + 20);
+          p.y = Math.min(Math.max(p.y, -20), h + 20);
+        }
+      }
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        clampParticlesToView();
+      }
+      resize();
+      window.addEventListener("resize", resize);
+      for (let i = 0; i < N; i++) {
+        P.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 2.2 + 0.4,
+          vx: (Math.random() - .5) * 0.24,
+          vy: (Math.random() - .5) * 0.24
+        });
+      }
+      function drawStatic() {
+        ctx.clearRect(0, 0, w, h);
+        for (const p of P) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.16)";
+          ctx.fill();
+        }
+      }
+      function tick() {
+        if (egadaPrefersReducedMotion()) {
+          drawStatic();
+          return;
+        }
+        if (document.visibilityState === "hidden") {
+          requestAnimationFrame(tick);
+          return;
+        }
+        ctx.clearRect(0, 0, w, h);
+        for (const p of P) {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < -20) p.x = w + 20;
+          if (p.x > w + 20) p.x = -20;
+          if (p.y < -20) p.y = h + 20;
+          if (p.y > h + 20) p.y = -20;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.18)";
+          ctx.fill();
+        }
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+
+    // Gráfico Chart.js — rendimiento (loop sincronizado con tooltip)
+    (function () {
+      const canvas = document.getElementById("portfolioChart");
+      if (!canvas || typeof Chart === "undefined") return;
+      const ctx = canvas.getContext("2d");
+      const tooltipEl = document.getElementById("movingTooltip");
+      const realValueEl = document.getElementById("realDataValue");
+      const markoValueEl = document.getElementById("markoDataValue");
+      const kpiReturn = document.getElementById("kpiReturn");
+      const perfOrb = document.getElementById("perfOrb");
+      if (!tooltipEl || !realValueEl || !markoValueEl) return;
+      function updatePerfOrbProgress(value) {
+        if (!perfOrb) return;
+        const numeric = Number(value);
+        if (Number.isNaN(numeric)) return;
+        const mapped = Math.max(0, Math.min(100, (numeric + 5) * 4));
+        perfOrb.style.setProperty("--perf-progress", mapped.toFixed(2));
+      }
+
+      let portfolioChartInstance = null;
+      let animationFrameId = null;
+      let currentTrackingX = 0;
+      let currentTrackingY = 0;
+      let isTrackingVisible = false;
+
+      const gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
+      gradientFill.addColorStop(0, "rgba(241, 196, 15, 0.3)");
+      gradientFill.addColorStop(1, "rgba(241, 196, 15, 0)");
+
+      const dataPortafolio = [100.2, 100.2, 100.1, 99.9, 99.8, 99.9, 100.9, 100.8, 100.8, 101.3, 101.4, 101.5, 101.9, 101.9, 102.1, 101.8, 101.9, 101.7, 101.5, 101.8, 101.7, 101.7, 101.6, 101.7, 101.7, 101.6, 101.7, 101.7, 101.8, 101.7, 101.9];
+      const dataMarkowitz = dataPortafolio.map(function (val, index) {
+        return 100.2 + index * 0.025;
+      });
+
+      const numPoints = dataPortafolio.length;
+      const drawingDuration = 4500;
+      const pauseDuration = 3500;
+      const totalLoopTime = drawingDuration + pauseDuration;
+      const delayBetweenPoints = drawingDuration / numPoints;
+
+      const dynamicTrackingPlugin = {
+        id: "dynamicTracking",
+        afterDraw: function (chart) {
+          if (!isTrackingVisible) return;
+          const c = chart.ctx;
+          c.save();
+          c.beginPath();
+          c.moveTo(currentTrackingX, chart.chartArea.top);
+          c.lineTo(currentTrackingX, chart.chartArea.bottom);
+          c.lineWidth = 1;
+          c.strokeStyle = "rgba(241, 196, 15, 0.5)";
+          c.setLineDash([4, 4]);
+          c.stroke();
+          c.restore();
+
+          c.save();
+          c.beginPath();
+          c.arc(currentTrackingX, currentTrackingY, 4, 0, 2 * Math.PI);
+          c.fillStyle = "#f1c40f";
+          c.fill();
+          c.strokeStyle = "rgba(241, 196, 15, 0.5)";
+          c.lineWidth = 1.5;
+          c.stroke();
+          c.restore();
+        }
+      };
+
+      function renderAnimatedChart() {
+        tooltipEl.style.display = "none";
+        isTrackingVisible = false;
+
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+        if (portfolioChartInstance) {
+          portfolioChartInstance.destroy();
+        }
+
+        if (egadaPrefersReducedMotion()) {
+          portfolioChartInstance = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: Array(numPoints).fill(""),
+              datasets: [
+                {
+                  label: "Portafolio",
+                  data: dataPortafolio,
+                  borderColor: "#f1c40f",
+                  borderWidth: 2,
+                  backgroundColor: gradientFill,
+                  fill: true,
+                  pointRadius: 0,
+                  pointHitRadius: 0,
+                  tension: 0
+                },
+                {
+                  label: "Teoría Markowitz",
+                  data: dataMarkowitz,
+                  borderColor: "#0ecb81",
+                  borderWidth: 1.5,
+                  borderDash: [6, 6],
+                  fill: false,
+                  pointRadius: 0,
+                  pointHitRadius: 0,
+                  tension: 0
+                }
+              ]
+            },
             options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#888', font: {size: 10} } } },
-                animation: false 
-            }
-        });
-    </script>
-    <script>
-        (function() {
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            const container = document.getElementById('banner-container');
-            let radius = 80; let growth = 0.9; let history = []; let trailLength = 45; 
-            function resize() {
-                const dpr = window.devicePixelRatio || 1;
-                canvas.width = container.offsetWidth * dpr; canvas.height = container.offsetHeight * dpr;
-                ctx.scale(dpr, dpr);
-            }
-            window.addEventListener('resize', resize); resize();
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const centerX = container.offsetWidth / 2; const centerY = container.offsetHeight / 2;
-                history.push(radius); if (history.length > trailLength) history.shift();
-                for (let i = 0; i < history.length; i++) {
-                    const opacity = i / history.length;
-                    ctx.beginPath(); ctx.arc(centerX, centerY, history[i], 0, Math.PI * 2);
-                    ctx.shadowBlur = 15; ctx.shadowColor = "rgba(255, 255, 255, 0.9)"; 
-                    ctx.lineWidth = 0.1 + (i * 0.02); 
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.4})`; ctx.stroke();
+              responsive: true,
+              maintainAspectRatio: false,
+              animation: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+              },
+              scales: {
+                y: {
+                  display: false,
+                  min: 99,
+                  max: 103
+                },
+                x: {
+                  display: false
                 }
-                ctx.shadowBlur = 8; ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-                const isMobile = container.offsetWidth < 500;
-                
-                if (isMobile) {
-                    ctx.font = "300 29px Arial"; 
-                    ctx.fillText("[Asistencia Inteligente", centerX, centerY - 35);
-                    ctx.fillText("En cualquier momento]", centerX, centerY - 5);
-                } else {
-                    ctx.font = "300 25px Arial"; 
-                    ctx.fillText("[Asistencia Inteligente en cualquier momento]", centerX, centerY - 25);
-                }
-                
-                const maxLimit = Math.min(container.offsetWidth, container.offsetHeight) * 0.45; const minLimit = 40;
-                radius += growth; if (radius > maxLimit || radius < minLimit) growth = -growth;
-                requestAnimationFrame(draw);
-            }
-            draw();
-        })();
-    </script>
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const prompt = document.getElementById('install-prompt');
-            const instruction = document.getElementById('instruction-text');
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+              }
+            },
+            plugins: [dynamicTrackingPlugin]
+          });
 
-            if (!isStandalone) {
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                const isAndroid = /Android/.test(navigator.userAgent);
-
-                if (isIOS) {
-                    instruction.innerHTML = 'Toca el icono <img src="https://img.icons8.com/ios/20/ffffff/upload--v1.png" style="vertical-align:middle"> y luego "Agregar a inicio"';
-                    setTimeout(() => { prompt.style.display = 'block'; }, 3000);
-                } else if (isAndroid) {
-                    instruction.innerText = 'Toca los tres puntos (⋮) y elige "Instalar aplicación"';
-                    setTimeout(() => { prompt.style.display = 'block'; }, 3000);
-                }
+          requestAnimationFrame(function () {
+            if (!portfolioChartInstance) return;
+            const last = numPoints - 1;
+            const meta0 = portfolioChartInstance.getDatasetMeta(0);
+            if (meta0 && meta0.data && meta0.data[last]) {
+              const pt = meta0.data[last].getProps(["x", "y"], true);
+              currentTrackingX = pt.x;
+              currentTrackingY = pt.y;
+              isTrackingVisible = true;
+              portfolioChartInstance.draw();
+              tooltipEl.style.left = pt.x + "px";
+              tooltipEl.style.top = pt.y + "px";
+              tooltipEl.style.display = "block";
+              const percentageReal = (dataPortafolio[last] - 100).toFixed(1);
+              const percentageMarko = (dataMarkowitz[last] - 100).toFixed(1);
+              realValueEl.innerText =
+                Number(percentageReal) >= 0 ? "+" + percentageReal + "%" : percentageReal + "%";
+              markoValueEl.innerText =
+                Number(percentageMarko) >= 0 ? "+" + percentageMarko + "%" : percentageMarko + "%";
+              realValueEl.style.color = Number(percentageReal) < 0 ? "#f6465d" : "#f1c40f";
+              if (kpiReturn) {
+                kpiReturn.textContent = realValueEl.innerText;
+                kpiReturn.style.color = Number(percentageReal) < 0 ? "var(--danger)" : "var(--ok)";
+                updatePerfOrbProgress(Number(percentageReal));
+              }
             }
+          });
+          return;
+        }
+
+        const previousY = function (context) {
+          if (context.index === 0) return context.chart.scales.y.getPixelForValue(100);
+          const meta = context.chart.getDatasetMeta(context.datasetIndex);
+          if (meta && meta.data[context.index - 1]) return meta.data[context.index - 1].getProps(["y"], true).y;
+          return context.chart.scales.y.getPixelForValue(100);
+        };
+
+        const animationConfig = {
+          x: {
+            type: "number",
+            easing: "linear",
+            duration: delayBetweenPoints,
+            from: NaN,
+            delay: function (context) {
+              if (context.type !== "data" || context.xStarted) return 0;
+              context.xStarted = true;
+              return context.index * delayBetweenPoints;
+            }
+          },
+          y: {
+            type: "number",
+            easing: "linear",
+            duration: delayBetweenPoints,
+            from: previousY,
+            delay: function (context) {
+              if (context.type !== "data" || context.yStarted) return 0;
+              context.yStarted = true;
+              return context.index * delayBetweenPoints;
+            }
+          }
+        };
+
+        portfolioChartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: Array(numPoints).fill(""),
+            datasets: [
+              {
+                label: "Portafolio",
+                data: dataPortafolio,
+                borderColor: "#f1c40f",
+                borderWidth: 2,
+                backgroundColor: gradientFill,
+                fill: true,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                tension: 0
+              },
+              {
+                label: "Teoría Markowitz",
+                data: dataMarkowitz,
+                borderColor: "#0ecb81",
+                borderWidth: 1.5,
+                borderDash: [6, 6],
+                fill: false,
+                pointRadius: 0,
+                pointHitRadius: 0,
+                tension: 0
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: animationConfig,
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: false }
+            },
+            scales: {
+              y: {
+                display: false,
+                min: 99,
+                max: 103
+              },
+              x: {
+                display: false
+              }
+            }
+          },
+          plugins: [dynamicTrackingPlugin]
         });
-    </script>
+
+        const startTime = performance.now();
+
+        function syncTrackingAndTooltip(time) {
+          if (!portfolioChartInstance) return;
+
+          const elapsed = time - startTime;
+          let exactIndex = elapsed / delayBetweenPoints - 1;
+          exactIndex = Math.max(0, Math.min(exactIndex, numPoints - 1));
+
+          const indexFloor = Math.floor(exactIndex);
+          const indexCeil = Math.min(indexFloor + 1, numPoints - 1);
+          const fraction = exactIndex - indexFloor;
+
+          const meta = portfolioChartInstance.getDatasetMeta(0);
+          if (meta && meta.data && meta.data.length === numPoints) {
+            const p1 = meta.data[indexFloor].getProps(["x", "y"], true);
+            const p2 = meta.data[indexCeil].getProps(["x", "y"], true);
+
+            if (p1 && p2 && !isNaN(p1.x)) {
+              const currentX = p1.x + (p2.x - p1.x) * fraction;
+              const currentY = p1.y + (p2.y - p1.y) * fraction;
+
+              currentTrackingX = currentX;
+              currentTrackingY = currentY;
+              isTrackingVisible = true;
+
+              portfolioChartInstance.draw();
+
+              tooltipEl.style.left = currentX + "px";
+              tooltipEl.style.top = currentY + "px";
+              tooltipEl.style.display = "block";
+
+              const valReal1 = dataPortafolio[indexFloor];
+              const valReal2 = dataPortafolio[indexCeil];
+              const interpolatedReal = valReal1 + (valReal2 - valReal1) * fraction;
+              const percentageReal = (interpolatedReal - 100).toFixed(1);
+
+              const valMarko1 = dataMarkowitz[indexFloor];
+              const valMarko2 = dataMarkowitz[indexCeil];
+              const interpolatedMarko = valMarko1 + (valMarko2 - valMarko1) * fraction;
+              const percentageMarko = (interpolatedMarko - 100).toFixed(1);
+
+              realValueEl.innerText = Number(percentageReal) >= 0 ? "+" + percentageReal + "%" : percentageReal + "%";
+              markoValueEl.innerText = Number(percentageMarko) >= 0 ? "+" + percentageMarko + "%" : percentageMarko + "%";
+              realValueEl.style.color = Number(percentageReal) < 0 ? "#f6465d" : "#f1c40f";
+
+              if (kpiReturn) {
+                kpiReturn.textContent = realValueEl.innerText;
+                kpiReturn.style.color = Number(percentageReal) < 0 ? "var(--danger)" : "var(--ok)";
+                updatePerfOrbProgress(Number(percentageReal));
+              }
+            }
+          }
+
+          if (elapsed < totalLoopTime) {
+            animationFrameId = requestAnimationFrame(syncTrackingAndTooltip);
+          }
+        }
+
+        animationFrameId = requestAnimationFrame(syncTrackingAndTooltip);
+      }
+
+      let chartLoopTimer = null;
+      renderAnimatedChart();
+      if (!egadaPrefersReducedMotion()) {
+        chartLoopTimer = setInterval(renderAnimatedChart, totalLoopTime);
+      }
+      document.addEventListener("visibilitychange", function () {
+        if (egadaPrefersReducedMotion()) return;
+        if (document.visibilityState === "hidden") {
+          if (chartLoopTimer) {
+            clearInterval(chartLoopTimer);
+            chartLoopTimer = null;
+          }
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+          }
+        } else if (!chartLoopTimer) {
+          renderAnimatedChart();
+          chartLoopTimer = setInterval(renderAnimatedChart, totalLoopTime);
+        }
+      });
+
+      document.querySelectorAll(".perf-time-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".perf-time-btn").forEach(function (b) {
+            b.classList.remove("active");
+          });
+          btn.classList.add("active");
+        });
+      });
+    })();
+
+    // Sidebar-like ECG strip
+    (function () {
+      const c = document.getElementById("ecgCanvas");
+      if (!c) return;
+      const x = c.getContext("2d");
+      const wave = [
+        0.5,0.5,0.5,0.5,0.5, 0.55,0.61,0.61,0.55,0.5, 0.5,0.5,0.5,
+        0.46,0.44,0.96,0.08,0.45,0.5, 0.5,0.5, 0.55,0.65,0.65,0.55,0.5, 0.5,0.5,0.5
+      ];
+      const stream = Array.from({ length: 240 }, (_, i) => wave[i % wave.length]);
+      let phase = 0;
+      let drawProgress = 2;
+      let cPhase = 0;
+      function ecgColor(t) {
+        const mix = (Math.sin(t) + 1) / 2;
+        const r = Math.round(241 + (14 - 241) * mix);
+        const g = Math.round(196 + (203 - 196) * mix);
+        const b = Math.round(15 + (129 - 15) * mix);
+        return { r, g, b };
+      }
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = c.clientWidth;
+        const h = 54;
+        c.width = w * dpr;
+        c.height = h * dpr;
+        c.style.height = h + "px";
+        x.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (egadaPrefersReducedMotion()) drawEcgStatic();
+      }
+      resize();
+      window.addEventListener("resize", resize);
+      function drawEcgStatic() {
+        const w = c.clientWidth;
+        const h = 54;
+        x.clearRect(0, 0, w, h);
+        const cc = ecgColor(0);
+        x.strokeStyle = "rgba(76,98,124,.25)";
+        x.lineWidth = 1;
+        for (let gx = 0; gx <= w; gx += 14) { x.beginPath(); x.moveTo(gx, 0); x.lineTo(gx, h); x.stroke(); }
+        for (let gy = 0; gy <= h; gy += 10) { x.beginPath(); x.moveTo(0, gy); x.lineTo(w, gy); x.stroke(); }
+        const n = 86;
+        let px = null, py = null;
+        for (let i = 0; i < n; i++) {
+          const yv = stream[(phase + i) % stream.length];
+          const xx = (i / (n - 1)) * w;
+          const yy = h * (1 - yv);
+          if (px !== null) {
+            x.strokeStyle = `rgba(${cc.r},${cc.g},${cc.b},.34)`;
+            x.lineWidth = 6;
+            x.beginPath(); x.moveTo(px, py); x.lineTo(xx, yy); x.stroke();
+            x.strokeStyle = `rgba(${cc.r},${cc.g},${cc.b},.95)`;
+            x.lineWidth = 1.6;
+            x.beginPath(); x.moveTo(px, py); x.lineTo(xx, yy); x.stroke();
+          }
+          px = xx; py = yy;
+        }
+      }
+      function draw() {
+        const w = c.clientWidth;
+        const h = 54;
+        if (egadaPrefersReducedMotion()) {
+          drawEcgStatic();
+          return;
+        }
+        if (document.visibilityState === "hidden") {
+          requestAnimationFrame(draw);
+          return;
+        }
+        x.clearRect(0, 0, w, h);
+        cPhase += 0.018; // transición lenta dorado <-> verde
+        const cc = ecgColor(cPhase);
+        x.strokeStyle = "rgba(76,98,124,.25)";
+        x.lineWidth = 1;
+        for (let gx = 0; gx <= w; gx += 14) { x.beginPath(); x.moveTo(gx, 0); x.lineTo(gx, h); x.stroke(); }
+        for (let gy = 0; gy <= h; gy += 10) { x.beginPath(); x.moveTo(0, gy); x.lineTo(w, gy); x.stroke(); }
+        const n = 86;
+        let px = null, py = null;
+        const visible = Math.max(2, Math.min(n, Math.floor(drawProgress)));
+        for (let i = 0; i < visible; i++) {
+          const yv = stream[(phase + i) % stream.length];
+          const xx = (i / (n - 1)) * w;
+          const yy = h * (1 - yv);
+          if (px !== null) {
+            x.strokeStyle = `rgba(${cc.r},${cc.g},${cc.b},.34)`;
+            x.lineWidth = 6;
+            x.beginPath(); x.moveTo(px, py); x.lineTo(xx, yy); x.stroke();
+            x.strokeStyle = `rgba(${cc.r},${cc.g},${cc.b},.95)`;
+            x.lineWidth = 1.6;
+            x.beginPath(); x.moveTo(px, py); x.lineTo(xx, yy); x.stroke();
+          }
+          px = xx; py = yy;
+        }
+        // Dibujo progresivo del trazo + desplazamiento lento tipo monitor real
+        if (drawProgress < n + 8) {
+          drawProgress += 0.18;
+        } else {
+          drawProgress = 2;
+          phase = (phase + 6) % stream.length;
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // Heatmap ticker-like live animation
+    (function () {
+      const cells = Array.from(document.querySelectorAll("#heatmapGrid .heat"));
+      if (!cells.length) return;
+      const state = cells.map(() => (Math.random() - 0.5) * 1.8);
+      function colorFor(v) {
+        if (v >= 0) {
+          const a = Math.min(1, Math.max(0, v / 3.2));
+          const r = Math.round(0 + a * 35);
+          const g = Math.round(210 + a * 45);
+          const b = Math.round(115 + a * 55);
+          return `rgba(${r}, ${g}, ${b}, 0.88)`;
+        }
+        const a = Math.min(1, Math.max(0, Math.abs(v) / 3.2));
+        const r = Math.round(235 + a * 20);
+        const g = Math.round(35 + a * 25);
+        const b = Math.round(48 + a * 30);
+        return `rgba(${r}, ${g}, ${b}, 0.9)`;
+      }
+      function tickHeat() {
+        cells.forEach((cell, i) => {
+          state[i] += (Math.random() - 0.5) * 0.36;
+          state[i] = Math.max(-4.2, Math.min(4.2, state[i] * 0.96));
+          const v = state[i];
+          const ret = cell.querySelector(".ret");
+          if (ret) ret.textContent = `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`;
+          if (ret) ret.style.color = v >= 0 ? "#b8ffd9" : "#ffc9cf";
+          cell.style.backgroundColor = colorFor(v);
+          cell.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,0.14)";
+        });
+      }
+      tickHeat();
+      let heatTimer = null;
+      function scheduleHeat() {
+        if (heatTimer) {
+          clearInterval(heatTimer);
+          heatTimer = null;
+        }
+        if (egadaPrefersReducedMotion()) return;
+        heatTimer = setInterval(tickHeat, 900);
+      }
+      if (!egadaPrefersReducedMotion()) {
+        heatTimer = setInterval(tickHeat, 900);
+      }
+      document.addEventListener("visibilitychange", function () {
+        if (egadaPrefersReducedMotion()) return;
+        if (document.visibilityState === "hidden") {
+          if (heatTimer) {
+            clearInterval(heatTimer);
+            heatTimer = null;
+          }
+        } else {
+          scheduleHeat();
+        }
+      });
+    })();
+
+    // Brokers 2×3: rotación suave del orden (FLIP)
+    (function () {
+      const mosaic = document.getElementById("brokerMosaicGrid");
+      if (!mosaic) return;
+      function flipRotate() {
+        const list = Array.from(mosaic.querySelectorAll(".broker-cell"));
+        if (list.length < 2) return;
+        const prevRects = list.map((el) => ({ el, old: el.getBoundingClientRect() }));
+        mosaic.appendChild(list[0]);
+        requestAnimationFrame(function () {
+          prevRects.forEach(function ({ el, old }) {
+            const neu = el.getBoundingClientRect();
+            const dx = old.left - neu.left;
+            const dy = old.top - neu.top;
+            if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
+            el.style.transition = "none";
+            el.style.transform = "translate(" + dx + "px, " + dy + "px)";
+            void el.offsetWidth;
+            el.style.transition = "transform 0.78s cubic-bezier(0.22, 1, 0.36, 1)";
+            el.style.transform = "translate(0, 0)";
+            function cleanup() {
+              el.style.transition = "";
+              el.style.transform = "";
+              el.removeEventListener("transitionend", cleanup);
+            }
+            el.addEventListener("transitionend", cleanup, { once: true });
+          });
+        });
+      }
+      let brokerTimer = null;
+      function scheduleBrokerFlip() {
+        if (brokerTimer) {
+          clearInterval(brokerTimer);
+          brokerTimer = null;
+        }
+        if (egadaPrefersReducedMotion()) return;
+        brokerTimer = setInterval(flipRotate, 4200);
+      }
+      scheduleBrokerFlip();
+      document.addEventListener("visibilitychange", function () {
+        if (egadaPrefersReducedMotion()) return;
+        if (document.visibilityState === "hidden") {
+          if (brokerTimer) {
+            clearInterval(brokerTimer);
+            brokerTimer = null;
+          }
+        } else {
+          scheduleBrokerFlip();
+        }
+      });
+    })();
+
+    // IA icon animation (from current app icon style)
+    (function () {
+      const canvas = document.getElementById("iaIconCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const shell = canvas.parentElement;
+      let t = 0;
+
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        const shellRect = shell.getBoundingClientRect();
+        const sideFromRect = Math.min(shellRect.width, shellRect.height);
+        const sideFallback = Math.min(shell.clientWidth || 0, shell.clientHeight || 0);
+        const side = sideFromRect || sideFallback || Math.min(window.innerWidth * 0.72, 278);
+        const size = Math.max(120, side);
+        canvas.width = size * dpr;
+        canvas.height = size * dpr;
+        canvas.style.width = size + "px";
+        canvas.style.height = size + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      requestAnimationFrame(resize);
+      window.addEventListener("resize", resize);
+
+      function spark(x, y, s, r) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(r);
+        ctx.beginPath();
+        ctx.moveTo(0, -s);
+        ctx.lineTo(s * .32, -s * .32);
+        ctx.lineTo(s, 0);
+        ctx.lineTo(s * .32, s * .32);
+        ctx.lineTo(0, s);
+        ctx.lineTo(-s * .32, s * .32);
+        ctx.lineTo(-s, 0);
+        ctx.lineTo(-s * .32, -s * .32);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function draw() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight || w || 220;
+        if (document.visibilityState === "hidden") {
+          requestAnimationFrame(draw);
+          return;
+        }
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        const u = Math.min(w, h) / 220;
+        ctx.clearRect(0, 0, w, h);
+
+        const pulse = egadaPrefersReducedMotion()
+          ? 1
+          : 1 + Math.sin(t * 0.04) * 0.02;
+
+        const haloR = Math.min(w, h) * 0.5;
+        const grd = ctx.createRadialGradient(cx, cy, 20 * u, cx, cy, haloR);
+        grd.addColorStop(0, "rgba(241,196,15,0.09)");
+        grd.addColorStop(1, "rgba(241,196,15,0)");
+        ctx.beginPath();
+        ctx.arc(cx, cy, haloR, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, 78 * pulse * u, 0, Math.PI * 2);
+        ctx.lineWidth = Math.max(1.5, 3 * u);
+        ctx.strokeStyle = "rgba(241,196,15,0.95)";
+        ctx.shadowBlur = 22 * u;
+        ctx.shadowColor = "rgba(241,196,15,0.36)";
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, 64 * pulse * u, 0, Math.PI * 2);
+        ctx.lineWidth = Math.max(1.5, 3 * u);
+        ctx.strokeStyle = "rgba(241,196,15,0.95)";
+        ctx.shadowBlur = 12 * u;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "rgba(241,196,15,0.98)";
+        const s1 = egadaPrefersReducedMotion() ? 13 : 13 + Math.sin(t * 0.06) * 1.2;
+        const s2 = egadaPrefersReducedMotion() ? 7 : 7 + Math.sin(t * 0.07 + 1) * 1.0;
+        const s3 = egadaPrefersReducedMotion() ? 9 : 9 + Math.sin(t * 0.08 + 2) * 1.1;
+        spark(
+          cx - 6 * u,
+          cy + 2 * u,
+          s1 * u,
+          egadaPrefersReducedMotion() ? 0 : Math.sin(t * 0.02) * 0.2
+        );
+        spark(
+          cx + 20 * u,
+          cy - 12 * u,
+          s2 * u,
+          egadaPrefersReducedMotion() ? 0 : Math.sin(t * 0.025 + 1) * 0.18
+        );
+        spark(
+          cx + 12 * u,
+          cy + 15 * u,
+          s3 * u,
+          egadaPrefersReducedMotion() ? 0 : Math.sin(t * 0.02 + 2) * 0.2
+        );
+
+        ctx.beginPath();
+        ctx.arc(
+          cx,
+          cy,
+          (90 + (egadaPrefersReducedMotion() ? 0 : Math.sin(t * 0.035) * 3)) * u,
+          0,
+          Math.PI * 2
+        );
+        ctx.strokeStyle = "rgba(241,196,15,0.28)";
+        ctx.lineWidth = Math.max(1, 1.3 * u);
+        ctx.stroke();
+
+        if (!egadaPrefersReducedMotion()) t += 1;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
 </body>
 </html>
+
