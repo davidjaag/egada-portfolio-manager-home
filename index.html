@@ -529,9 +529,9 @@
     .perf-side-main > div {
       position: relative;
       z-index: 2;
-      background: var(--bg);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
       padding: 10px 14px;
       min-width: min(150px, 88%);
     }
@@ -2748,11 +2748,16 @@
       const kpiReturn = document.getElementById("kpiReturn");
       const perfOrb = document.getElementById("perfOrb");
       if (!tooltipEl || !realValueEl || !markoValueEl) return;
+      function toSimulatedPercent(rawPercent) {
+        const clampedRaw = Math.max(0, Math.min(1.9, Number(rawPercent) || 0));
+        const simulated = 1.9 + (clampedRaw / 1.9) * (15 - 1.9);
+        return Number(simulated.toFixed(1));
+      }
       function updatePerfOrbProgress(value) {
         if (!perfOrb) return;
         const numeric = Number(value);
         if (Number.isNaN(numeric)) return;
-        const mapped = Math.max(0, Math.min(100, (numeric + 5) * 4));
+        const mapped = Math.max(0, Math.min(100, ((numeric - 1.9) / (15 - 1.9)) * 100));
         perfOrb.style.setProperty("--perf-progress", mapped.toFixed(2));
       }
 
@@ -2881,17 +2886,17 @@
               tooltipEl.style.left = pt.x + "px";
               tooltipEl.style.top = pt.y + "px";
               tooltipEl.style.display = "block";
-              const percentageReal = (dataPortafolio[last] - 100).toFixed(1);
-              const percentageMarko = (dataMarkowitz[last] - 100).toFixed(1);
-              realValueEl.innerText =
-                Number(percentageReal) >= 0 ? "+" + percentageReal + "%" : percentageReal + "%";
-              markoValueEl.innerText =
-                Number(percentageMarko) >= 0 ? "+" + percentageMarko + "%" : percentageMarko + "%";
-              realValueEl.style.color = Number(percentageReal) < 0 ? "#f6465d" : "#f1c40f";
+              const percentageReal = dataPortafolio[last] - 100;
+              const percentageMarko = dataMarkowitz[last] - 100;
+              const simulatedReal = toSimulatedPercent(percentageReal);
+              const simulatedMarko = toSimulatedPercent(percentageMarko);
+              realValueEl.innerText = "+" + simulatedReal.toFixed(1) + "%";
+              markoValueEl.innerText = "+" + simulatedMarko.toFixed(1) + "%";
+              realValueEl.style.color = "#f1c40f";
               if (kpiReturn) {
                 kpiReturn.textContent = realValueEl.innerText;
-                kpiReturn.style.color = Number(percentageReal) < 0 ? "var(--danger)" : "var(--ok)";
-                updatePerfOrbProgress(Number(percentageReal));
+                kpiReturn.style.color = "var(--ok)";
+                updatePerfOrbProgress(simulatedReal);
               }
             }
           });
@@ -3016,21 +3021,23 @@
               const valReal1 = dataPortafolio[indexFloor];
               const valReal2 = dataPortafolio[indexCeil];
               const interpolatedReal = valReal1 + (valReal2 - valReal1) * fraction;
-              const percentageReal = (interpolatedReal - 100).toFixed(1);
+              const percentageReal = interpolatedReal - 100;
 
               const valMarko1 = dataMarkowitz[indexFloor];
               const valMarko2 = dataMarkowitz[indexCeil];
               const interpolatedMarko = valMarko1 + (valMarko2 - valMarko1) * fraction;
-              const percentageMarko = (interpolatedMarko - 100).toFixed(1);
+              const percentageMarko = interpolatedMarko - 100;
+              const simulatedReal = toSimulatedPercent(percentageReal);
+              const simulatedMarko = toSimulatedPercent(percentageMarko);
 
-              realValueEl.innerText = Number(percentageReal) >= 0 ? "+" + percentageReal + "%" : percentageReal + "%";
-              markoValueEl.innerText = Number(percentageMarko) >= 0 ? "+" + percentageMarko + "%" : percentageMarko + "%";
-              realValueEl.style.color = Number(percentageReal) < 0 ? "#f6465d" : "#f1c40f";
+              realValueEl.innerText = "+" + simulatedReal.toFixed(1) + "%";
+              markoValueEl.innerText = "+" + simulatedMarko.toFixed(1) + "%";
+              realValueEl.style.color = "#f1c40f";
 
               if (kpiReturn) {
                 kpiReturn.textContent = realValueEl.innerText;
-                kpiReturn.style.color = Number(percentageReal) < 0 ? "var(--danger)" : "var(--ok)";
-                updatePerfOrbProgress(Number(percentageReal));
+                kpiReturn.style.color = "var(--ok)";
+                updatePerfOrbProgress(simulatedReal);
               }
             }
           }
