@@ -108,21 +108,25 @@
     .ticker-item b { color: var(--ok); font-weight: 800; }
     @keyframes ticker { to { transform: translateX(-50%); } }
     .lang-switch {
-      position: absolute;
+      position: fixed;
       right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+      bottom: 10px;
       display: inline-flex;
-      gap: 6px;
-      z-index: 3;
+      gap: 4px;
+      z-index: 95;
+      opacity: 0.42;
+      transition: opacity .2s ease;
     }
+    .lang-switch:hover { opacity: 0.9; }
     .lang-btn {
       border: 1px solid var(--line);
-      background: rgba(6, 13, 26, 0.8);
+      background: rgba(6, 13, 26, 0.62);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       color: var(--sub);
       border-radius: 999px;
-      padding: 5px 10px;
-      font-size: 11px;
+      padding: 4px 8px;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.2px;
       cursor: pointer;
@@ -2015,6 +2019,7 @@
       section { padding: 52px 0; }
       .lang-switch {
         right: 8px;
+        bottom: 8px;
       }
       .lang-btn {
         padding: 4px 8px;
@@ -2615,6 +2620,14 @@
           "sections.dashboardDesc": "Gráfica de rendimiento animada y asignación estricta por activos, como en tu flujo real de operación.",
           "sections.appTitle": "Elementos operativos clave de la app",
           "sections.appDesc": "Terminales de acciones, heatmap global y módulos de análisis con estilo visual conectado.",
+          "bubble.title": "Asignación por activo con pesos estrictos",
+          "bubble.desc": "Los porcentajes definidos por el modelo deben mantenerse para preservar el perfil de riesgo y objetivo.",
+          "feat.t1": "Dashboard ejecutivo",
+          "feat.d1": "KPIs de activos bajo gestión, alertas, métricas de riesgo y estado de mercado en una sola vista.",
+          "feat.t2": "Análisis Markowitz/CAPM",
+          "feat.d2": "Frontera eficiente, portafolio de tangencia, mínima varianza y diagnóstico cuantitativo explicable.",
+          "feat.t3": "Registro de operaciones",
+          "feat.d3": "Estructura de compras y ventas para mantener trazabilidad y coherencia entre ejecución y resultados.",
           "terminals.title": "Terminal de acciones",
           "terminals.badgePrimary": "Data Descargable",
           "terminals.badgeSecondary": "LIVE DATA",
@@ -2652,6 +2665,7 @@
           "ia.li2": "Explicación contextual de riesgo y desempeño.",
           "ia.li3": "Resúmenes IA enfocados en utilidad operativa.",
           "ia.li4": "Control por límites de plan y protección anti-abuso.",
+          "ia.caption": "[Asistencia Inteligente en cualquier momento]",
           "devices.mobileDesc": "Vertical para quickview operativo. Horizontal para mayor contexto visual y lectura comparativa.",
           "devices.desktopDesc": "Espacio ideal para monitoreo completo, terminales y detalle de métricas avanzadas.",
           "platform.webTitle": "Web de escritorio",
@@ -2681,6 +2695,14 @@
           "sections.dashboardDesc": "Animated performance chart and strict asset allocation, matching your real operating workflow.",
           "sections.appTitle": "Key operational app components",
           "sections.appDesc": "Stock terminals, global heatmap, and analysis modules with a connected visual style.",
+          "bubble.title": "Asset allocation with strict weights",
+          "bubble.desc": "Model-defined percentages must be maintained to preserve target risk profile and objective.",
+          "feat.t1": "Executive dashboard",
+          "feat.d1": "AUM KPIs, alerts, risk metrics, and market status in a single view.",
+          "feat.t2": "Markowitz/CAPM analysis",
+          "feat.d2": "Efficient frontier, tangency portfolio, minimum variance, and explainable quantitative diagnosis.",
+          "feat.t3": "Operations log",
+          "feat.d3": "Structured buy/sell records to keep traceability and coherence between execution and results.",
           "terminals.title": "Stock terminal",
           "terminals.badgePrimary": "Downloadable Data",
           "terminals.badgeSecondary": "LIVE DATA",
@@ -2718,6 +2740,7 @@
           "ia.li2": "Contextual explanation of risk and performance.",
           "ia.li3": "AI summaries focused on operational usefulness.",
           "ia.li4": "Plan-limit controls and anti-abuse protection.",
+          "ia.caption": "[Intelligent Assistance anytime]",
           "devices.mobileDesc": "Vertical for quick operational view. Horizontal for wider visual context and comparative reading.",
           "devices.desktopDesc": "Ideal workspace for full monitoring, terminals, and advanced metrics detail.",
           "platform.webTitle": "Desktop web",
@@ -2783,6 +2806,14 @@
         setText(".section-dashboard-ref .title-center p", t["sections.dashboardDesc"]);
         setText(".section-app-features .title-center h2", t["sections.appTitle"]);
         setText(".section-app-features .title-center p", t["sections.appDesc"]);
+        setText(".bubble-card h3", t["bubble.title"]);
+        setText(".bubble-card p", t["bubble.desc"]);
+        setTextAt(".feature-grid .feature h3", 0, t["feat.t1"]);
+        setTextAt(".feature-grid .feature h3", 1, t["feat.t2"]);
+        setTextAt(".feature-grid .feature h3", 2, t["feat.t3"]);
+        setTextAt(".feature-grid .feature p", 0, t["feat.d1"]);
+        setTextAt(".feature-grid .feature p", 1, t["feat.d2"]);
+        setTextAt(".feature-grid .feature p", 2, t["feat.d3"]);
         setTextAt(".terminal-heatmap .th-head h3", 0, t["terminals.title"]);
         setTextAt(".terminal-heatmap .th-head h3", 1, t["heatmap.title"]);
         setTextAt(".terminal-heatmap .th-card:first-child .th-badge", 0, t["terminals.badgePrimary"]);
@@ -2812,6 +2843,7 @@
         setTextAt(".section-hub-rotatory .hub-copy p", 1, t["hub.p2"]);
         setTextAt(".ia-copy p", 0, t["ia.p1"]);
         setTextAll(".ia-copy .ia-list li", [t["ia.li1"], t["ia.li2"], t["ia.li3"], t["ia.li4"]]);
+        setText(".mobile-ia-caption", t["ia.caption"]);
         setTextAt(".device-card p", 0, t["devices.mobileDesc"]);
         setTextAt(".device-card p", 1, t["devices.desktopDesc"]);
         setTextAt(".platform-grid .platform h4", 0, t["platform.webTitle"]);
