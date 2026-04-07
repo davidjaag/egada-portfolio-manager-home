@@ -107,17 +107,23 @@
     }
     .ticker-item b { color: var(--ok); font-weight: 800; }
     @keyframes ticker { to { transform: translateX(-50%); } }
-    .lang-switch {
-      position: fixed;
-      right: 10px;
-      bottom: 10px;
-      display: inline-flex;
-      gap: 4px;
-      z-index: 95;
-      opacity: 0.42;
-      transition: opacity .2s ease;
+    .lang-switch-row {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(6, 13, 26, 0.48);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
-    .lang-switch:hover { opacity: 0.9; }
+    .lang-switch-row .wrap {
+      display: flex;
+      justify-content: flex-end;
+      padding: 6px 0;
+    }
+    .lang-switch {
+      display: inline-flex;
+      gap: 6px;
+      z-index: 3;
+      opacity: 1;
+    }
     .lang-btn {
       border: 1px solid var(--line);
       background: rgba(6, 13, 26, 0.62);
@@ -170,6 +176,8 @@
       line-height: 0.9;
       letter-spacing: -3px;
       margin-bottom: 30px;
+      max-width: min(96vw, 980px);
+      text-wrap: balance;
       background: linear-gradient(to right, #fff 20%, var(--gold) 50%, #fff 80%);
       background-size: 200% auto;
       -webkit-background-clip: text;
@@ -2017,9 +2025,8 @@
     }
     @media (max-width: 680px) {
       section { padding: 52px 0; }
-      .lang-switch {
-        right: 8px;
-        bottom: 8px;
+      .lang-switch-row .wrap {
+        padding: 6px 0;
       }
       .lang-btn {
         padding: 4px 8px;
@@ -2034,8 +2041,10 @@
       }
       h1 {
         font-size: clamp(34px, 11vw, 54px);
-        letter-spacing: -0.6px;
-        line-height: 1.08;
+        letter-spacing: -0.4px;
+        line-height: 1.04;
+        max-width: 94vw;
+        margin-inline: auto;
       }
       /* Menor hueco entre brokers y HUB rotatorio */
       section.section-brokers {
@@ -2121,9 +2130,13 @@
       <div class="ticker-item">Heatmap global <b>• MARKET VIEW</b></div>
       <div class="ticker-item">Resumen semanal viernes cierre <b>• EMAIL</b></div>
     </div>
-    <div class="lang-switch" aria-label="Language selector">
-      <button type="button" class="lang-btn active" data-lang-btn="es">Español</button>
-      <button type="button" class="lang-btn" data-lang-btn="en">English</button>
+  </div>
+  <div class="lang-switch-row">
+    <div class="wrap">
+      <div class="lang-switch" aria-label="Language selector">
+        <button type="button" class="lang-btn active" data-lang-btn="es">Español</button>
+        <button type="button" class="lang-btn" data-lang-btn="en">English</button>
+      </div>
     </div>
   </div>
 
@@ -2383,16 +2396,16 @@
               <span class="broker-name">GBM+</span>
             </div>
             <div class="broker-cell">
-              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/v6d7GL4d_NkeDSBFeQ4FKiEIIjBD8ON4ZGkWodkxpp_wMSo1amlgB3HYIctVzUV3Q8k" alt="Charles Schwab"></div>
-              <span class="broker-name">Charles Schwab</span>
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/v6d7GL4d_NkeDSBFeQ4FKiEIIjBD8ON4ZGkWodkxpp_wMSo1amlgB3HYIctVzUV3Q8k" alt="Hapi"></div>
+              <span class="broker-name">Hapi</span>
             </div>
             <div class="broker-cell">
-              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/atHG9zZA-f4mLrpWICOsOV7xqUYwPGJba4cNWw86WkdpL7kFuMpTFf4TR0_xyujj55U" alt="Broker compatible 1"></div>
-              <span class="broker-name">Broker compatible 1</span>
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/atHG9zZA-f4mLrpWICOsOV7xqUYwPGJba4cNWw86WkdpL7kFuMpTFf4TR0_xyujj55U" alt="XTB"></div>
+              <span class="broker-name">XTB</span>
             </div>
             <div class="broker-cell">
-              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/fL4njISMsR9QoNfRjbiZAP0t4dmCOWpXqFb1vmcL69nFHk_h1vVgLIgu-lLkuzvVID0" alt="Broker compatible 2"></div>
-              <span class="broker-name">Broker compatible 2</span>
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/fL4njISMsR9QoNfRjbiZAP0t4dmCOWpXqFb1vmcL69nFHk_h1vVgLIgu-lLkuzvVID0" alt="Trade Republic"></div>
+              <span class="broker-name">Trade Republic</span>
             </div>
             <div class="broker-cell">
               <div class="broker-icon"><img src="https://etoro-cdn.etorostatic.com/web-client/img/meta/meta-etoro-logo.png" alt="eToro"></div>
@@ -2628,13 +2641,30 @@
           "feat.d2": "Frontera eficiente, portafolio de tangencia, mínima varianza y diagnóstico cuantitativo explicable.",
           "feat.t3": "Registro de operaciones",
           "feat.d3": "Estructura de compras y ventas para mantener trazabilidad y coherencia entre ejecución y resultados.",
+          "perf.title": "Rendimiento del Portafolio",
+          "perf.kpiAccum": "Resultado acumulado",
+          "perf.badgeIA": "✨ Explicación IA",
+          "perf.kpiVol": "Volatilidad actual",
+          "perf.kpiSharpe": "Sharpe ratio",
+          "perf.kpiSignal": "Estado de señal",
+          "perf.kpiSignalValue": "SIN REBALANCEO",
+          "perf.kpiExpected": "Rendimiento esperado",
+          "perf.glow": "Descarga datos historicos en PDF y Excel multiplataforma",
           "terminals.title": "Terminal de acciones",
           "terminals.badgePrimary": "Data Descargable",
           "terminals.badgeSecondary": "LIVE DATA",
+          "terminals.desc": "Visualiza contexto por activo y señales relevantes de desempeño. Diseñado para ejecutar solo cuando existe motivo de rebalanceo, no por variaciones de ruido intradía.",
           "heatmap.title": "Heatmap global",
           "heatmap.badgePrimary": "Sectores GICS",
           "heatmap.badgeSecondary": "LIVE DATA",
+          "heatmap.desc": "Lectura rápida del mercado por intensidad y dirección. Permite detectar concentración de riesgo y zonas de presión.",
           "evaluation.title": "Evaluación Profesional de Portafolio Existente",
+          "evaluation.badge1": "MARKOWITZ + MONTE CARLO",
+          "evaluation.badge2": "ANÁLISIS COMPLETO",
+          "evaluation.desc": "Evalúa carteras personalizadas con análisis profesional detallado, compara contra portafolios óptimos y recibe explicación IA para entender decisiones de rebalanceo con criterio técnico.",
+          "evaluation.li1": "Diagnóstico de eficiencia con frontera Markowitz y portafolio tangente.",
+          "evaluation.li2": "8 gráficos profesionales para composición, correlación, riesgo y desempeño.",
+          "evaluation.li3": "Recomendaciones accionables con exportación ejecutiva.",
           "brokers.title": "Compatible con los principales brokers internacionales",
           "hub.title": "HUB financiero y newsletters",
           "ia.title": "Asistencia Inteligente integrada",
@@ -2703,13 +2733,30 @@
           "feat.d2": "Efficient frontier, tangency portfolio, minimum variance, and explainable quantitative diagnosis.",
           "feat.t3": "Operations log",
           "feat.d3": "Structured buy/sell records to keep traceability and coherence between execution and results.",
+          "perf.title": "Portfolio Performance",
+          "perf.kpiAccum": "Accumulated return",
+          "perf.badgeIA": "✨ AI Explanation",
+          "perf.kpiVol": "Current volatility",
+          "perf.kpiSharpe": "Sharpe ratio",
+          "perf.kpiSignal": "Signal status",
+          "perf.kpiSignalValue": "NO REBALANCING",
+          "perf.kpiExpected": "Expected return",
+          "perf.glow": "Download historical data in PDF and Excel across devices",
           "terminals.title": "Stock terminal",
           "terminals.badgePrimary": "Downloadable Data",
           "terminals.badgeSecondary": "LIVE DATA",
+          "terminals.desc": "View per-asset context and relevant performance signals. Built to execute only when there is a true rebalancing reason, not intraday noise.",
           "heatmap.title": "Global heatmap",
           "heatmap.badgePrimary": "GICS Sectors",
           "heatmap.badgeSecondary": "LIVE DATA",
+          "heatmap.desc": "Fast market reading by intensity and direction. Helps detect risk concentration and pressure zones.",
           "evaluation.title": "Professional Existing Portfolio Evaluation",
+          "evaluation.badge1": "MARKOWITZ + MONTE CARLO",
+          "evaluation.badge2": "FULL ANALYSIS",
+          "evaluation.desc": "Evaluate custom portfolios with detailed professional analysis, compare against optimal portfolios, and receive AI explanation to understand rebalancing decisions with technical criteria.",
+          "evaluation.li1": "Efficiency diagnosis using Markowitz frontier and tangency portfolio.",
+          "evaluation.li2": "8 professional charts for composition, correlation, risk, and performance.",
+          "evaluation.li3": "Actionable recommendations with executive export.",
           "brokers.title": "Compatible with leading international brokers",
           "hub.title": "Financial HUB and newsletters",
           "ia.title": "Integrated Intelligent Assistance",
@@ -2820,7 +2867,22 @@
         setTextAt(".terminal-heatmap .th-card:first-child .th-badge", 1, t["terminals.badgeSecondary"]);
         setTextAt(".terminal-heatmap .th-card:last-child .th-badge", 0, t["heatmap.badgePrimary"]);
         setTextAt(".terminal-heatmap .th-card:last-child .th-badge", 1, t["heatmap.badgeSecondary"]);
+        setText(".perf-dashboard-header .title-container h2", t["perf.title"]);
+        setText(".perf-side-main small", t["perf.kpiAccum"]);
+        setText(".perf-dashboard-badges .perf-badge-interactive", t["perf.badgeIA"]);
+        setTextAt(".perf-side-grid .mini-kpi small", 0, t["perf.kpiVol"]);
+        setTextAt(".perf-side-grid .mini-kpi small", 1, t["perf.kpiSharpe"]);
+        setTextAt(".perf-side-grid .mini-kpi small", 2, t["perf.kpiSignal"]);
+        setTextAt(".perf-side-grid .mini-kpi small", 3, t["perf.kpiExpected"]);
+        setTextAt(".perf-side-grid .mini-kpi strong", 2, t["perf.kpiSignalValue"]);
+        setText(".terminal-heatmap .th-card:first-child p", t["terminals.desc"]);
+        setText(".terminal-glow-text", t["perf.glow"]);
+        setText(".terminal-heatmap .th-card:last-child p", t["heatmap.desc"]);
         setText(".eval-compat .eval-compat-head-text h3", t["evaluation.title"]);
+        setTextAt(".eval-cyan-badges .eval-cyan-badge", 0, t["evaluation.badge1"]);
+        setTextAt(".eval-cyan-badges .eval-cyan-badge", 1, t["evaluation.badge2"]);
+        setText(".eval-compat > p", t["evaluation.desc"]);
+        setTextAll(".eval-list-compat li", [t["evaluation.li1"], t["evaluation.li2"], t["evaluation.li3"]]);
         setText(".section-brokers .compat-copy h3", t["brokers.title"]);
         setText(".section-hub-rotatory .hub-copy h3", t["hub.title"]);
         setText(".ia-copy h3", t["ia.title"]);
