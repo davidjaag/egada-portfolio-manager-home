@@ -8,6 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="EGADA | Portfolio Management" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
@@ -105,6 +107,31 @@
     }
     .ticker-item b { color: var(--ok); font-weight: 800; }
     @keyframes ticker { to { transform: translateX(-50%); } }
+    .lang-switch {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      gap: 6px;
+      z-index: 3;
+    }
+    .lang-btn {
+      border: 1px solid var(--line);
+      background: rgba(6, 13, 26, 0.8);
+      color: var(--sub);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+    }
+    .lang-btn.active {
+      color: #0b1629;
+      background: var(--gold);
+      border-color: var(--gold);
+    }
 
     .hero {
       min-height: min(74vh, 920px);
@@ -1986,6 +2013,13 @@
     }
     @media (max-width: 680px) {
       section { padding: 52px 0; }
+      .lang-switch {
+        right: 8px;
+      }
+      .lang-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
       section.hero {
         padding-top: 14px;
       }
@@ -2082,28 +2116,32 @@
       <div class="ticker-item">Heatmap global <b>• MARKET VIEW</b></div>
       <div class="ticker-item">Resumen semanal viernes cierre <b>• EMAIL</b></div>
     </div>
+    <div class="lang-switch" aria-label="Language selector">
+      <button type="button" class="lang-btn active" data-lang-btn="es">Español</button>
+      <button type="button" class="lang-btn" data-lang-btn="en">English</button>
+    </div>
   </div>
 
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="reveal show hero-main-block">
         <div class="hero-main-logo">
-          <img src="../Desktop/egada-flet/assets/logo.svg" alt="EGADA" />
+          <img src="logo.svg" alt="EGADA" onerror="this.onerror=null;this.src='assets/logo.svg';" />
         </div>
-        <div class="kicker">EGADA INSTITUTIONAL TERMINAL</div>
-        <h1>+ INFORMACIÓN.<br />- RIESGO.</h1>
-        <p class="lead">
+        <div class="kicker" data-i18n="hero.kicker">EGADA INSTITUTIONAL TERMINAL</div>
+        <h1 data-i18n-html="hero.title">+ INFORMACIÓN.<br />- RIESGO.</h1>
+        <p class="lead" data-i18n="hero.lead">
           Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.
         </p>
         <div class="hero-actions">
-          <a class="btn btn-primary wide" href="#">Lanzar terminal</a>
+          <a class="btn btn-primary wide" href="#" data-i18n="hero.launch">Lanzar terminal</a>
         </div>
       </div>
       <div class="glass hero-card reveal">
-        <div class="metric"><span class="l">Info descargable</span><span class="v">PDF + EXCEL EN CUALQUIER DISPOSITIVO</span></div>
-        <div class="metric"><span class="l">Analisis financiero</span><span class="v">SUSTENTO FUERTE + REPORTE EJECUTIVO EXPLICATIVO</span></div>
-        <div class="metric"><span class="l">Terminales financieras</span><span class="v">MULTIPLATAFORMA CON DATOS DESCARGABLES</span></div>
-        <div class="metric"><span class="l">HUB + newsletter</span><span class="v">NEWSLETTER FINANCIERO Y HERRAMIENTAS TODO EN UNO</span></div>
+        <div class="metric"><span class="l" data-i18n="heroCard.downloadLabel">Info descargable</span><span class="v" data-i18n="heroCard.downloadValue">PDF + EXCEL EN CUALQUIER DISPOSITIVO</span></div>
+        <div class="metric"><span class="l" data-i18n="heroCard.analysisLabel">Analisis financiero</span><span class="v" data-i18n="heroCard.analysisValue">SUSTENTO FUERTE + REPORTE EJECUTIVO EXPLICATIVO</span></div>
+        <div class="metric"><span class="l" data-i18n="heroCard.terminalsLabel">Terminales financieras</span><span class="v" data-i18n="heroCard.terminalsValue">MULTIPLATAFORMA CON DATOS DESCARGABLES</span></div>
+        <div class="metric"><span class="l" data-i18n="heroCard.hubLabel">HUB + newsletter</span><span class="v" data-i18n="heroCard.hubValue">NEWSLETTER FINANCIERO Y HERRAMIENTAS TODO EN UNO</span></div>
       </div>
     </div>
   </section>
@@ -2458,10 +2496,10 @@
           <p>Vertical para quickview operativo. Horizontal para mayor contexto visual y lectura comparativa.</p>
           <div class="mock-row">
             <div class="mock phone-v has-image">
-              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-c7bb46d1-c03d-41e6-af34-bffadd1543b8.png" alt="Vista iPhone vertical EGADA" />
+              <img src="Interfaz1.png" alt="Vista iPhone vertical EGADA" onerror="this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-c7bb46d1-c03d-41e6-af34-bffadd1543b8.png';" />
             </div>
             <div class="mock phone-h has-image">
-              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-44068517-330f-4711-978b-002278a026c1.png" alt="Vista iPhone horizontal EGADA" />
+              <img src="Interfaz2.png" alt="Vista iPhone horizontal EGADA" onerror="this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-44068517-330f-4711-978b-002278a026c1.png';" />
             </div>
           </div>
         </article>
@@ -2470,10 +2508,10 @@
           <p>Espacio ideal para monitoreo completo, terminales y detalle de métricas avanzadas.</p>
           <div class="mock-row">
             <div class="mock desk-v has-image">
-              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-6cb6f553-29c3-446a-b5f0-c79fd2188840.png" alt="Vista dashboard EGADA" />
+              <img src="Interfaz3.png" alt="Vista dashboard EGADA" onerror="this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-6cb6f553-29c3-446a-b5f0-c79fd2188840.png';" />
             </div>
             <div class="mock desk-h has-image">
-              <img src="/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-e18e40e0-ccea-4985-9d06-34d316955648.png" alt="Vista newsletters EGADA" />
+              <img src="Interfaz4.png" alt="Vista newsletters EGADA" onerror="if(this.src.indexOf('Intertaz4.png')===-1){this.src='Intertaz4.png';}else{this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-e18e40e0-ccea-4985-9d06-34d316955648.png';}" />
             </div>
           </div>
         </article>
@@ -2556,6 +2594,245 @@
   <script>
     const egadaPrefersReducedMotion = () =>
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Language selector (Español | English)
+    (function () {
+      const dict = {
+        es: {
+          "hero.kicker": "EGADA INSTITUTIONAL TERMINAL",
+          "hero.title": "+ INFORMACIÓN.<br />- RIESGO.",
+          "hero.lead": "Optimizamos tu capital con el rigor de un fondo cuantitativo. Tú mantienes el control, nosotros eliminamos la incertidumbre.",
+          "hero.launch": "Lanzar terminal",
+          "heroCard.downloadLabel": "Info descargable",
+          "heroCard.downloadValue": "PDF + EXCEL EN CUALQUIER DISPOSITIVO",
+          "heroCard.analysisLabel": "Analisis financiero",
+          "heroCard.analysisValue": "SUSTENTO FUERTE + REPORTE EJECUTIVO EXPLICATIVO",
+          "heroCard.terminalsLabel": "Terminales financieras",
+          "heroCard.terminalsValue": "MULTIPLATAFORMA CON DATOS DESCARGABLES",
+          "heroCard.hubLabel": "HUB + newsletter",
+          "heroCard.hubValue": "NEWSLETTER FINANCIERO Y HERRAMIENTAS TODO EN UNO",
+          "sections.dashboardTitle": "Referencia visual directa del dashboard EGADA",
+          "sections.dashboardDesc": "Gráfica de rendimiento animada y asignación estricta por activos, como en tu flujo real de operación.",
+          "sections.appTitle": "Elementos operativos clave de la app",
+          "sections.appDesc": "Terminales de acciones, heatmap global y módulos de análisis con estilo visual conectado.",
+          "terminals.title": "Terminal de acciones",
+          "terminals.badgePrimary": "Data Descargable",
+          "terminals.badgeSecondary": "LIVE DATA",
+          "heatmap.title": "Heatmap global",
+          "heatmap.badgePrimary": "Sectores GICS",
+          "heatmap.badgeSecondary": "LIVE DATA",
+          "evaluation.title": "Evaluación Profesional de Portafolio Existente",
+          "brokers.title": "Compatible con los principales brokers internacionales",
+          "hub.title": "HUB financiero y newsletters",
+          "ia.title": "Asistencia Inteligente integrada",
+          "devices.mobileTitle": "Interfaz adaptativa - Experiencia Optimizada",
+          "devices.desktopTitle": "Interzfaz - Vista de análisis",
+          "faq.title": "Preguntas frecuentes",
+          "faq.desc": "Dudas generales de nuevos usuarios al iniciar en EGADA.",
+          "faq.q1": "¿EGADA ejecuta operaciones directamente en mi broker?",
+          "faq.q2": "¿Tengo que revisar la app todos los días?",
+          "faq.q3": "¿Cómo inicio si ya tengo cuenta en un broker?",
+          "faq.q4": "¿Qué aporta la Asistencia Inteligente?",
+          "faq.q5": "¿La plataforma funciona en web y app móvil?",
+          "faq.q6": "¿Qué recibo por correo de forma automática?",
+          "faq.a1": "No. EGADA no ejecuta operaciones por ti. Te indica cuándo conviene rebalancear según el modelo. Tú mantienes el control de ejecución.",
+          "faq.a2": "No. La lógica está diseñada para filtrar ruido. Recibirás notificaciones solo cuando sea necesario actuar y resumen semanal los viernes al cierre.",
+          "faq.a3": "Compras en tu broker los activos de tu portafolio asignado, luego los registras en EGADA para seguimiento en tiempo real y control de rebalanceo.",
+          "faq.a4": "Explica resultados y contexto de mercado en lenguaje claro, para que entiendas el porqué de cada señal antes de ejecutar una operación.",
+          "faq.a5": "Sí. Puedes analizar en escritorio y dar seguimiento en móvil con continuidad de datos y experiencia consistente.",
+          "faq.a6": "Notificaciones de rebalanceo cuando aplica y un resumen semanal de rendimiento con cierre de viernes para seguimiento ejecutivo.",
+          "compat.pStrong": "Tú tienes el control de tus recursos y operas con tu broker de preferencia.",
+          "compat.p1": "Debes comprar los activos del portafolio asignado a tus expectativas y perfil de riesgo. Después registras esas posiciones en EGADA para seguimiento en tiempo real.",
+          "compat.p2": "No es necesario revisar diario. El modelo ignora ruido y solo sugiere operaciones cuando existe condición real de rebalanceo.",
+          "compat.p3": "Recibirás correo de notificación cuando toque rebalancear y resumen semanal de rendimiento los viernes al cierre.",
+          "hub.p1": "El HUB concentra herramientas de simulación y análisis aplicado para decisiones patrimoniales. Newsletters complementa la estrategia con contexto ejecutivo y señal de mercado relevante.",
+          "hub.p2": "El usuario opera con una sola lógica: analizar, ejecutar en broker, registrar en EGADA y recibir seguimiento guiado por modelo.",
+          "ia.p1": "La asistencia se mantiene dentro del flujo operativo. Ayuda a interpretar métricas, contexto de noticias y prioridades de ejecución con lenguaje claro.",
+          "ia.li1": "Interacción por texto y voz dentro de la app.",
+          "ia.li2": "Explicación contextual de riesgo y desempeño.",
+          "ia.li3": "Resúmenes IA enfocados en utilidad operativa.",
+          "ia.li4": "Control por límites de plan y protección anti-abuso.",
+          "devices.mobileDesc": "Vertical para quickview operativo. Horizontal para mayor contexto visual y lectura comparativa.",
+          "devices.desktopDesc": "Espacio ideal para monitoreo completo, terminales y detalle de métricas avanzadas.",
+          "platform.webTitle": "Web de escritorio",
+          "platform.webDesc": "Mayor superficie para análisis profundo, comparativos y operación de precisión.",
+          "platform.appTitle": "App móvil",
+          "platform.appDesc": "Control de estado, alertas y decisiones puntuales desde cualquier lugar.",
+          "platform.contTitle": "Experiencia continua",
+          "platform.contDesc": "Misma lógica de datos y proceso operativo en ambos canales para evitar fricción.",
+          "cta.title": "Opera menos por impulso, más por método.",
+          "cta.desc": "EGADA te avisa cuándo actuar. El resto del tiempo, tu estrategia sigue su curso.",
+          "cta.button": "Solicitar acceso"
+        },
+        en: {
+          "hero.kicker": "EGADA INSTITUTIONAL TERMINAL",
+          "hero.title": "+ INFORMATION.<br />- RISK.",
+          "hero.lead": "We optimize your capital with quantitative fund rigor. You stay in control while we remove uncertainty.",
+          "hero.launch": "Launch terminal",
+          "heroCard.downloadLabel": "Downloadable data",
+          "heroCard.downloadValue": "PDF + EXCEL ON ANY DEVICE",
+          "heroCard.analysisLabel": "Financial analysis",
+          "heroCard.analysisValue": "STRONG RATIONALE + EXPLANATORY EXECUTIVE REPORT",
+          "heroCard.terminalsLabel": "Financial terminals",
+          "heroCard.terminalsValue": "MULTI-PLATFORM WITH DOWNLOADABLE MARKET DATA",
+          "heroCard.hubLabel": "HUB + newsletter",
+          "heroCard.hubValue": "FINANCIAL NEWSLETTER AND HUB TOOLS ALL IN ONE",
+          "sections.dashboardTitle": "Direct visual reference of the EGADA dashboard",
+          "sections.dashboardDesc": "Animated performance chart and strict asset allocation, matching your real operating workflow.",
+          "sections.appTitle": "Key operational app components",
+          "sections.appDesc": "Stock terminals, global heatmap, and analysis modules with a connected visual style.",
+          "terminals.title": "Stock terminal",
+          "terminals.badgePrimary": "Downloadable Data",
+          "terminals.badgeSecondary": "LIVE DATA",
+          "heatmap.title": "Global heatmap",
+          "heatmap.badgePrimary": "GICS Sectors",
+          "heatmap.badgeSecondary": "LIVE DATA",
+          "evaluation.title": "Professional Existing Portfolio Evaluation",
+          "brokers.title": "Compatible with leading international brokers",
+          "hub.title": "Financial HUB and newsletters",
+          "ia.title": "Integrated Intelligent Assistance",
+          "devices.mobileTitle": "Adaptive Interface - Optimized Experience",
+          "devices.desktopTitle": "Interface - Analysis View",
+          "faq.title": "Frequently asked questions",
+          "faq.desc": "Common questions from new users when starting with EGADA.",
+          "faq.q1": "Does EGADA execute operations directly in my broker account?",
+          "faq.q2": "Do I need to check the app every day?",
+          "faq.q3": "How do I start if I already have a broker account?",
+          "faq.q4": "What value does Intelligent Assistance provide?",
+          "faq.q5": "Does the platform work on web and mobile app?",
+          "faq.q6": "What do I receive automatically by email?",
+          "faq.a1": "No. EGADA does not execute trades for you. It indicates when rebalancing is advisable according to the model. You keep execution control.",
+          "faq.a2": "No. The logic is designed to filter noise. You will receive notifications only when action is needed, plus a weekly summary on Friday close.",
+          "faq.a3": "You buy the assigned portfolio assets in your broker, then register those positions in EGADA for real-time tracking and rebalance control.",
+          "faq.a4": "It explains results and market context in clear language, so you understand the reason behind each signal before executing.",
+          "faq.a5": "Yes. You can analyze on desktop and track on mobile with data continuity and a consistent experience.",
+          "faq.a6": "Rebalancing notifications when applicable and a weekly performance summary at Friday close for executive tracking.",
+          "compat.pStrong": "You keep full control of your capital and operate with your preferred broker.",
+          "compat.p1": "You should buy the portfolio assets aligned with your expectations and risk profile. Then register those positions in EGADA for real-time tracking.",
+          "compat.p2": "Daily review is not necessary. The model ignores noise and only suggests actions when there is a real rebalancing condition.",
+          "compat.p3": "You will receive an email notification when rebalancing is needed and a weekly performance summary every Friday at close.",
+          "hub.p1": "The HUB centralizes simulation and applied analysis tools for wealth decisions. Newsletters complement the strategy with executive context and relevant market signals.",
+          "hub.p2": "The user operates with one logic: analyze, execute at broker level, register in EGADA, and receive model-guided follow-up.",
+          "ia.p1": "Assistance remains within the operational flow. It helps interpret metrics, news context, and execution priorities in clear language.",
+          "ia.li1": "Text and voice interaction inside the app.",
+          "ia.li2": "Contextual explanation of risk and performance.",
+          "ia.li3": "AI summaries focused on operational usefulness.",
+          "ia.li4": "Plan-limit controls and anti-abuse protection.",
+          "devices.mobileDesc": "Vertical for quick operational view. Horizontal for wider visual context and comparative reading.",
+          "devices.desktopDesc": "Ideal workspace for full monitoring, terminals, and advanced metrics detail.",
+          "platform.webTitle": "Desktop web",
+          "platform.webDesc": "Larger surface for deep analysis, comparisons, and precision execution.",
+          "platform.appTitle": "Mobile app",
+          "platform.appDesc": "Status control, alerts, and quick decisions from anywhere.",
+          "platform.contTitle": "Continuous experience",
+          "platform.contDesc": "Same data logic and operating process across channels to avoid friction.",
+          "cta.title": "Operate less on impulse, more with method.",
+          "cta.desc": "EGADA tells you when to act. The rest of the time, your strategy stays on course.",
+          "cta.button": "Request access"
+        }
+      };
+
+      function setText(selector, value) {
+        const el = document.querySelector(selector);
+        if (el && value) el.textContent = value;
+      }
+      function setTextAt(selector, index, value) {
+        const els = document.querySelectorAll(selector);
+        if (els[index] && value) els[index].textContent = value;
+      }
+      function setTextAll(selector, values) {
+        const els = document.querySelectorAll(selector);
+        if (!els.length || !Array.isArray(values)) return;
+        els.forEach((el, idx) => {
+          if (values[idx]) el.textContent = values[idx];
+        });
+      }
+      function setTextLast(selector, value) {
+        const els = document.querySelectorAll(selector);
+        if (els.length && value) els[els.length - 1].textContent = value;
+      }
+      function setFaqQuestion(index, value) {
+        const btns = document.querySelectorAll(".faq-q");
+        const btn = btns[index];
+        if (!btn || !value) return;
+        const plus = btn.querySelector(".plus");
+        btn.childNodes.forEach((n) => {
+          if (n.nodeType === Node.TEXT_NODE) n.nodeValue = value;
+        });
+        if (!plus) btn.textContent = value;
+      }
+
+      function applyLang(lang) {
+        const safeLang = dict[lang] ? lang : "es";
+        document.documentElement.lang = safeLang;
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (dict[safeLang][key]) el.textContent = dict[safeLang][key];
+        });
+        document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+          const key = el.getAttribute("data-i18n-html");
+          if (dict[safeLang][key]) el.innerHTML = dict[safeLang][key];
+        });
+        document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+          btn.classList.toggle("active", btn.getAttribute("data-lang-btn") === safeLang);
+        });
+
+        // Extended UI translation
+        const t = dict[safeLang];
+        setText(".section-dashboard-ref .title-center h2", t["sections.dashboardTitle"]);
+        setText(".section-dashboard-ref .title-center p", t["sections.dashboardDesc"]);
+        setText(".section-app-features .title-center h2", t["sections.appTitle"]);
+        setText(".section-app-features .title-center p", t["sections.appDesc"]);
+        setTextAt(".terminal-heatmap .th-head h3", 0, t["terminals.title"]);
+        setTextAt(".terminal-heatmap .th-head h3", 1, t["heatmap.title"]);
+        setTextAt(".terminal-heatmap .th-card:first-child .th-badge", 0, t["terminals.badgePrimary"]);
+        setTextAt(".terminal-heatmap .th-card:first-child .th-badge", 1, t["terminals.badgeSecondary"]);
+        setTextAt(".terminal-heatmap .th-card:last-child .th-badge", 0, t["heatmap.badgePrimary"]);
+        setTextAt(".terminal-heatmap .th-card:last-child .th-badge", 1, t["heatmap.badgeSecondary"]);
+        setText(".eval-compat .eval-compat-head-text h3", t["evaluation.title"]);
+        setText(".section-brokers .compat-copy h3", t["brokers.title"]);
+        setText(".section-hub-rotatory .hub-copy h3", t["hub.title"]);
+        setText(".ia-copy h3", t["ia.title"]);
+        setTextAt(".device-card h4", 0, t["devices.mobileTitle"]);
+        setTextAt(".device-card h4", 1, t["devices.desktopTitle"]);
+        setTextLast(".title-center h2", t["faq.title"]);
+        setTextLast(".title-center p", t["faq.desc"]);
+        setFaqQuestion(0, t["faq.q1"]);
+        setFaqQuestion(1, t["faq.q2"]);
+        setFaqQuestion(2, t["faq.q3"]);
+        setFaqQuestion(3, t["faq.q4"]);
+        setFaqQuestion(4, t["faq.q5"]);
+        setFaqQuestion(5, t["faq.q6"]);
+        setTextAll(".faq-a", [t["faq.a1"], t["faq.a2"], t["faq.a3"], t["faq.a4"], t["faq.a5"], t["faq.a6"]]);
+        setText(".section-brokers .compat-copy p.strong", t["compat.pStrong"]);
+        setTextAt(".section-brokers .compat-copy p", 1, t["compat.p1"]);
+        setTextAt(".section-brokers .compat-copy p", 2, t["compat.p2"]);
+        setTextAt(".section-brokers .compat-copy p", 3, t["compat.p3"]);
+        setTextAt(".section-hub-rotatory .hub-copy p", 0, t["hub.p1"]);
+        setTextAt(".section-hub-rotatory .hub-copy p", 1, t["hub.p2"]);
+        setTextAt(".ia-copy p", 0, t["ia.p1"]);
+        setTextAll(".ia-copy .ia-list li", [t["ia.li1"], t["ia.li2"], t["ia.li3"], t["ia.li4"]]);
+        setTextAt(".device-card p", 0, t["devices.mobileDesc"]);
+        setTextAt(".device-card p", 1, t["devices.desktopDesc"]);
+        setTextAt(".platform-grid .platform h4", 0, t["platform.webTitle"]);
+        setTextAt(".platform-grid .platform h4", 1, t["platform.appTitle"]);
+        setTextAt(".platform-grid .platform h4", 2, t["platform.contTitle"]);
+        setTextAt(".platform-grid .platform p", 0, t["platform.webDesc"]);
+        setTextAt(".platform-grid .platform p", 1, t["platform.appDesc"]);
+        setTextAt(".platform-grid .platform p", 2, t["platform.contDesc"]);
+        setText(".cta-band h3", t["cta.title"]);
+        setText(".cta-band p", t["cta.desc"]);
+        setText(".cta-band .btn.btn-primary", t["cta.button"]);
+        try { localStorage.setItem("egada_lang", safeLang); } catch (_) {}
+      }
+
+      let initial = "es";
+      try { initial = localStorage.getItem("egada_lang") || "es"; } catch (_) {}
+      applyLang(initial);
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.addEventListener("click", () => applyLang(btn.getAttribute("data-lang-btn")));
+      });
+    })();
 
     // Subtle stagger for elegant reveals
     document.querySelectorAll(".reveal").forEach((el, i) => {
