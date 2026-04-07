@@ -1811,6 +1811,13 @@
     }
     .platform h4 { color: var(--gold); margin-bottom: 8px; font-size: 15px; }
     .platform p { color: var(--sub); font-size: 13px; line-height: 1.45; }
+    section.section-brokers {
+      padding-top: 0;
+    }
+    section.section-dashboard-ref {
+      padding-top: 8px;
+      margin-top: -24px;
+    }
 
     .faq-wrap { margin-top: 22px; display: grid; gap: 10px; }
     .faq-item {
@@ -1983,7 +1990,8 @@
         padding-top: 14px;
       }
       section.section-dashboard-ref {
-        padding-top: 18px;
+        padding-top: 6px;
+        margin-top: -18px;
       }
       h1 {
         font-size: clamp(34px, 11vw, 54px);
@@ -1992,6 +2000,7 @@
       }
       /* Menor hueco entre brokers y HUB rotatorio */
       section.section-brokers {
+        padding-top: 0;
         padding-bottom: 22px;
       }
       section.section-hub-rotatory {
@@ -2036,6 +2045,12 @@
       .perf-chart-container {
         height: min(270px, 40vh);
         min-height: 200px;
+      }
+      .perf-card {
+        min-height: 0;
+      }
+      .perf-dashboard-inner {
+        padding-bottom: 8px;
       }
       .ia-app-grid {
         gap: 22px;
@@ -2325,16 +2340,16 @@
               <span class="broker-name">GBM+</span>
             </div>
             <div class="broker-cell">
-              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/v6d7GL4d_NkeDSBFeQ4FKiEIIjBD8ON4ZGkWodkxpp_wMSo1amlgB3HYIctVzUV3Q8k" alt="Hapi"></div>
-              <span class="broker-name">Hapi</span>
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/v6d7GL4d_NkeDSBFeQ4FKiEIIjBD8ON4ZGkWodkxpp_wMSo1amlgB3HYIctVzUV3Q8k" alt="Charles Schwab"></div>
+              <span class="broker-name">Charles Schwab</span>
             </div>
             <div class="broker-cell">
-              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/atHG9zZA-f4mLrpWICOsOV7xqUYwPGJba4cNWw86WkdpL7kFuMpTFf4TR0_xyujj55U" alt="XTB"></div>
-              <span class="broker-name">XTB</span>
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/atHG9zZA-f4mLrpWICOsOV7xqUYwPGJba4cNWw86WkdpL7kFuMpTFf4TR0_xyujj55U" alt="Broker compatible 1"></div>
+              <span class="broker-name">Broker compatible 1</span>
             </div>
             <div class="broker-cell">
-              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/fL4njISMsR9QoNfRjbiZAP0t4dmCOWpXqFb1vmcL69nFHk_h1vVgLIgu-lLkuzvVID0" alt="Trade Rupublic"></div>
-              <span class="broker-name">Trade Republic</span>
+              <div class="broker-icon"><img src="https://play-lh.googleusercontent.com/fL4njISMsR9QoNfRjbiZAP0t4dmCOWpXqFb1vmcL69nFHk_h1vVgLIgu-lLkuzvVID0" alt="Broker compatible 2"></div>
+              <span class="broker-name">Broker compatible 2</span>
             </div>
             <div class="broker-cell">
               <div class="broker-icon"><img src="https://etoro-cdn.etorostatic.com/web-client/img/meta/meta-etoro-logo.png" alt="eToro"></div>
