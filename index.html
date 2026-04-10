@@ -2262,94 +2262,48 @@
       .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .platform-grid { grid-template-columns: 1fr 1fr; }
     }
+    /* --- AJUSTES RESPONSIVOS UNIFICADOS --- */
     @media (max-width: 680px) {
-      section { padding: 52px 0; }
-      .lang-switch-row .wrap {
-        padding: 6px 0;
+      section { padding: 45px 0; }
+      
+      /* Contenedor Bento: Rectángulos con margen de seguridad */
+      .hero-bento {
+        width: 92% !important; 
+        margin: 30px auto 0 !important;
+        gap: 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
       }
-      .lang-btn {
-        padding: 4px 8px;
-        font-size: 10px;
+      
+      .bento-card {
+        width: 100% !important;
+        min-height: 65px !important;
+        padding: 12px 16px !important;
+        gap: 15px !important;
+        border-radius: 15px !important;
+        transform: none !important; /* Evita que se muevan solos en móvil */
       }
-      section.hero {
-        padding-top: 14px;
+
+      .bento-icon-wrap {
+        width: 40px !important;
+        height: 40px !important;
+        flex: 0 0 40px !important; /* Mantiene el círculo perfecto */
       }
-      section.section-dashboard-ref {
-        padding-top: 6px;
-        margin-top: -18px;
+
+      .bento-icon-wrap .material-symbols-outlined {
+        font-size: 22px !important;
       }
-      h1 {
-        font-size: clamp(34px, 11vw, 54px);
-        letter-spacing: -0.4px;
-        line-height: 1.04;
-        max-width: 94vw;
-        margin-inline: auto;
+
+      .bento-text p {
+        font-size: 13px !important;
+        line-height: 1.25 !important;
       }
-      /* Menor hueco entre brokers y HUB rotatorio */
-      section.section-brokers {
-        padding-top: 0;
-        padding-bottom: 22px;
-      }
-      section.section-hub-rotatory {
-        padding-top: 22px;
-      }
-      .hub-grid {
-        margin-top: 14px;
-        justify-items: center;
-      }
-      /* HUB rotatorio: evita clipping y mantiene proporciones circulares en móvil */
-      .hub-orbit {
-        min-height: min(500px, 126vw);
-        padding: 24px 0 36px;
-        overflow: visible;
-        width: 100%;
-        justify-self: center;
-      }
-      .hub-orbit-visual {
-        width: min(390px, 92vw);
-        height: min(390px, 92vw);
-        --hub-r: min(148px, 34vw);
-        margin-inline: auto;
-      }
-      .hub-sat {
-        width: 56px;
-        height: 56px;
-        margin: -28px 0 0 -28px;
-      }
-      .hub-sat .material-symbols-outlined {
-        font-size: 44px;
-      }
-      /* Más aire entre burbujas de asignación y “Elementos operativos…” */
-      section.section-dashboard-ref {
-        padding-bottom: clamp(88px, 20vw, 140px);
-      }
-      section.section-app-features {
-        padding-top: clamp(70px, 16vw, 120px);
-      }
-      section.section-app-features .title-center {
-        margin-bottom: clamp(18px, 4vw, 28px);
-      }
-      .perf-chart-container {
-        height: min(270px, 40vh);
-        min-height: 200px;
-      }
-      .perf-card {
-        min-height: 0;
-      }
-      .perf-dashboard-inner {
-        padding-bottom: 8px;
-      }
-      .ia-app-grid {
-        gap: 22px;
-      }
-      .compat-grid {
-        gap: 22px;
-      }
-      .feature-grid,
-      .platform-grid,
-      .mock-row {
-        grid-template-columns: 1fr;
-      }
+
+      /* Otros ajustes de sección para móvil */
+      .hub-orbit { min-height: 120vw; }
+      .feature-grid, .platform-grid, .mock-row { grid-template-columns: 1fr; }
+    }
     }
     /* Reducir espacio entre burbujas y la sección de Elementos Operativos */
     section.section-dashboard-ref {
@@ -2464,38 +2418,6 @@
       right: 0 !important; 
       height: 2px !important;
       background: linear-gradient(90deg, transparent, var(--gold), transparent) !important;
-    }
-    /* Ajuste para que NO se amontone en móviles */
-    @media (max-width: 680px) {
-      .hero-bento {
-        width: 100% !important; /* Usa todo el ancho disponible */
-        gap: 10px !important;   /* Espacio entre rectángulos */
-        padding: 0 10px;        /* Margen lateral para que no toque los bordes del cel */
-      }
-      
-      .bento-card {
-        padding: 12px 16px !important; /* Menos relleno vertical para ahorrar espacio */
-        gap: 12px !important;          /* Menos espacio entre icono y texto */
-      }
-
-      .bento-icon-wrap {
-        width: 40px !important;  /* Iconos ligeramente más pequeños en móvil */
-        height: 40px !important;
-        flex-shrink: 0;
-      }
-
-      .bento-icon-wrap .material-symbols-outlined {
-        font-size: 24px !important;
-      }
-
-      .bento-text p {
-        font-size: 13.5px !important; /* Texto un poco más pequeño para que quepa bien */
-        line-height: 1.2 !important;
-      }
-      
-      .bento-text h4 {
-        font-size: 9px !important; /* Títulos de categoría más discretos */
-      }
     }
   </style>
 </head>
