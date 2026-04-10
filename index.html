@@ -1995,7 +1995,88 @@
     #install-prompt .close-prompt:hover {
       opacity: 1;
     }
+/* --- SECCIÓN AUDITORÍA DE SEGURIDAD INTEGRADA --- */
+    .section-security {
+      padding: 80px 0;
+      position: relative;
+    }
 
+    .security-card-integrated {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      padding: 40px;
+      margin-top: 30px;
+    }
+
+    /* El Resplandor (Glow) potenciado */
+    .shield-visual-hub {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 350px;
+    }
+
+    .shield-visual-hub::before {
+      content: "";
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle at center, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(43, 224, 237, 0.08) 30%, 
+        transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
+      animation: shieldAura 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes shieldAura {
+      from { transform: scale(0.9); opacity: 0.5; }
+      to { transform: scale(1.1); opacity: 1; }
+    }
+
+    .shield-img-premium {
+      width: min(280px, 80%);
+      height: auto;
+      z-index: 1;
+      filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .security-card-integrated:hover .shield-img-premium {
+      transform: translateY(-15px) scale(1.05);
+    }
+
+    /* Badges técnicos integrados */
+    .security-badges {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .tech-badge-outline {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--sub);
+      text-transform: uppercase;
+    }
+
+    .tech-badge-outline b { color: var(--gold); }
+
+    @media (max-width: 1050px) {
+      .security-card-integrated { grid-template-columns: 1fr; text-align: center; }
+      .security-badges { justify-content: center; }
+      .shield-visual-hub { order: 1; min-height: 300px; }
+      .security-info { order: 2; }
+    }
     @media (max-width: 1050px) {
       .hero-grid,
       .perf-layout,
@@ -2551,7 +2632,42 @@
       </div>
     </div>
   </section>
+<section class="section-security">
+    <div class="wrap">
+      <div class="title-center reveal">
+        <h2>Validación de Riesgo Soberano</h2>
+        <p>Tu estrategia no solo se optimiza, se somete a un <span class="kw">proceso de certificación</span> matemático.</p>
+      </div>
 
+      <article class="glass security-card-integrated reveal">
+        <div class="security-info">
+          <div class="security-badges">
+            <span class="tech-badge-outline">Status: <b>Bootstrap Test</b></span>
+            <span class="tech-badge-outline">Simulación: <b>Stress Test</b></span>
+          </div>
+          
+          <h3 style="font-size: clamp(24px, 3vw, 36px); margin-bottom: 20px; color: var(--text);">
+            Blindaje Cuantitativo de Portafolio
+          </h3>
+          
+          <p style="color: var(--sub); line-height: 1.7; margin-bottom: 25px; font-size: 17px;">
+            EGADA <span class="kw">analiza</span> tu portafolio bajo miles de escenarios y caídas de mercado <span class="kw">extremas</span>. 
+            Utilizamos tecnología de grado institucional para garantizar que tu capital resida en una estructura 
+            <span class="kw">robusta</span> y matemáticamente <span class="kw">segura</span>.
+          </p>
+
+          <div style="display: flex; align-items: center; gap: 12px; color: var(--ok); font-weight: 800; font-size: 14px;">
+            <span class="material-symbols-outlined">check_circle</span>
+            SOLO PERMITIMOS ASIGNACIONES CON LUZ VERDE
+          </div>
+        </div>
+
+        <div class="shield-visual-hub">
+          <img src="escudo.png" alt="Seguridad EGADA" class="shield-img-premium">
+        </div>
+      </article>
+    </div>
+  </section>
   <section>
     <div class="wrap">
       <div class="title-center reveal">
