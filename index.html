@@ -3054,38 +3054,30 @@
     });
 
     // Instalar app en móvil (iOS / Android) — no mostrar si ya está en modo standalone
-    (function () {
-      const promptEl = document.getElementById("install-prompt");
-      const instruction = document.getElementById("instruction-text");
-      const closeBtn = promptEl?.querySelector(".close-prompt");
-      if (!promptEl || !instruction) return;
+    // Instalar app en móvil (iOS / Android) — Redirige a la app
+(function () {
+  const promptEl = document.getElementById("install-prompt");
+  const closeBtn = promptEl?.querySelector(".close-prompt");
+  if (!promptEl) return;
 
-      const isStandalone =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        (window.navigator && window.navigator.standalone === true);
-      if (isStandalone) return;
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator && window.navigator.standalone === true);
+  if (isStandalone) return;
 
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      const isAndroid = /Android/.test(navigator.userAgent);
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-      if (isIOS) {
-        instruction.innerHTML =
-          'Toca el icono <img src="https://img.icons8.com/ios/20/ffffff/upload--v1.png" alt="" width="20" height="20" style="vertical-align:middle" /> y luego <strong>Agregar a inicio</strong>';
-      } else if (isAndroid) {
-        instruction.innerHTML =
-          'Toca los tres puntos (<strong>⋮</strong>) y elige <strong>Instalar aplicación</strong>';
-      } else {
-        return;
-      }
+  if (isMobile) {
+    setTimeout(() => {
+      promptEl.style.display = "block";
+    }, 3000);
+  }
 
-      setTimeout(() => {
-        promptEl.style.display = "block";
-      }, 3000);
-
-      closeBtn?.addEventListener("click", () => {
-        promptEl.style.display = "none";
-      });
-    })();
+  closeBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    promptEl.style.display = "none";
+  });
+})();
 
     // Reveal linked to scroll position (displacement + appearance)
     (function () {
