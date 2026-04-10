@@ -2465,6 +2465,38 @@
       height: 2px !important;
       background: linear-gradient(90deg, transparent, var(--gold), transparent) !important;
     }
+    /* Ajuste para que NO se amontone en móviles */
+    @media (max-width: 680px) {
+      .hero-bento {
+        width: 100% !important; /* Usa todo el ancho disponible */
+        gap: 10px !important;   /* Espacio entre rectángulos */
+        padding: 0 10px;        /* Margen lateral para que no toque los bordes del cel */
+      }
+      
+      .bento-card {
+        padding: 12px 16px !important; /* Menos relleno vertical para ahorrar espacio */
+        gap: 12px !important;          /* Menos espacio entre icono y texto */
+      }
+
+      .bento-icon-wrap {
+        width: 40px !important;  /* Iconos ligeramente más pequeños en móvil */
+        height: 40px !important;
+        flex-shrink: 0;
+      }
+
+      .bento-icon-wrap .material-symbols-outlined {
+        font-size: 24px !important;
+      }
+
+      .bento-text p {
+        font-size: 13.5px !important; /* Texto un poco más pequeño para que quepa bien */
+        line-height: 1.2 !important;
+      }
+      
+      .bento-text h4 {
+        font-size: 9px !important; /* Títulos de categoría más discretos */
+      }
+    }
   </style>
 </head>
 <body>
