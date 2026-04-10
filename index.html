@@ -1612,66 +1612,97 @@
       font-size: 13px;
     }
 
+    /* --- REDISEÑO SHOWCASE DE INTERFACES PREMIUM --- */
     .device-grid {
-      margin-top: 20px;
+      margin-top: 40px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 24px;
       align-items: stretch;
     }
-    .device-card { padding: 16px; }
-    .device-card h4 {
-      color: var(--gold);
-      letter-spacing: .2px;
-      margin-bottom: 8px;
-      font-size: 15px;
-      text-transform: uppercase;
-    }
-    .device-card p { color: var(--sub); font-size: 13px; line-height: 1.45; margin-bottom: 12px; }
-    .mock-row {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr 1fr;
-    }
-    .mock {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, .03);
+    .device-card {
+      padding: 32px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(13, 27, 42, 0.8), rgba(6, 13, 26, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 18px rgba(43, 224, 237, .06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
-    .mock::before {
-      content: "Placeholder para interfaz real";
+    /* Luz de fondo sutil tipo aurora */
+    .device-card::before {
+      content: '';
       position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      color: rgba(255, 255, 255, .48);
-      font-size: 11px;
-      letter-spacing: .4px;
+      top: 0; left: 0; right: 0; height: 160px;
+      background: radial-gradient(ellipse at top, rgba(43, 224, 237, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .device-card h4 {
+      color: var(--gold);
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      font-size: 13px;
       text-transform: uppercase;
+      font-weight: 800;
+      position: relative; z-index: 2;
     }
-    .mock.has-image::before {
-      content: none;
+    .device-card p {
+      color: #e0e1dd;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 30px;
+      font-weight: 500;
+      position: relative; z-index: 2;
     }
+    .mock-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: auto;
+      position: relative; z-index: 2;
+    }
+    /* El "Bisel" del dispositivo */
+    .mock {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-top: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 14px;
+      background: #020e1e;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+      flex: 1;
+    }
+    /* Efecto "Levitar y Brillar" en Hover */
+    .mock:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 25px rgba(43,224,237,0.3);
+      border-color: rgba(43, 224, 237, 0.5);
+    }
+    /* Imagen borde a borde (edge-to-edge screen) */
     .mock img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
+      object-position: top center;
       display: block;
-      background: rgba(0, 0, 0, 0.22);
     }
-    .mock.phone-v.has-image,
-    .mock.phone-h.has-image {
-      aspect-ratio: 16 / 9;
-      height: auto;
-    }
-    .phone-v { height: 220px; border-radius: 28px; }
-    .phone-h { height: 150px; border-radius: 24px; }
-    .desk-v { height: 180px; }
-    .desk-h { height: 180px; }
+    /* Proporciones reales de pantalla */
+    .phone-v { aspect-ratio: 9/19; max-height: 260px; max-width: 140px; margin: 0 auto; border-radius: 18px; }
+    .phone-h { aspect-ratio: 19/9; max-height: 140px; }
+    .desk-v { aspect-ratio: 4/3; }
+    .desk-h { aspect-ratio: 16/9; }
 
+    @media (max-width: 768px) {
+      .device-grid { grid-template-columns: 1fr; gap: 16px; }
+      .phone-v { max-height: 320px; max-width: 180px; }
+    }
     .platform-grid {
       margin-top: 14px;
       display: grid;
@@ -2355,6 +2386,64 @@
     section.section-app-features {
       padding-top: 20px !important;
     }
+    /* --- REDISEÑO PLATAFORMAS (SOBREESCRIBE LOS DISEÑOS DUPLICADOS) --- */
+    .platform-grid {
+      margin-top: 30px !important;
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 20px !important;
+    }
+    .platform {
+      padding: 30px 24px !important;
+      border-radius: 22px !important;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      text-align: center !important;
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 15px !important;
+    }
+    .platform:hover {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border-color: var(--gold) !important;
+      transform: translateY(-5px) !important;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(241, 196, 15, 0.1) !important;
+    }
+    .platform-icon-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(241, 196, 15, 0.05);
+      border: 1px solid rgba(241, 196, 15, 0.2);
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      margin-bottom: 5px;
+      transition: all 0.3s ease;
+    }
+    .platform:hover .platform-icon-circle {
+      background: var(--gold);
+      color: var(--bg);
+      box-shadow: 0 0 25px var(--gold);
+    }
+    .platform-icon-circle span { font-size: 30px; }
+    .platform h4 {
+      color: var(--text) !important;
+      font-size: 17px !important;
+      font-weight: 700 !important;
+      margin: 0 !important;
+    }
+    .platform p {
+      color: var(--sub) !important;
+      font-size: 14px !important;
+      line-height: 1.5 !important;
+      margin: 0 !important;
+    }
+    @media (max-width: 900px) {
+      .platform-grid { grid-template-columns: 1fr !important; }
+    }
   </style>
 </head>
 <body>
@@ -2777,27 +2866,28 @@
         </article>
       </div>
 
-      <div class="device-grid">
+     <div class="device-grid">
         <article class="glass device-card reveal">
           <h4>Interfaz adaptativa - Experiencia Optimizada</h4>
           <p>Vertical para quickview operativo. Horizontal para mayor contexto visual y lectura comparativa.</p>
           <div class="mock-row">
-            <div class="mock phone-v has-image">
+            <div class="mock phone-v">
               <img src="Interfaz1.png" alt="Vista iPhone vertical EGADA" onerror="this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-c7bb46d1-c03d-41e6-af34-bffadd1543b8.png';" />
             </div>
-            <div class="mock phone-h has-image">
+            <div class="mock phone-h">
               <img src="Interfaz2.png" alt="Vista iPhone horizontal EGADA" onerror="this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-44068517-330f-4711-978b-002278a026c1.png';" />
             </div>
           </div>
         </article>
+        
         <article class="glass device-card reveal">
-          <h4>Interzfaz - Vista de análisis</h4>
+          <h4>Interfaz - Vista de análisis</h4>
           <p>Espacio ideal para monitoreo completo, terminales y detalle de métricas avanzadas.</p>
           <div class="mock-row">
-            <div class="mock desk-v has-image">
+            <div class="mock desk-v">
               <img src="Interfaz3.png" alt="Vista dashboard EGADA" onerror="this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-6cb6f553-29c3-446a-b5f0-c79fd2188840.png';" />
             </div>
-            <div class="mock desk-h has-image">
+            <div class="mock desk-h">
               <img src="Interfaz4.png" alt="Vista newsletters EGADA" onerror="if(this.src.indexOf('Intertaz4.png')===-1){this.src='Intertaz4.png';}else{this.onerror=null;this.src='/Users/davidjassan/.cursor/projects/Users-davidjassan-Desktop-egada-flet/assets/image-e18e40e0-ccea-4985-9d06-34d316955648.png';}" />
             </div>
           </div>
@@ -2805,20 +2895,30 @@
       </div>
 
       <div class="platform-grid">
-        <article class="platform reveal">
+        <article class="platform reveal cursor-react">
+          <div class="platform-icon-circle">
+            <span class="material-symbols-outlined">desktop_windows</span>
+          </div>
           <h4>Web de escritorio</h4>
           <p>Mayor superficie para análisis profundo, comparativos y operación de precisión.</p>
         </article>
-        <article class="platform reveal">
+
+        <article class="platform reveal cursor-react">
+          <div class="platform-icon-circle">
+            <span class="material-symbols-outlined">smartphone</span>
+          </div>
           <h4>App móvil</h4>
           <p>Control de estado, alertas y decisiones puntuales desde cualquier lugar.</p>
         </article>
-        <article class="platform reveal">
+
+        <article class="platform reveal cursor-react">
+          <div class="platform-icon-circle">
+            <span class="material-symbols-outlined">sync_alt</span>
+          </div>
           <h4>Experiencia continua</h4>
           <p>Misma lógica de datos y proceso operativo en ambos canales para evitar fricción.</p>
         </article>
       </div>
-    </div>
   </section>
 <section class="section-security">
     <div class="wrap">
@@ -2886,6 +2986,27 @@
         <div class="faq-item reveal">
           <button class="faq-q" type="button">¿Qué recibo por correo de forma automática?<span class="plus">+</span></button>
           <div class="faq-a">Notificaciones de rebalanceo cuando aplica y un resumen semanal de rendimiento con cierre de viernes para seguimiento ejecutivo.</div>
+        </div>
+        <style>
+          .tc-item.open .faq-a { max-height: 320px; padding: 0 16px 20px; overflow-y: auto; }
+          /* Estilo de barra de desplazamiento premium para el texto legal */
+          .tc-item .faq-a::-webkit-scrollbar { width: 6px; }
+          .tc-item .faq-a::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+          .tc-item .faq-a::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+        </style>
+        
+        <div class="faq-item tc-item reveal" style="margin-top: 35px; border: 1px solid rgba(241, 196, 15, 0.4); background: rgba(241, 196, 15, 0.03);">
+          <button class="faq-q" type="button" style="font-size: 14px;">
+            Al usar la app aceptas nuestros Términos, Condiciones y Aviso de Riesgo
+            <span class="plus">+</span>
+          </button>
+          <div class="faq-a">
+            <p style="margin-bottom: 12px; margin-top: 10px;"><strong>1. Naturaleza del Servicio:</strong> EGADA es una plataforma de análisis cuantitativo, simulación y visualización de datos de mercado con fines estrictamente informativos y educativos. EGADA NO es un broker, NO es un asesor financiero registrado, NO capta capital y NO gestiona fondos de terceros.</p>
+            <p style="margin-bottom: 12px;"><strong>2. Responsabilidad del Usuario:</strong> El usuario reconoce y acepta que es el único responsable de las decisiones de inversión que tome y ejecute en su cuenta de corretaje personal. EGADA proporciona herramientas matemáticas (como optimización de Markowitz y CAPM), pero la ejecución final, el riesgo asumido y los resultados recaen 100% en el usuario.</p>
+            <p style="margin-bottom: 12px;"><strong>3. Riesgo de Inversión:</strong> Toda inversión en los mercados financieros conlleva un alto riesgo de pérdida total o parcial del capital. Los resultados mostrados en simulaciones, *Bootstrap Tests*, *Stress Tests* o datos históricos <strong>no garantizan de ninguna manera rendimientos futuros</strong>.</p>
+            <p style="margin-bottom: 12px;"><strong>4. Exactitud de los Datos:</strong> Aunque utilizamos tecnología institucional para proveer información de mercado, EGADA no garantiza la exactitud, latencia cero o integridad absoluta de los datos financieros. La plataforma y sus algoritmos se proporcionan "tal cual" (as is), sin garantías implícitas o explícitas.</p>
+            <p style="margin-bottom: 0;"><strong>5. Aceptación y Liberación:</strong> Al acceder, navegar o utilizar las herramientas operativas de EGADA, el usuario confirma que ha leído, entendido y aceptado estas condiciones incondicionalmente, liberando a los desarrolladores y operadores de EGADA de cualquier responsabilidad civil, penal o financiera derivada de posibles pérdidas de mercado.</p>
+          </div>
         </div>
       </div>
 
