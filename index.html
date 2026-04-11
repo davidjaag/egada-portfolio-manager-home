@@ -2293,18 +2293,19 @@
       .perf-chart-container { height: 260px !important; width: 100% !important; }
       
       .hub-orbit { 
-        min-height: 380px !important; 
-        width: 100% !important;
+        min-height: 520px !important; /* Aumentamos altura para dar espacio a la órbita */
+        width: 100vw !important; /* Usamos todo el ancho de la pantalla */
+        margin-left: calc(-50vw + 50%); /* Centrado absoluto aunque el padre tenga márgenes */
         overflow: visible !important; 
         display: flex !important;
         justify-content: center !important;
+        align-items: center !important;
       }
       .hub-orbit-visual {
-        --hub-r: 120px !important; /* Radio reducido para que quepa en el ancho del cel */
-        transform: scale(0.85);
+        --hub-r: 186px !important; /* RESTAURADO: Tu dimensión original de escritorio */
+        transform: scale(0.8); /* Solo un ligero zoom out general para que quepa en el ancho del cel */
+        transform-origin: center center;
       }
-      .feature-grid, .platform-grid, .mock-row { grid-template-columns: 1fr !important; }
-    }
       
       /* Contenedor Bento: Rectángulos con margen de seguridad */
       .hero-bento {
