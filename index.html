@@ -2285,12 +2285,21 @@
         gap: 14px !important;
         transform: none !important;
       }
+      /* Corregir que el gráfico no deje huecos negros abajo */
+      .perf-card {
+        min-height: auto !important; 
+        height: auto !important;
+        margin-bottom: 20px !important;
+      }
       .bento-icon-wrap { width: 40px !important; height: 40px !important; flex: 0 0 40px !important; }
       .bento-icon-wrap .material-symbols-outlined { font-size: 22px !important; }
 
       /* Gráfico y Hub: Centrados y sin cortes */
       .perf-layout { display: flex !important; flex-direction: column !important; width: 100% !important; }
-      .perf-chart-container { height: 260px !important; width: 100% !important; }
+      .perf-chart-container { 
+        height: 250px !important; /* Altura optimizada para que los botones suban */
+        width: 100% !important; 
+      }
       
       .hub-orbit { 
         min-height: 520px !important; /* Aumentamos altura para dar espacio a la órbita */
