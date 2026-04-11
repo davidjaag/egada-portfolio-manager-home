@@ -2262,9 +2262,49 @@
       .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .platform-grid { grid-template-columns: 1fr 1fr; }
     }
-    /* --- AJUSTES RESPONSIVOS UNIFICADOS --- */
+    /* --- AJUSTES RESPONSIVOS UNIFICADOS (CORREGIDO) --- */
     @media (max-width: 680px) {
-      section { padding: 45px 0; }
+      section { padding: 40px 0 !important; }
+      
+      /* Hero: Evita que el texto y el logo toquen los bordes */
+      .hero-main-block { width: 100% !important; padding: 0 6% !important; }
+      h1 { font-size: clamp(36px, 10vw, 46px) !important; margin-bottom: 18px !important; }
+      .lead { font-size: 15.5px !important; line-height: 1.4 !important; }
+
+      /* Bento: Rectángulos con espacio lateral */
+      .hero-bento {
+        width: 92% !important; 
+        margin: 25px auto 0 !important;
+        gap: 10px !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .bento-card {
+        width: 100% !important;
+        padding: 12px 16px !important;
+        gap: 14px !important;
+        transform: none !important;
+      }
+      .bento-icon-wrap { width: 40px !important; height: 40px !important; flex: 0 0 40px !important; }
+      .bento-icon-wrap .material-symbols-outlined { font-size: 22px !important; }
+
+      /* Gráfico y Hub: Centrados y sin cortes */
+      .perf-layout { display: flex !important; flex-direction: column !important; width: 100% !important; }
+      .perf-chart-container { height: 260px !important; width: 100% !important; }
+      
+      .hub-orbit { 
+        min-height: 380px !important; 
+        width: 100% !important;
+        overflow: visible !important; 
+        display: flex !important;
+        justify-content: center !important;
+      }
+      .hub-orbit-visual {
+        --hub-r: 120px !important; /* Radio reducido para que quepa en el ancho del cel */
+        transform: scale(0.85);
+      }
+      .feature-grid, .platform-grid, .mock-row { grid-template-columns: 1fr !important; }
+    }
       
       /* Contenedor Bento: Rectángulos con margen de seguridad */
       .hero-bento {
@@ -2307,10 +2347,10 @@
     }
     /* Reducir espacio entre burbujas y la sección de Elementos Operativos */
     section.section-dashboard-ref {
-      padding-bottom: 10px !important;
+      padding-bottom: 110px !important; /* Espacio extra para las esferas */
     }
     section.section-app-features {
-      padding-top: 20px !important;
+      padding-top: 50px !important;
     }
     /* --- REDISEÑO PLATAFORMAS (SOBREESCRIBE LOS DISEÑOS DUPLICADOS) --- */
     .platform-grid {
@@ -2994,20 +3034,20 @@
   </section>
 
   <div id="install-prompt" role="dialog" aria-labelledby="install-prompt-title">
-  <button type="button" class="close-prompt" aria-label="Cerrar">×</button>
-  <a href="https://egada-app.onrender.com/" style="text-decoration: none; color: inherit; display: block;">
-    <div class="prompt-header">
-      <img src="favicon.png" class="prompt-icon" alt="" width="45" height="45" />
-      <div class="prompt-text">
-        <h4 id="install-prompt-title">Instalar EGADA Terminal</h4>
-        <p>Acceso rápido a la plataforma</p>
+    <button type="button" class="close-prompt" aria-label="Cerrar">×</button>
+    <a href="https://egada-portfolio-manager-home.vercel.app/" style="text-decoration: none; color: inherit; display: block;">
+      <div class="prompt-header">
+        <img src="favicon.png" class="prompt-icon" alt="" width="45" height="45" />
+        <div class="prompt-text">
+          <h4 id="install-prompt-title">Instalar EGADA</h4>
+          <p>Acceso directo a la plataforma</p>
+        </div>
       </div>
-    </div>
-    <div class="prompt-instructions" style="background: rgba(0, 0, 0, 0.22); border-radius: 10px; padding: 12px; font-size: 12px; text-align: center; color: var(--gold); font-weight: 600;">
-      Toca aquí para abrir la app y agregarla a tu inicio.
-    </div>
-  </a>
-</div>
+      <div class="prompt-instructions" style="background: rgba(0, 0, 0, 0.22); border-radius: 10px; padding: 12px; font-size: 12px; text-align: center; color: var(--gold); font-weight: 600;">
+        Toca <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">ios_share</span> y luego <strong>"Agregar al inicio"</strong> <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">add_box</span> para instalar en tu pantalla.
+      </div>
+    </a>
+  </div>
 
   <footer>
     © 2026 EGADA Portfolio Manager · Ciudad de México · Plataforma de inteligencia de portafolio
