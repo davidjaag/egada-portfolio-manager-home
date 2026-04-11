@@ -2302,10 +2302,14 @@
         align-items: center !important;
       }
       .hub-orbit-visual {
-        --hub-r: 186px !important; /* RESTAURADO: Tu dimensión original de escritorio */
-        transform: scale(0.8); /* Solo un ligero zoom out general para que quepa en el ancho del cel */
-        transform-origin: center center;
-      }
+      position: relative;
+      width: min(460px, 100%);
+      height: min(460px, 100%);
+      display: grid;
+      place-items: center;
+      margin: 0 auto; /* Centrado automático */
+      --hub-r: min(186px, 41vw);
+    }
       
       /* Contenedor Bento: Rectángulos con margen de seguridad */
       .hero-bento {
