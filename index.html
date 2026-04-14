@@ -66,7 +66,14 @@
       opacity: .55;
     }
 
-    .wrap { width: min(1220px, 92vw); margin: 0 auto; }
+    .wrap {
+      width: min(1220px, 100%);
+      max-width: 100%;
+      margin: 0 auto;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+      box-sizing: border-box;
+    }
     section { padding: 58px 0; }
     section.hero {
       padding-top: 22px;
@@ -1998,13 +2005,13 @@
       font-size: 13px;
     }
 
-    /* Instalar app web (PWA) en móvil */
+    /* Instalar app web (PWA): móvil abajo centrado; escritorio esquina inferior derecha */
     #install-prompt {
       position: fixed;
       bottom: max(80px, calc(env(safe-area-inset-bottom, 0px) + 56px));
       left: 50%;
       transform: translateX(-50%);
-      width: 90%;
+      width: min(400px, calc(100vw - 32px));
       max-width: 400px;
       background: rgba(15, 22, 38, 0.78);
       backdrop-filter: blur(22px) saturate(1.08);
@@ -2017,6 +2024,13 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
       animation: installSlideUp 0.5s ease-out;
     }
+    #install-prompt.install-prompt--desktop {
+      left: auto;
+      right: max(16px, env(safe-area-inset-right, 0px));
+      transform: none;
+      bottom: max(24px, env(safe-area-inset-bottom, 0px));
+      animation: installSlideInDesktop 0.45s ease-out;
+    }
     @keyframes installSlideUp {
       from {
         bottom: -100px;
@@ -2026,6 +2040,67 @@
         bottom: max(80px, calc(env(safe-area-inset-bottom, 0px) + 56px));
         opacity: 1;
       }
+    }
+    @keyframes installSlideInDesktop {
+      from {
+        opacity: 0;
+        transform: translateX(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    #install-prompt .install-panel {
+      display: none;
+    }
+    #install-prompt.is-mobile .install-panel--mobile {
+      display: block;
+    }
+    #install-prompt.is-desktop .install-panel--desktop {
+      display: block;
+    }
+    .install-panel--desktop .install-desktop-actions {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-install-chrome {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      background: var(--gold);
+      color: #0b1629;
+      box-shadow: 0 4px 16px rgba(241, 196, 15, 0.35);
+    }
+    .btn-install-chrome:hover {
+      filter: brightness(1.05);
+    }
+    .btn-install-chrome:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .install-open-terminal {
+      display: block;
+      text-align: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .install-open-terminal:hover {
+      border-color: var(--gold);
+      color: var(--gold);
     }
     #install-prompt .prompt-header {
       display: flex;
@@ -2266,8 +2341,8 @@
     @media (max-width: 680px) {
       section { padding: 40px 0 !important; }
       
-      /* Hero: Evita que el texto y el logo toquen los bordes */
-      .hero-main-block { width: 100% !important; padding: 0 6% !important; }
+      /* Hero: el .wrap ya aporta padding lateral */
+      .hero-main-block { width: 100% !important; padding: 0 !important; }
       h1 { font-size: clamp(36px, 10vw, 46px) !important; margin-bottom: 18px !important; }
       .lead { font-size: 15.5px !important; line-height: 1.4 !important; }
 
@@ -2301,24 +2376,29 @@
         width: 100% !important; 
       }
       
-      .hub-orbit { 
-        min-height: 520px !important; /* Aumentamos altura para dar espacio a la órbita */
-        width: 100vw !important; /* Usamos todo el ancho de la pantalla */
-        margin-left: calc(-50vw + 50%); /* Centrado absoluto aunque el padre tenga márgenes */
-        overflow: visible !important; 
+      .hub-orbit {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        min-height: min(96vw, 440px) !important;
+        padding: 12px 8px 20px !important;
+        overflow: visible !important;
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
       }
       .hub-orbit-visual {
-      position: relative;
-      width: min(460px, 100%);
-      height: min(460px, 100%);
-      display: grid;
-      place-items: center;
-      margin: 0 auto; /* Centrado automático */
-      --hub-r: min(186px, 41vw);
-    }
+        position: relative;
+        width: min(320px, 86vw) !important;
+        height: min(320px, 86vw) !important;
+        display: grid;
+        place-items: center;
+        margin: 0 auto;
+        --hub-r: min(108px, 14.5vw) !important;
+      }
+      .hub-center img {
+        width: min(160px, 42vw) !important;
+      }
       
       /* Contenedor Bento: Rectángulos con margen de seguridad */
       .hero-bento {
@@ -2354,10 +2434,96 @@
         line-height: 1.25 !important;
       }
 
-      /* Otros ajustes de sección para móvil */
-      .hub-orbit { min-height: 120vw; }
+      .kicker {
+        letter-spacing: 0.28em !important;
+        font-size: 10px !important;
+        padding: 0 4px;
+      }
+      h1 { letter-spacing: -1px !important; }
+      .metric {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .metric .v {
+        max-width: 100%;
+        text-align: left;
+      }
+      .terminal-glow {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+      }
+      .terminal-glow-text {
+        flex: 1 1 100%;
+        text-align: center;
+      }
+      .th-head {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .th-ibox {
+        width: 56px !important;
+        height: 56px !important;
+      }
+      .th-ibox .material-symbols-outlined {
+        font-size: 30px !important;
+      }
+      .heat {
+        min-width: 0;
+        padding: 0 4px;
+        gap: 2px;
+      }
+      .heat .sym {
+        font-size: 9px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 52%;
+      }
+      .heat .ret { font-size: 9px; }
+      .bubble-wrap {
+        height: auto !important;
+        min-height: 200px;
+        padding: 12px 4px 28px;
+      }
+      .b1 { width: 100px !important; height: 100px !important; }
+      .b2 { width: 112px !important; height: 112px !important; }
+      .b3 { width: 92px !important; height: 92px !important; }
+      .b4 { width: 82px !important; height: 82px !important; }
+      .alloc-bubble b { font-size: clamp(17px, 4.5vw, 22px) !important; }
+      .alloc-bubble span { font-size: 10px !important; }
+      .device-card { padding: 22px 18px !important; }
+      .mock:hover {
+        transform: none;
+      }
+      .iphone-screen {
+        border-radius: min(36px, 9vw) !important;
+      }
+      .siri-container {
+        border-radius: min(36px, 9vw) !important;
+      }
+      .faq-item.open .faq-a { max-height: 520px; }
       .feature-grid, .platform-grid, .mock-row { grid-template-columns: 1fr; }
-    }
+      .eval-compat-head {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .eval-icon-cyan {
+        width: 56px !important;
+        height: 56px !important;
+      }
+      .eval-icon-cyan .material-symbols-outlined {
+        font-size: 30px !important;
+      }
+      .security-card-integrated {
+        padding: 28px 16px !important;
+        gap: 24px !important;
+      }
+      .compat-copy { padding: 16px 8px !important; }
+      .hub-copy { padding: 16px 8px !important; }
+      .ia-copy { padding: 16px 12px !important; }
+      .cta-band { padding: 20px 16px !important; }
     }
     /* Reducir espacio entre burbujas y la sección de Elementos Operativos */
     section.section-dashboard-ref {
@@ -3047,20 +3213,36 @@
     </div>
   </section>
 
-  <div id="install-prompt" role="dialog" aria-labelledby="install-prompt-title">
+  <div id="install-prompt" role="dialog" aria-labelledby="install-prompt-title" aria-hidden="true">
     <button type="button" class="close-prompt" aria-label="Cerrar">×</button>
-    <a href="https://egada-app.onrender.com/" style="text-decoration: none; color: inherit; display: block;">
+    <div class="install-panel install-panel--mobile">
+      <a href="https://egada-app.onrender.com/" style="text-decoration: none; color: inherit; display: block;">
+        <div class="prompt-header">
+          <img src="favicon.png" class="prompt-icon" alt="" width="45" height="45" />
+          <div class="prompt-text">
+            <h4 id="install-prompt-title" data-i18n="install.title">Instalar Terminal EGADA</h4>
+            <p data-i18n="install.subMobile">Herramienta Operativa Quant</p>
+          </div>
+        </div>
+        <div class="prompt-instructions" style="background: rgba(0, 0, 0, 0.22); border-radius: 10px; padding: 12px; font-size: 12px; text-align: center; color: var(--gold); font-weight: 600;" data-i18n-html="install.instrMobile">
+          Ten tu portafolio siempre a la mano. Toca <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">ios_share</span> y luego <strong>"Agregar al inicio"</strong>.
+        </div>
+      </a>
+    </div>
+    <div class="install-panel install-panel--desktop">
       <div class="prompt-header">
         <img src="favicon.png" class="prompt-icon" alt="" width="45" height="45" />
         <div class="prompt-text">
-          <h4 id="install-prompt-title">Instalar Terminal EGADA</h4>
-          <p>Herramienta Operativa Quant</p>
+          <h4 id="install-prompt-title-desktop" data-i18n="install.title">Instalar Terminal EGADA</h4>
+          <p data-i18n="install.subDesktop">Chrome en escritorio</p>
         </div>
       </div>
-      <div class="prompt-instructions" style="background: rgba(0, 0, 0, 0.22); border-radius: 10px; padding: 12px; font-size: 12px; text-align: center; color: var(--gold); font-weight: 600;">
-        Ten tu portafolio siempre a la mano. Toca <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">ios_share</span> y luego <strong>"Agregar al inicio"</strong>.
+      <div class="prompt-instructions" style="background: rgba(0, 0, 0, 0.22); border-radius: 10px; padding: 12px; font-size: 12px; text-align: left; color: var(--gold); font-weight: 600; line-height: 1.45;" data-i18n-html="install.instrDesktop"></div>
+      <div class="install-desktop-actions">
+        <a class="install-open-terminal" href="https://egada-app.onrender.com/" data-i18n="install.openTerminal">Abrir terminal</a>
+        <button type="button" class="btn-install-chrome" id="pwa-install-btn" hidden data-i18n="install.installBtn">Instalar aplicación</button>
       </div>
-    </a>
+    </div>
   </div>
 
   <footer>
@@ -3164,7 +3346,14 @@
           "platform.contDesc": "Misma lógica de datos y proceso operativo en ambos canales para evitar fricción.",
           "cta.title": "Opera menos por impulso, más por método.",
           "cta.desc": "EGADA te avisa cuándo actuar. El resto del tiempo, tu estrategia sigue su curso.",
-          "cta.button": "Solicitar acceso"
+          "cta.button": "Solicitar acceso",
+          "install.title": "Instalar Terminal EGADA",
+          "install.subMobile": "Herramienta Operativa Quant",
+          "install.subDesktop": "Chrome en escritorio",
+          "install.instrMobile": "Ten tu portafolio siempre a la mano. Toca <span class=\"material-symbols-outlined\" style=\"font-size:16px; vertical-align:middle;\">ios_share</span> y luego <strong>«Agregar al inicio»</strong>.",
+          "install.instrDesktop": "1) Pulsa <strong>Abrir terminal</strong> y entra en la app.<br />2) En esa p\u00e1gina, men\u00fa de Chrome <strong>\u22EE</strong> (arriba a la derecha) \u2192 <strong>Instalar EGADA\u2026</strong> o <strong>Instalar aplicaci\u00f3n</strong>.<br />3) As\u00ed tendr\u00e1s <strong>un solo icono</strong> y se abrir\u00e1 como app, sin barra de direcciones.",
+          "install.openTerminal": "Abrir terminal",
+          "install.installBtn": "Instalar aplicación"
         },
         en: {
           "hero.kicker": "EGADA INSTITUTIONAL TERMINAL",
@@ -3256,7 +3445,14 @@
           "platform.contDesc": "Same data logic and operating process across channels to avoid friction.",
           "cta.title": "Operate less on impulse, more with method.",
           "cta.desc": "EGADA tells you when to act. The rest of the time, your strategy stays on course.",
-          "cta.button": "Request access"
+          "cta.button": "Request access",
+          "install.title": "Install EGADA Terminal",
+          "install.subMobile": "Quant operations tool",
+          "install.subDesktop": "Chrome on desktop",
+          "install.instrMobile": "Keep your portfolio one tap away. Tap <span class=\"material-symbols-outlined\" style=\"font-size:16px; vertical-align:middle;\">ios_share</span> then <strong>Add to Home Screen</strong>.",
+          "install.instrDesktop": "1) Tap <strong>Open terminal</strong> and load the app.<br />2) On that page, Chrome menu <strong>\u22EE</strong> (top-right) \u2192 <strong>Install EGADA\u2026</strong> or <strong>Install app</strong>.<br />3) You get <strong>one icon</strong> and it opens fullscreen, no address bar.",
+          "install.openTerminal": "Open terminal",
+          "install.installBtn": "Install app"
         }
       };
 
@@ -3391,31 +3587,62 @@
       el.style.setProperty("--reveal-delay", `${(i % 8) * 45}ms`);
     });
 
-    // Instalar app en móvil (iOS / Android) — no mostrar si ya está en modo standalone
-    // Instalar app en móvil (iOS / Android) — Redirige a la app
-(function () {
-  const promptEl = document.getElementById("install-prompt");
-  const closeBtn = promptEl?.querySelector(".close-prompt");
-  if (!promptEl) return;
+    // Instalar PWA: móvil (Safari/Chrome) y escritorio (Chrome) — oculto en modo standalone
+ (function () {
+      const promptEl = document.getElementById("install-prompt");
+      const closeBtn = promptEl?.querySelector(".close-prompt");
+      const pwaBtn = document.getElementById("pwa-install-btn");
+      if (!promptEl) return;
 
-  const isStandalone =
-    window.matchMedia("(display-mode: standalone)").matches ||
-    (window.navigator && window.navigator.standalone === true);
-  if (isStandalone) return;
+      const isStandalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        (window.navigator && window.navigator.standalone === true);
+      if (isStandalone) return;
 
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const ua = navigator.userAgent || "";
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
 
-  if (isMobile) {
-    setTimeout(() => {
-      promptEl.style.display = "block";
-    }, 3000);
-  }
+      let deferredPrompt = null;
+      let isTerminalHost = false;
+      try {
+        isTerminalHost = /\.onrender\.com$/i.test(location.hostname);
+      } catch (_) {}
 
-  closeBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    promptEl.style.display = "none";
-  });
-})();
+      if (isTerminalHost) {
+        window.addEventListener("beforeinstallprompt", (e) => {
+          e.preventDefault();
+          deferredPrompt = e;
+          if (pwaBtn) pwaBtn.hidden = false;
+        });
+      }
+
+      pwaBtn?.addEventListener("click", async () => {
+        if (!deferredPrompt) return;
+        try {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+        } catch (_) {}
+        deferredPrompt = null;
+        pwaBtn.hidden = true;
+      });
+
+      function showInstallPrompt() {
+        promptEl.classList.toggle("is-mobile", isMobile);
+        promptEl.classList.toggle("is-desktop", !isMobile);
+        promptEl.classList.toggle("install-prompt--desktop", !isMobile);
+        promptEl.style.display = "block";
+        promptEl.setAttribute("aria-hidden", "false");
+      }
+
+      setTimeout(showInstallPrompt, isMobile ? 3000 : 4500);
+
+      closeBtn?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        promptEl.style.display = "none";
+        promptEl.setAttribute("aria-hidden", "true");
+      });
+    })();
 
     // Reveal linked to scroll position (displacement + appearance)
     (function () {
