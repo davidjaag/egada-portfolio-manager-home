@@ -1878,25 +1878,25 @@
       position: relative;
       gap: 10px;
     }
-    /* Círculo siempre 1:1: ancho basado en el ancho del mockup, sin mezclar % con vw en la altura */
+    /* Cuadrado explícito (ancho = alto): evita óvalos por flex/aspect-ratio en WebKit */
     .mobile-ia-stage {
       box-sizing: border-box;
-      width: min(100%, min(260px, 86cqw));
-      aspect-ratio: 1 / 1;
-      height: auto;
+      --ia-side: min(260px, 86cqw);
+      width: var(--ia-side);
+      height: var(--ia-side);
+      max-width: 100%;
       border-radius: 50%;
       position: relative;
       margin-inline: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
+      display: block;
       flex: 0 0 auto;
+      overflow: hidden;
     }
     .mobile-ia-holder #iaIconCanvas {
       position: absolute;
-      left: 0;
-      top: 0;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       width: 100%;
       height: 100%;
       display: block;
@@ -2500,9 +2500,28 @@
         max-width: 52%;
       }
       .heat .ret { font-size: 9px; }
+      /* Burbujas grandes tipo referencia móvil: rejilla 2×2 a casi todo el ancho */
+      .bubble-card {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
       .bubble-wrap {
-        --bu: min(74px, 20.5vw) !important;
-        padding: 12px 4px 24px !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-rows: auto auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        column-gap: min(16px, 4vw) !important;
+        row-gap: min(18px, 4.5vw) !important;
+        padding: 12px 0 32px !important;
+        /* b2 es la más ancha (~1.138× --bu); que quepa en media fila */
+        --bu: min(200px, calc((100vw - 52px) / 2 / 1.1379)) !important;
+      }
+      .bubble-wrap .b4 {
+        grid-column: unset !important;
+        grid-row: unset !important;
+      }
+      .transparent-phone-mockup .mobile-ia-stage {
+        --ia-side: min(240px, 82cqw) !important;
       }
       .device-card { padding: 22px 18px !important; }
       .mock:hover {
@@ -4360,19 +4379,31 @@
       function resize() {
         const dpr = window.devicePixelRatio || 1;
         const shellRect = shell.getBoundingClientRect();
-        const sideFromRect = Math.min(shellRect.width, shellRect.height);
-        const sideFallback = Math.min(shell.clientWidth || 0, shell.clientHeight || 0);
-        const side = sideFromRect || sideFallback || Math.min(window.innerWidth * 0.72, 278);
+        let side = Math.floor(Math.min(shellRect.width, shellRect.height));
+        if (side < 2) {
+          side = Math.floor(Math.min(shell.clientWidth || 0, shell.clientHeight || 0));
+        }
+        if (side < 2) {
+          side = Math.floor(Math.min(window.innerWidth * 0.5, 260));
+        }
         const size = Math.max(120, side);
-        canvas.width = size * dpr;
-        canvas.height = size * dpr;
+        canvas.width = Math.max(1, Math.round(size * dpr));
+        canvas.height = Math.max(1, Math.round(size * dpr));
         canvas.style.width = size + "px";
         canvas.style.height = size + "px";
+        canvas.style.aspectRatio = "1 / 1";
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
       resize();
       requestAnimationFrame(resize);
       window.addEventListener("resize", resize);
+      try {
+        if (typeof ResizeObserver !== "undefined") {
+          new ResizeObserver(function () {
+            resize();
+          }).observe(shell);
+        }
+      } catch (_) {}
 
       function spark(x, y, s, r) {
         ctx.save();
@@ -4399,16 +4430,17 @@
           requestAnimationFrame(draw);
           return;
         }
-        const cx = w * 0.5;
-        const cy = h * 0.5;
-        const u = Math.min(w, h) / 220;
-        ctx.clearRect(0, 0, w, h);
+        const D = Math.min(w, h);
+        const cx = D * 0.5;
+        const cy = D * 0.5;
+        const u = D / 220;
+        ctx.clearRect(0, 0, D, D);
 
         const pulse = egadaPrefersReducedMotion()
           ? 1
           : 1 + Math.sin(t * 0.04) * 0.02;
 
-        const haloR = Math.min(w, h) * 0.5;
+        const haloR = D * 0.5;
         const grd = ctx.createRadialGradient(cx, cy, 20 * u, cx, cy, haloR);
         grd.addColorStop(0, "rgba(241,196,15,0.09)");
         grd.addColorStop(1, "rgba(241,196,15,0)");
