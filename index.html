@@ -1635,18 +1635,9 @@
       overflow: visible;
       display: grid;
       place-items: center;
-      justify-items: center;
-      width: 100%;
-      max-width: 100%;
       background: transparent;
       border: none;
       box-shadow: none;
-    }
-    /* Evita micro-escalados por reveal al hacer scroll en iOS */
-    .ia-icon-shell.reveal,
-    .ia-icon-shell.reveal.show {
-      transform: none !important;
-      filter: none !important;
     }
     .ia-icon-shell::before {
       content: none;
@@ -1783,25 +1774,19 @@
       margin-bottom: 34px;
     }
     .transparent-phone-mockup {
-      box-sizing: border-box;
-      container-type: size;
-      container-name: egada-phone;
-      /* Tamaño fijo por proporción (no depende de dvh, no cambia al hacer scroll) */
-      --phone-w: min(300px, calc(100vw - 24px));
-      width: var(--phone-w);
-      max-width: 100%;
-      height: calc(var(--phone-w) * 620 / 300);
-      aspect-ratio: auto;
-      max-height: none;
+      width: min(300px, 88vw);
+      aspect-ratio: 300 / 620;
+      height: auto;
+      max-height: min(620px, 86dvh);
       border: 1.5px solid rgba(255, 255, 255, 0.1);
       border-radius: min(54px, 14vw);
       margin: 0 auto;
       position: relative;
       box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-      overflow: clip;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      align-items: stretch;
+      align-items: center;
       background: rgba(5, 12, 24, 0.08);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -1820,8 +1805,7 @@
     }
     .iphone-screen {
       width: 100%;
-      flex: 1 1 auto;
-      min-height: 0;
+      height: 100%;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -1884,38 +1868,42 @@
     }
     .mobile-ia-holder {
       width: 100%;
-      flex: 1 1 auto;
-      min-height: 0;
-      display: grid;
-      place-content: center;
-      justify-items: center;
-      padding: 12px 14px 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 18px 12px;
       z-index: 5;
       position: relative;
-      gap: 10px;
+      gap: 12px;
     }
-    /* Cuadrado explícito (ancho = alto): evita óvalos por flex/aspect-ratio en WebKit */
     .mobile-ia-stage {
-      box-sizing: border-box;
-      --ia-side: calc(var(--phone-w, 300px) * 0.78);
-      width: var(--ia-side);
-      height: var(--ia-side);
-      max-width: calc(100% - 6px);
-      max-height: calc(100% - 6px);
+      width: min(278px, 94%);
+      height: min(278px, 94vw);
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 1 / 1;
       border-radius: 50%;
       position: relative;
-      margin: 0 auto;
-      display: block;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      justify-self: center;
+      align-self: center;
       flex: 0 0 auto;
-      overflow: hidden;
     }
     .mobile-ia-holder #iaIconCanvas {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      inset: 0;
+      margin: auto;
       width: 100%;
-      height: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      max-width: 100%;
+      max-height: 100%;
       display: block;
       border-radius: 50%;
     }
@@ -2538,7 +2526,8 @@
         grid-row: unset !important;
       }
       .transparent-phone-mockup .mobile-ia-stage {
-        --ia-side: calc(var(--phone-w, 300px) * 0.78) !important;
+        width: min(278px, 94%) !important;
+        height: min(278px, 94vw) !important;
       }
       .device-card { padding: 22px 18px !important; }
       .mock:hover {
@@ -4396,22 +4385,29 @@
       function resize() {
         const dpr = window.devicePixelRatio || 1;
         const shellRect = shell.getBoundingClientRect();
-        let side = Math.floor(shellRect.width || shell.clientWidth || 0);
+        const sideFromRect = Math.min(shellRect.width, shellRect.height);
+        const sideFallback = Math.min(shell.clientWidth || 0, shell.clientHeight || 0);
+        let side = sideFromRect || sideFallback;
         if (side < 2) {
-          side = Math.floor(Math.min(window.innerWidth * 0.5, 260));
+          side = Math.min(window.innerWidth * 0.72, 278);
         }
-        const size = Math.max(120, side);
+        const size = Math.max(120, Math.floor(side));
         canvas.width = Math.max(1, Math.round(size * dpr));
         canvas.height = Math.max(1, Math.round(size * dpr));
         canvas.style.width = size + "px";
         canvas.style.height = size + "px";
-        canvas.style.aspectRatio = "1 / 1";
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
       resize();
       requestAnimationFrame(resize);
       window.addEventListener("resize", resize);
-      window.addEventListener("orientationchange", resize);
+      try {
+        if (typeof ResizeObserver !== "undefined") {
+          new ResizeObserver(function () {
+            resize();
+          }).observe(shell);
+        }
+      } catch (_) {}
 
       function spark(x, y, s, r) {
         ctx.save();
@@ -4432,9 +4428,8 @@
       }
 
       function draw() {
-        const dpr = window.devicePixelRatio || 1;
-        const w = canvas.width / dpr;
-        const h = canvas.height / dpr || w || 220;
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight || w || 220;
         if (document.visibilityState === "hidden") {
           requestAnimationFrame(draw);
           return;
@@ -4443,7 +4438,7 @@
         const cx = D * 0.5;
         const cy = D * 0.5;
         const u = D / 220;
-        ctx.clearRect(0, 0, D, D);
+        ctx.clearRect(0, 0, w, h);
 
         const pulse = egadaPrefersReducedMotion()
           ? 1
