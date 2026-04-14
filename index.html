@@ -180,7 +180,8 @@
     h1 {
       font-size: clamp(35px, 8vw, 90px);
       font-weight: 900;
-      line-height: 0.9;
+      line-height: 0.98;
+      padding-top: 0.04em;
       letter-spacing: -3px;
       margin-bottom: 30px;
       max-width: min(96vw, 980px);
@@ -487,10 +488,17 @@
     }
     .perf-timeframes {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
       gap: 8px;
       padding: 0 4px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .perf-timeframes::-webkit-scrollbar {
+      display: none;
     }
     .perf-time-btn {
       background: transparent;
@@ -502,6 +510,8 @@
       cursor: pointer;
       transition: all 0.2s;
       font-family: inherit;
+      white-space: nowrap;
+      flex: 0 0 auto;
     }
     .perf-time-btn.active {
       background-color: var(--chart-gold);
@@ -1869,10 +1879,9 @@
       width: 100%;
       flex: 1 1 auto;
       min-height: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      display: grid;
+      place-content: center;
+      justify-items: center;
       padding: 12px 14px 10px;
       z-index: 5;
       position: relative;
@@ -1887,7 +1896,7 @@
       max-width: 100%;
       border-radius: 50%;
       position: relative;
-      margin-inline: auto;
+      margin: 0 auto;
       display: block;
       flex: 0 0 auto;
       overflow: hidden;
@@ -4424,8 +4433,9 @@
       }
 
       function draw() {
-        const w = canvas.clientWidth;
-        const h = canvas.clientHeight || w || 220;
+        const dpr = window.devicePixelRatio || 1;
+        const w = canvas.width / dpr;
+        const h = canvas.height / dpr || w || 220;
         if (document.visibilityState === "hidden") {
           requestAnimationFrame(draw);
           return;
