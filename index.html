@@ -1777,7 +1777,7 @@
       height: auto;
       max-height: min(620px, calc(100dvh - 200px));
       border: 1.5px solid rgba(255, 255, 255, 0.1);
-      border-radius: min(54px, 18cqw);
+      border-radius: min(54px, 14vw);
       margin: 0 auto;
       position: relative;
       box-shadow: 0 15px 40px rgba(0,0,0,0.3);
@@ -1808,7 +1808,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      border-radius: min(54px, 18cqw);
+      border-radius: min(54px, 14vw);
       z-index: 1;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008));
       backdrop-filter: blur(28px) saturate(1.12);
@@ -1819,7 +1819,7 @@
     .siri-container {
       position: absolute;
       inset: 1px;
-      border-radius: min(54px, 18cqw);
+      border-radius: min(54px, 14vw);
       padding: 2px;
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
@@ -1873,7 +1873,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: min(12px, 3cqw) min(14px, 4cqw) 10px;
+      padding: 12px 14px 10px;
       z-index: 5;
       position: relative;
       gap: 10px;
@@ -1881,7 +1881,7 @@
     /* Cuadrado explícito (ancho = alto): evita óvalos por flex/aspect-ratio en WebKit */
     .mobile-ia-stage {
       box-sizing: border-box;
-      --ia-side: min(260px, 86cqw);
+      --ia-side: min(250px, 72vw);
       width: var(--ia-side);
       height: var(--ia-side);
       max-width: 100%;
@@ -2512,7 +2512,7 @@
         max-width: 100% !important;
         column-gap: min(16px, 4vw) !important;
         row-gap: min(18px, 4.5vw) !important;
-        padding: 12px 0 32px !important;
+        padding: 8px 0 12px !important;
         /* b2 es la más ancha (~1.138× --bu); que quepa en media fila */
         --bu: min(200px, calc((100vw - 52px) / 2 / 1.1379)) !important;
       }
@@ -2521,7 +2521,7 @@
         grid-row: unset !important;
       }
       .transparent-phone-mockup .mobile-ia-stage {
-        --ia-side: min(240px, 82cqw) !important;
+        --ia-side: min(246px, 70vw) !important;
       }
       .device-card { padding: 22px 18px !important; }
       .mock:hover {
@@ -2551,10 +2551,10 @@
     }
     /* Reducir espacio entre burbujas y la sección de Elementos Operativos */
     section.section-dashboard-ref {
-      padding-bottom: 110px !important; /* Espacio extra para las esferas */
+      padding-bottom: 28px !important;
     }
     section.section-app-features {
-      padding-top: 50px !important;
+      padding-top: 18px !important;
     }
     /* --- REDISEÑO PLATAFORMAS (SOBREESCRIBE LOS DISEÑOS DUPLICADOS) --- */
     .platform-grid {
