@@ -1642,6 +1642,12 @@
       border: none;
       box-shadow: none;
     }
+    /* Evita micro-escalados por reveal al hacer scroll en iOS */
+    .ia-icon-shell.reveal,
+    .ia-icon-shell.reveal.show {
+      transform: none !important;
+      filter: none !important;
+    }
     .ia-icon-shell::before {
       content: none;
     }
@@ -1780,12 +1786,13 @@
       box-sizing: border-box;
       container-type: size;
       container-name: egada-phone;
-      /* Una sola escala: ratio 300:620; si limita la altura del viewport, el ancho baja solo */
-      width: min(300px, calc(100vw - 24px));
+      /* Tamaño fijo por proporción (no depende de dvh, no cambia al hacer scroll) */
+      --phone-w: min(300px, calc(100vw - 24px));
+      width: var(--phone-w);
       max-width: 100%;
-      aspect-ratio: 300 / 620;
-      height: auto;
-      max-height: min(620px, calc(100dvh - 200px));
+      height: calc(var(--phone-w) * 620 / 300);
+      aspect-ratio: auto;
+      max-height: none;
       border: 1.5px solid rgba(255, 255, 255, 0.1);
       border-radius: min(54px, 14vw);
       margin: 0 auto;
