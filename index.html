@@ -1897,10 +1897,11 @@
     /* Cuadrado explícito (ancho = alto): evita óvalos por flex/aspect-ratio en WebKit */
     .mobile-ia-stage {
       box-sizing: border-box;
-      --ia-side: min(250px, 72vw);
+      --ia-side: calc(var(--phone-w, 300px) * 0.78);
       width: var(--ia-side);
       height: var(--ia-side);
-      max-width: 100%;
+      max-width: calc(100% - 6px);
+      max-height: calc(100% - 6px);
       border-radius: 50%;
       position: relative;
       margin: 0 auto;
@@ -2537,7 +2538,7 @@
         grid-row: unset !important;
       }
       .transparent-phone-mockup .mobile-ia-stage {
-        --ia-side: min(246px, 70vw) !important;
+        --ia-side: calc(var(--phone-w, 300px) * 0.78) !important;
       }
       .device-card { padding: 22px 18px !important; }
       .mock:hover {
@@ -4395,10 +4396,7 @@
       function resize() {
         const dpr = window.devicePixelRatio || 1;
         const shellRect = shell.getBoundingClientRect();
-        let side = Math.floor(Math.min(shellRect.width, shellRect.height));
-        if (side < 2) {
-          side = Math.floor(Math.min(shell.clientWidth || 0, shell.clientHeight || 0));
-        }
+        let side = Math.floor(shellRect.width || shell.clientWidth || 0);
         if (side < 2) {
           side = Math.floor(Math.min(window.innerWidth * 0.5, 260));
         }
@@ -4413,13 +4411,7 @@
       resize();
       requestAnimationFrame(resize);
       window.addEventListener("resize", resize);
-      try {
-        if (typeof ResizeObserver !== "undefined") {
-          new ResizeObserver(function () {
-            resize();
-          }).observe(shell);
-        }
-      } catch (_) {}
+      window.addEventListener("orientationchange", resize);
 
       function spark(x, y, s, r) {
         ctx.save();
